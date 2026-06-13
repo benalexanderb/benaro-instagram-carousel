@@ -29,7 +29,7 @@ async function main() {
   const logoB64 = 'data:image/jpeg;base64,' +
     fs.readFileSync(path.join(__dirname, 'skills/instagram-carousel-skill/templates/benaro-logo.jpg')).toString('base64');
 
-  const outDir = path.join(__dirname, 'output/carousel_2026-06-09/slides');
+  const outDir = path.join(__dirname, 'output/carousel_2026-06-13/slides');
   fs.mkdirSync(outDir, { recursive: true });
 
   const h = (type, props, ...ch) => ({
@@ -40,7 +40,7 @@ async function main() {
     },
   });
 
-  // ── REUSABLE COMPONENTS ─────────────────────────────────────────────────────
+  // ── REUSABLE COMPONENTS ──────────────────────────────────────────────────────
 
   function slideRoot(bgColor, ...children) {
     return h('div', {
@@ -133,407 +133,395 @@ async function main() {
     }, ...children);
   }
 
-  // ── SLIDE 1: HOOK — Das 8. Weltwunder ───────────────────────────────────────
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SLIDE 1 — HOOK: "Was passiert mit deiner Familie wenn du stirbst?"
+  // Akt 1 | Spannung | Neugier + Schock
+  // ═══════════════════════════════════════════════════════════════════════════
 
-  // SVG: Exponentialkurve Teaser (kein <text>)
-  const hookCurveSvg = `<svg width="940" height="280" viewBox="0 0 940 280" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#10B981" stop-opacity="0.3"/>
-        <stop offset="100%" stop-color="#10B981" stop-opacity="1"/>
-      </linearGradient>
-    </defs>
-    <path d="M30,250 C150,245 300,230 450,200 C600,165 720,120 910,30" stroke="url(#g1)" stroke-width="5" fill="none" stroke-linecap="round"/>
-    <path d="M30,250 C150,245 300,230 450,200 C600,165 720,120 910,30 L910,280 L30,280 Z" fill="#10B981" fill-opacity="0.08"/>
-    <circle cx="910" cy="30" r="10" fill="#10B981"/>
-    <circle cx="30" cy="250" r="7" fill="rgba(255,255,255,0.5)"/>
+  // SVG: Schild-Symbol (Shield icon)
+  const shieldSvg = `<svg width="220" height="260" viewBox="0 0 220 260" xmlns="http://www.w3.org/2000/svg">
+    <path d="M110,10 L200,45 L200,130 C200,185 155,230 110,250 C65,230 20,185 20,130 L20,45 Z"
+      stroke="rgba(239,68,68,0.8)" stroke-width="6" fill="rgba(239,68,68,0.12)" stroke-linejoin="round"/>
+    <line x1="110" y1="80" x2="110" y2="155" stroke="rgba(239,68,68,0.9)" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="110" cy="178" r="8" fill="rgba(239,68,68,0.9)"/>
   </svg>`;
-  const hookCurveSrc = `data:image/svg+xml;base64,${Buffer.from(hookCurveSvg).toString('base64')}`;
+  const shieldSrc = `data:image/svg+xml;base64,${Buffer.from(shieldSvg).toString('base64')}`;
+
+  // SVG: Family silhouette (simple)
+  const familySvg = `<svg width="520" height="180" viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="120" cy="48" r="32" stroke="rgba(255,255,255,0.6)" stroke-width="4" fill="none"/>
+    <path d="M65,180 Q80,120 120,110 Q160,120 175,180" stroke="rgba(255,255,255,0.6)" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <circle cx="260" cy="44" r="36" stroke="rgba(255,255,255,0.8)" stroke-width="5" fill="none"/>
+    <path d="M200,180 Q220,115 260,104 Q300,115 320,180" stroke="rgba(255,255,255,0.8)" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <circle cx="400" cy="52" r="28" stroke="rgba(255,255,255,0.5)" stroke-width="3" fill="none"/>
+    <path d="M358,180 Q370,125 400,116 Q430,125 442,180" stroke="rgba(255,255,255,0.5)" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <line x1="40" y1="180" x2="480" y2="180" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+  </svg>`;
+  const familySrc = `data:image/svg+xml;base64,${Buffer.from(familySvg).toString('base64')}`;
 
   const slide1 = slideRoot(C.bgDark,
-    topRow('8. WELTWUNDER', 'rgba(16,185,129,0.25)'),
+    topRow('ACHTUNG', 'rgba(239,68,68,0.3)'),
     visualBlock(
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
-        headline('Das Geheimnis,', 66),
-        headline('das Banken nicht', 66),
-        headline('wollen, dass du', 66),
-        headline('es kennst.', 66),
+      h('div', { style: { display: 'flex', gap: '28px', alignItems: 'flex-start', marginBottom: '10px' } },
+        h('img', { src: shieldSrc, width: 110, height: 130, style: { objectFit: 'contain', marginTop: '8px' } }),
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px', flex: '1' } },
+          headline('Was passiert', 62),
+          headline('mit deiner', 62),
+          headline('Familie, wenn', 62),
+          headline('du stirbst?', 62),
+        ),
       ),
-      h('span', {
+      h('img', { src: familySrc, width: 940, height: 150, style: { objectFit: 'contain', marginTop: '10px' } }),
+      h('div', {
         style: {
-          fontSize: '30px', fontWeight: 500,
-          color: C.textMuted, lineHeight: '1.5', marginTop: '8px',
+          display: 'flex', marginTop: '24px', padding: '22px 32px',
+          backgroundColor: 'rgba(239,68,68,0.15)',
+          borderRadius: '16px',
+          border: '2px solid rgba(239,68,68,0.4)',
         },
-      }, 'Wie 100 EUR im Monat zu 121.997 EUR werden'),
-      h('img', {
-        src: hookCurveSrc,
-        width: 940, height: 280,
-        style: { marginTop: '10px', objectFit: 'contain' },
-      }),
-      h('div', { style: { display: 'flex', alignItems: 'baseline', gap: '16px', marginTop: '8px' } },
-        h('span', { style: { fontSize: '28px', fontWeight: 500, color: C.textMuted } }, 'Eingezahlt:'),
-        h('span', { style: { fontSize: '40px', fontWeight: 800, color: C.text } }, '36.000 EUR'),
-        h('span', { style: { fontSize: '28px', fontWeight: 500, color: C.textMuted } }, 'Ergebnis:'),
-        h('span', { style: { fontSize: '40px', fontWeight: 800, color: C.green } }, '121.997 EUR'),
+      },
+        h('span', {
+          style: { fontSize: '28px', fontWeight: 600, color: C.textSoft, lineHeight: '1.5' },
+        }, '25% aller Deutschen haben KEINE Risikolebensversicherung — obwohl sie eine Familie haben.'),
       ),
     ),
-    keyLearning('Zinseszins – Albert Einstein nannte ihn das 8. Weltwunder', C.green),
+    keyLearning('Im Ernstfall entscheidet deine Absicherung ueber alles', C.red),
     igHandle(),
   );
 
-  // ── SLIDE 2: PROBLEM — Deutschland schläft ──────────────────────────────────
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SLIDE 2 — DATEN: Witwenrente Versorgungsluecke
+  // Akt 1 | Spannung | Kontext mit Zahlen
+  // ═══════════════════════════════════════════════════════════════════════════
 
   const slide2 = slideRoot(C.bg,
-    topRow('SO LÄUFT ES GERADE', C.cardBg),
+    topRow('RISIKOLEBENSVERSICHERUNG', C.cardBg),
     visualBlock(
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '24px' } },
-        headline('Deutschland schläft', 58),
-        headline('auf seinem Geld.', 58),
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '20px' } },
+        headline('Was der Staat', 58),
+        headline('zahlt — und', 58),
+        headline('was fehlt.', 58),
       ),
-      h('div', { style: { display: 'flex', gap: '20px' } },
-        // Card links: Girokonto
-        h('div', {
-          style: {
-            display: 'flex', flexDirection: 'column', flex: '1',
-            backgroundColor: 'rgba(239,68,68,0.15)', borderRadius: '20px',
-            padding: '36px 28px', gap: '12px',
-            border: '2px solid rgba(239,68,68,0.4)',
-          },
-        },
-          h('span', { style: { fontSize: '20px', fontWeight: 700, color: C.red, letterSpacing: '2px' } }, 'GIROKONTO'),
-          h('span', { style: { fontSize: '60px', fontWeight: 800, color: C.text, lineHeight: '1' } }, '0,1%'),
-          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4' } }, 'Zinsen pro Jahr'),
-          h('div', { style: { display: 'flex', height: '2px', backgroundColor: 'rgba(239,68,68,0.4)', borderRadius: '1px' } }),
-          h('span', { style: { fontSize: '20px', fontWeight: 600, color: C.textSoft } }, 'nach 30 Jahren:'),
-          h('span', { style: { fontSize: '38px', fontWeight: 800, color: C.red } }, '38.110 EUR'),
-          h('span', { style: { fontSize: '18px', fontWeight: 500, color: C.textMuted } }, 'bei 100 EUR/Monat'),
+      // Bar-Diagramm: Einkommen vs. Witwenrente vs. Luecke
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '20px' } },
+        // Row 1: Bruttoeinkommen
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px' } },
+          h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
+            h('span', { style: { fontSize: '24px', fontWeight: 700, color: C.text } }, 'Bruttoeinkommen Familie'),
+            h('span', { style: { fontSize: '24px', fontWeight: 800, color: C.text } }, '3.500 EUR'),
+          ),
+          h('div', { style: { display: 'flex', height: '32px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '8px', overflow: 'hidden' } },
+            h('div', { style: { display: 'flex', width: '100%', height: '32px', backgroundColor: 'rgba(255,255,255,0.35)', borderRadius: '8px' } }),
+          ),
         ),
-        // Card rechts: ETF
-        h('div', {
-          style: {
-            display: 'flex', flexDirection: 'column', flex: '1',
-            backgroundColor: 'rgba(16,185,129,0.15)', borderRadius: '20px',
-            padding: '36px 28px', gap: '12px',
-            border: '2px solid rgba(16,185,129,0.4)',
-          },
-        },
-          h('span', { style: { fontSize: '20px', fontWeight: 700, color: C.green, letterSpacing: '2px' } }, 'WORLD-ETF'),
-          h('span', { style: { fontSize: '60px', fontWeight: 800, color: C.text, lineHeight: '1' } }, '7%'),
-          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4' } }, 'Rendite pro Jahr (hist.)'),
-          h('div', { style: { display: 'flex', height: '2px', backgroundColor: 'rgba(16,185,129,0.4)', borderRadius: '1px' } }),
-          h('span', { style: { fontSize: '20px', fontWeight: 600, color: C.textSoft } }, 'nach 30 Jahren:'),
-          h('span', { style: { fontSize: '38px', fontWeight: 800, color: C.green } }, '121.997 EUR'),
-          h('span', { style: { fontSize: '18px', fontWeight: 500, color: C.textMuted } }, 'bei 100 EUR/Monat'),
+        // Row 2: Kleine Witwenrente
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px' } },
+          h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
+            h('span', { style: { fontSize: '24px', fontWeight: 700, color: C.textSoft } }, 'Kleine Witwenrente (Staat)'),
+            h('span', { style: { fontSize: '24px', fontWeight: 800, color: C.gold } }, '700 EUR'),
+          ),
+          h('div', { style: { display: 'flex', height: '32px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '8px', overflow: 'hidden' } },
+            h('div', { style: { display: 'flex', width: '20%', height: '32px', backgroundColor: C.gold, borderRadius: '8px' } }),
+          ),
+        ),
+        // Row 3: Luecke
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px' } },
+          h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
+            h('span', { style: { fontSize: '24px', fontWeight: 700, color: C.red } }, 'Monatliche Versorgungsluecke'),
+            h('span', { style: { fontSize: '24px', fontWeight: 800, color: C.red } }, '-2.800 EUR'),
+          ),
+          h('div', { style: { display: 'flex', height: '32px', backgroundColor: 'rgba(239,68,68,0.1)', borderRadius: '8px', overflow: 'hidden' } },
+            h('div', { style: { display: 'flex', width: '80%', height: '32px', backgroundColor: 'rgba(239,68,68,0.7)', borderRadius: '8px' } }),
+          ),
         ),
       ),
     ),
-    keyLearning('Ø-Deutscher lässt 83.887 EUR Rendite auf dem Tisch liegen', C.red),
+    keyLearning('Die kleine Witwenrente deckt nur 20% des Familieneinkommens', C.red),
     igHandle(),
   );
 
-  // ── SLIDE 3: ESKALATION — Balkendiagramm ────────────────────────────────────
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SLIDE 3 — PROBLEM: Was Menschen glauben vs. was wirklich passiert
+  // Akt 1 | Spannung | Die Konsequenz
+  // ═══════════════════════════════════════════════════════════════════════════
 
-  // SVG Balkendiagramm (kein <text>)
-  const barSvg = `<svg width="860" height="320" viewBox="0 0 860 320" xmlns="http://www.w3.org/2000/svg">
-    <rect x="60" y="200" width="220" height="100" rx="10" fill="rgba(239,68,68,0.7)"/>
-    <rect x="580" y="50" width="220" height="250" rx="10" fill="rgba(16,185,129,0.85)"/>
-    <line x1="30" y1="310" x2="830" y2="310" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+  // SVG: Funnel (Dreistufig)
+  const funnelSvg = `<svg width="880" height="280" viewBox="0 0 880 280" xmlns="http://www.w3.org/2000/svg">
+    <rect x="40" y="0" width="800" height="72" rx="10" fill="rgba(255,255,255,0.18)"/>
+    <line x1="40" y1="72" x2="160" y2="144" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+    <line x1="840" y1="72" x2="720" y2="144" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+    <rect x="160" y="86" width="560" height="72" rx="10" fill="rgba(245,158,11,0.3)"/>
+    <line x1="160" y1="158" x2="280" y2="210" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+    <line x1="720" y1="158" x2="600" y2="210" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+    <rect x="280" y="202" width="320" height="72" rx="10" fill="rgba(239,68,68,0.5)"/>
   </svg>`;
-  const barSrc = `data:image/svg+xml;base64,${Buffer.from(barSvg).toString('base64')}`;
+  const funnelSrc = `data:image/svg+xml;base64,${Buffer.from(funnelSvg).toString('base64')}`;
 
-  const slide3 = slideRoot(C.bg,
-    topRow('HARTE ZAHLEN', C.cardBg),
+  const slide3 = slideRoot(C.bgDark,
+    topRow('RISIKOLEBENSVERSICHERUNG', C.cardBg),
     visualBlock(
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '18px' } },
-        headline('100 EUR/Monat,', 60),
-        headline('30 Jahre lang.', 60),
-        subline('Was unterscheidet Sparbuch von ETF?'),
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '16px' } },
+        headline('So schrumpft', 60),
+        headline('die Absicherung', 60),
+        headline('im Todesfall.', 60),
       ),
-      h('div', { style: { display: 'flex', position: 'relative' } },
-        h('img', { src: barSrc, width: 860, height: 320, style: { objectFit: 'contain' } }),
-      ),
-      h('div', { style: { display: 'flex', gap: '40px', justifyContent: 'space-around', marginTop: '-10px' } },
-        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' } },
-          h('span', { style: { fontSize: '18px', fontWeight: 600, color: C.textMuted, letterSpacing: '2px' } }, 'SPARBUCH (1%)'),
-          h('span', { style: { fontSize: '46px', fontWeight: 800, color: C.red } }, '38.110 EUR'),
+      h('img', { src: funnelSrc, width: 880, height: 280, style: { objectFit: 'contain' } }),
+      // Labels neben dem Funnel
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '10px' } },
+        h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 20px' } },
+          h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.textSoft } }, 'Letztes Nettogehalt'),
+          h('span', { style: { fontSize: '26px', fontWeight: 800, color: C.text } }, '3.500 EUR/Monat'),
         ),
-        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' } },
-          h('span', { style: { fontSize: '18px', fontWeight: 600, color: C.textMuted, letterSpacing: '2px' } }, 'WORLD-ETF (7%)'),
-          h('span', { style: { fontSize: '46px', fontWeight: 800, color: C.green } }, '121.997 EUR'),
+        h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 20px' } },
+          h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.gold } }, 'Staatliche Witwenrente'),
+          h('span', { style: { fontSize: '26px', fontWeight: 800, color: C.gold } }, '700 EUR/Monat'),
         ),
-      ),
-      h('div', {
-        style: {
-          display: 'flex', justifyContent: 'center', marginTop: '12px',
-          backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '14px', padding: '18px 28px',
-        },
-      },
-        h('span', { style: { fontSize: '30px', fontWeight: 700, color: C.text } }, 'Eingezahlt: nur 36.000 EUR'),
+        h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 20px', backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '10px' } },
+          h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.red } }, 'Was wirklich bleibt'),
+          h('span', { style: { fontSize: '26px', fontWeight: 800, color: C.red } }, 'Nichts sicher'),
+        ),
       ),
     ),
-    keyLearning('83.887 EUR Unterschied – allein durch Zinseszins', C.green),
+    keyLearning('Kinder, Miete, Kredite — alles muss alleine gestemmt werden', C.red),
     igHandle(),
   );
 
-  // ── SLIDE 4: ERKLÄRUNG — Der Schneeball-Effekt ──────────────────────────────
-
-  // Exponentialkurve mit Jahresmarkierungen
-  const growthSvg = `<svg width="880" height="360" viewBox="0 0 880 360" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="gLine" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#10B981" stop-opacity="0.4"/>
-        <stop offset="100%" stop-color="#10B981" stop-opacity="1"/>
-      </linearGradient>
-      <linearGradient id="gFill" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#10B981" stop-opacity="0.25"/>
-        <stop offset="100%" stop-color="#10B981" stop-opacity="0.02"/>
-      </linearGradient>
-    </defs>
-    <path d="M40,340 L200,330 L360,310 L520,270 L680,200 L840,50" stroke="url(#gLine)" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M40,340 L200,330 L360,310 L520,270 L680,200 L840,50 L840,350 L40,350 Z" fill="url(#gFill)"/>
-    <line x1="40" y1="350" x2="40" y2="340" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
-    <line x1="200" y1="350" x2="200" y2="330" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
-    <line x1="360" y1="350" x2="360" y2="310" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
-    <line x1="520" y1="350" x2="520" y2="270" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
-    <line x1="680" y1="350" x2="680" y2="200" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
-    <line x1="840" y1="350" x2="840" y2="50" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
-    <circle cx="840" cy="50" r="10" fill="#10B981"/>
-    <circle cx="680" cy="200" r="7" fill="rgba(16,185,129,0.7)"/>
-    <circle cx="520" cy="270" r="6" fill="rgba(16,185,129,0.5)"/>
-    <line x1="40" y1="350" x2="840" y2="350" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
-  </svg>`;
-  const growthSrc = `data:image/svg+xml;base64,${Buffer.from(growthSvg).toString('base64')}`;
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SLIDE 4 — WENDEPUNKT: Erwartung vs. Realitat
+  // Akt 2 | Aufloesung | Der Irrtum wird aufgedeckt
+  // ═══════════════════════════════════════════════════════════════════════════
 
   const slide4 = slideRoot(C.bg,
-    topRow('SO FUNKTIONIERT ES', C.cardBg),
+    topRow('DAS IST DER IRRTUM', 'rgba(245,158,11,0.25)'),
     visualBlock(
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '12px' } },
-        headline('Der Schneeball', 60),
-        headline('rollt bergab.', 60),
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '24px' } },
+        headline('Was du glaubst', 58),
+        headline('— und was stimmt.', 58),
       ),
-      h('img', { src: growthSrc, width: 880, height: 360, style: { objectFit: 'contain' } }),
-      h('div', { style: { display: 'flex', justifyContent: 'space-between', marginTop: '-8px', paddingLeft: '20px', paddingRight: '20px' } },
-        h('span', { style: { fontSize: '20px', fontWeight: 600, color: C.textMuted } }, 'Jahr 0'),
-        h('span', { style: { fontSize: '20px', fontWeight: 600, color: C.textMuted } }, 'Jahr 6'),
-        h('span', { style: { fontSize: '20px', fontWeight: 600, color: C.textMuted } }, 'Jahr 12'),
-        h('span', { style: { fontSize: '20px', fontWeight: 600, color: C.textMuted } }, 'Jahr 18'),
-        h('span', { style: { fontSize: '20px', fontWeight: 600, color: C.textMuted } }, 'Jahr 24'),
-        h('span', { style: { fontSize: '20px', fontWeight: 700, color: C.green } }, 'Jahr 30'),
-      ),
-      h('div', {
-        style: {
-          display: 'flex', gap: '14px', marginTop: '20px',
-          backgroundColor: C.cardBg, borderRadius: '16px', padding: '24px 28px',
+      h('div', { style: { display: 'flex', gap: '18px' } },
+        // Erwartung (links)
+        h('div', {
+          style: {
+            display: 'flex', flexDirection: 'column', flex: '1',
+            backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '20px',
+            padding: '32px 28px', gap: '16px',
+            border: '2px solid rgba(255,255,255,0.15)',
+          },
         },
-      },
-        h('div', { style: { display: 'flex', width: '6px', backgroundColor: C.green, borderRadius: '3px', minHeight: '60px' } }),
-        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px' } },
-          h('span', { style: { fontSize: '24px', fontWeight: 700, color: C.text } }, 'Wie der Schneeball entsteht:'),
-          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, lineHeight: '1.5' } }, 'Zinsen werden reinvestiert und selbst verzinst. Im letzten Jahr wachsen die Zinsen schneller als in den ersten 10 Jahren zusammen.'),
+          h('span', { style: { fontSize: '20px', fontWeight: 700, color: C.textMuted, letterSpacing: '2.5px' } }, 'ERWARTUNG'),
+          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: C.border, borderRadius: '2px' } }),
+          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textSoft, lineHeight: '1.55' } }, '"Mein Arbeitgeber sichert mich ab."'),
+          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textSoft, lineHeight: '1.55', marginTop: '10px' } }, '"Der Staat zahlt genug."'),
+          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textSoft, lineHeight: '1.55', marginTop: '10px' } }, '"Das passiert mir nicht."'),
+        ),
+        // Realitaet (rechts)
+        h('div', {
+          style: {
+            display: 'flex', flexDirection: 'column', flex: '1',
+            backgroundColor: '#FFFFFF', borderRadius: '20px',
+            padding: '32px 28px', gap: '16px',
+          },
+        },
+          h('span', { style: { fontSize: '20px', fontWeight: 700, color: 'rgba(0,31,97,0.5)', letterSpacing: '2.5px' } }, 'REALITAET'),
+          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(0,31,97,0.15)', borderRadius: '2px' } }),
+          h('span', { style: { fontSize: '24px', fontWeight: 600, color: '#001F61', lineHeight: '1.55' } }, 'Nur in Ausnahmefaellen — nicht standardmaessig.'),
+          h('span', { style: { fontSize: '24px', fontWeight: 600, color: '#001F61', lineHeight: '1.55', marginTop: '10px' } }, 'Nur 20% des Einkommens — Luecke riesig.'),
+          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.red, lineHeight: '1.55', marginTop: '10px' } }, 'Jeder 4. erlebt einen Ernstfall vor der Rente.'),
         ),
       ),
     ),
-    keyLearning('Im 30. Jahr erwirtschaftet der ETF allein 7.700 EUR Zinsen', C.green),
+    keyLearning('Du bist selbst verantwortlich fuer die Absicherung deiner Familie', C.gold),
     igHandle(),
   );
 
-  // ── SLIDE 5: HEBEL — 4 Faktoren entscheiden alles ───────────────────────────
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SLIDE 5 — LOESUNG: RLV Kosten vs. Leistung
+  // Akt 2 | Aufloesung | Die gute Nachricht
+  // ═══════════════════════════════════════════════════════════════════════════
 
-  function hebelCard(label, value, desc, color) {
-    return h('div', {
-      style: {
-        display: 'flex', flexDirection: 'column', flex: '1',
-        backgroundColor: C.cardBg, borderRadius: '18px',
-        padding: '28px 22px', gap: '10px',
-        border: `2px solid ${color}30`,
-      },
-    },
-      h('div', { style: { display: 'flex', width: '40px', height: '40px', borderRadius: '10px', backgroundColor: `${color}25`, alignItems: 'center', justifyContent: 'center' } },
-        h('div', { style: { display: 'flex', width: '20px', height: '20px', borderRadius: '4px', backgroundColor: color } }),
-      ),
-      h('span', { style: { fontSize: '30px', fontWeight: 800, color: C.text } }, value),
-      h('span', { style: { fontSize: '18px', fontWeight: 700, color, letterSpacing: '1.5px' } }, label),
-      h('span', { style: { fontSize: '18px', fontWeight: 400, color: C.textMuted, lineHeight: '1.4' } }, desc),
-    );
-  }
-
-  const slide5 = slideRoot(C.bg,
-    topRow('DEINE STELLSCHRAUBEN', C.cardBg),
+  const slide5 = slideRoot(C.bgDark,
+    topRow('SO FUNKTIONIERT ES', 'rgba(16,185,129,0.25)'),
     visualBlock(
       h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '24px' } },
-        headline('4 Faktoren', 62),
-        headline('entscheiden alles.', 62),
-      ),
-      h('div', { style: { display: 'flex', gap: '20px', marginBottom: '16px' } },
-        hebelCard('ZEIT', '30 Jahre', '10 Jahre frueher starten = fast doppelter Betrag', C.gold),
-        hebelCard('BETRAG', '100+ EUR', 'Mehr einzahlen = direkter Schub vom ersten Tag', C.green),
+        headline('Fuer 30 EUR/Monat:', 58),
+        headline('500.000 EUR', 58),
+        headline('Schutz fuer', 58),
+        headline('deine Familie.', 58),
       ),
       h('div', { style: { display: 'flex', gap: '20px' } },
-        hebelCard('RENDITE', '7% p.a.', 'Breit diversifizierter ETF schlaegt Sparbuch um Faktor 3', C.text),
-        hebelCard('FREQUENZ', 'Monatlich', 'Regelmaessig einzahlen nutzt den Cost-Average-Effekt', '#9CA3AF'),
-      ),
-    ),
-    keyLearning('Zeit ist der einzige Faktor den du nicht kaufen kannst', C.gold),
-    igHandle(),
-  );
-
-  // ── SLIDE 6: ZEITVORTEIL — 10 Jahre früher = 140.000 EUR mehr ───────────────
-
-  const slide6 = slideRoot(C.bg,
-    topRow('KRASSE REALITÄT', 'rgba(239,68,68,0.2)'),
-    visualBlock(
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '28px' } },
-        headline('10 Jahre frueher', 58),
-        headline('= 140.000 EUR mehr.', 58),
-      ),
-      h('div', { style: { display: 'flex', gap: '24px' } },
-        // Start mit 25
+        // Links: Monatsbeitrag
+        h('div', {
+          style: {
+            display: 'flex', flexDirection: 'column', flex: '1',
+            backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: '20px',
+            padding: '36px 28px', gap: '14px',
+            border: '2px solid rgba(255,255,255,0.15)',
+          },
+        },
+          h('span', { style: { fontSize: '20px', fontWeight: 700, color: C.textMuted, letterSpacing: '2px' } }, 'MONATSBEITRAG'),
+          h('span', { style: { fontSize: '76px', fontWeight: 800, color: C.text, lineHeight: '1' } }, '30'),
+          h('span', { style: { fontSize: '30px', fontWeight: 600, color: C.textSoft } }, 'EUR / Monat'),
+          h('div', { style: { display: 'flex', height: '2px', backgroundColor: C.border, borderRadius: '1px', marginTop: '8px' } }),
+          h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4' } }, 'Mann, 30 Jahre, Nichtraucher, gesund — 20 Jahre Laufzeit'),
+        ),
+        // Rechts: Versicherungssumme
         h('div', {
           style: {
             display: 'flex', flexDirection: 'column', flex: '1',
             backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '20px',
-            padding: '32px 24px', gap: '10px',
-            border: '2px solid rgba(16,185,129,0.4)',
+            padding: '36px 28px', gap: '14px',
+            border: '2px solid rgba(16,185,129,0.5)',
           },
         },
-          h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.green, letterSpacing: '2px' } }, 'START MIT 25'),
-          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px' } },
-            h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted } }, '40 Jahre x 100 EUR'),
-          ),
-          h('span', { style: { fontSize: '56px', fontWeight: 800, color: C.green, lineHeight: '1' } }, '261.781'),
-          h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.text } }, 'EUR'),
+          h('span', { style: { fontSize: '20px', fontWeight: 700, color: C.green, letterSpacing: '2px' } }, 'VERSICHERUNGSSUMME'),
+          h('span', { style: { fontSize: '44px', fontWeight: 800, color: C.text, lineHeight: '1.1' } }, '500.000'),
+          h('span', { style: { fontSize: '30px', fontWeight: 600, color: C.green } }, 'EUR im Todesfall'),
           h('div', { style: { display: 'flex', height: '2px', backgroundColor: 'rgba(16,185,129,0.4)', borderRadius: '1px', marginTop: '8px' } }),
-          h('span', { style: { fontSize: '18px', fontWeight: 500, color: C.textMuted } }, 'Eingezahlt: 48.000 EUR'),
-          h('span', { style: { fontSize: '18px', fontWeight: 700, color: C.green } }, 'Zinsen: 213.781 EUR'),
+          h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4' } }, 'Sofortige Einmalzahlung an deine Familie — steuerfrei'),
         ),
-        // Start mit 35
-        h('div', {
-          style: {
-            display: 'flex', flexDirection: 'column', flex: '1',
-            backgroundColor: 'rgba(239,68,68,0.08)', borderRadius: '20px',
-            padding: '32px 24px', gap: '10px',
-            border: '2px solid rgba(239,68,68,0.25)',
-          },
-        },
-          h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.red, letterSpacing: '2px' } }, 'START MIT 35'),
-          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px' } },
-            h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted } }, '30 Jahre x 100 EUR'),
-          ),
-          h('span', { style: { fontSize: '56px', fontWeight: 800, color: C.red, lineHeight: '1' } }, '121.997'),
-          h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.text } }, 'EUR'),
-          h('div', { style: { display: 'flex', height: '2px', backgroundColor: 'rgba(239,68,68,0.3)', borderRadius: '1px', marginTop: '8px' } }),
-          h('span', { style: { fontSize: '18px', fontWeight: 500, color: C.textMuted } }, 'Eingezahlt: 36.000 EUR'),
-          h('span', { style: { fontSize: '18px', fontWeight: 700, color: C.red } }, 'Zinsen: 85.997 EUR'),
-        ),
-      ),
-      h('div', {
-        style: {
-          display: 'flex', justifyContent: 'center', marginTop: '20px',
-          backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '14px', padding: '18px 28px',
-        },
-      },
-        h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.text } }, '10 Jahre Differenz = 139.784 EUR Unterschied'),
       ),
     ),
-    keyLearning('Jedes Jahr Warten kostet dich im Schnitt 13.978 EUR', C.red),
+    keyLearning('RLV ist die guenstigste Absicherung, die es gibt', C.green),
     igHandle(),
   );
 
-  // ── SLIDE 7: LÖSUNG — Dein 3-Schritt-Startplan ──────────────────────────────
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SLIDE 6 — METHODE: 3 Faktoren fuer die richtige Versicherungssumme
+  // Akt 2 | Aufloesung | Konkrete Anleitung
+  // ═══════════════════════════════════════════════════════════════════════════
 
-  function stepCard(num, title, desc, color) {
+  function faktorCard(num, title, desc, color, pct) {
     return h('div', {
       style: {
-        display: 'flex', gap: '20px', alignItems: 'flex-start',
+        display: 'flex', flexDirection: 'column', gap: '10px',
         backgroundColor: C.cardBg, borderRadius: '18px',
-        padding: '28px 28px', border: `1px solid ${color}40`,
+        padding: '24px 28px',
+        border: `1px solid ${color}40`,
       },
     },
-      h('div', {
-        style: {
-          display: 'flex', minWidth: '54px', height: '54px',
-          borderRadius: '14px', backgroundColor: `${color}20`,
-          border: `2px solid ${color}`,
-          alignItems: 'center', justifyContent: 'center',
-        },
-      },
-        h('span', { style: { fontSize: '28px', fontWeight: 800, color } }, num),
+      h('div', { style: { display: 'flex', alignItems: 'center', gap: '18px' } },
+        h('span', { style: { fontSize: '38px', fontWeight: 800, color, minWidth: '54px' } }, num),
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px', flex: '1' } },
+          h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.text, lineHeight: '1.2' } }, title),
+          h('span', { style: { fontSize: '21px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4' } }, desc),
+        ),
       ),
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
-        h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.text } }, title),
-        h('span', { style: { fontSize: '21px', fontWeight: 400, color: C.textMuted, lineHeight: '1.4' } }, desc),
+      h('div', { style: { display: 'flex', height: '6px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' } },
+        h('div', { style: { display: 'flex', width: `${pct}%`, height: '6px', backgroundColor: color, borderRadius: '3px' } }),
       ),
     );
   }
 
-  const slide7 = slideRoot(C.bg,
-    topRow('DEIN 3-SCHRITT-PLAN', 'rgba(16,185,129,0.2)'),
+  const slide6 = slideRoot(C.bg,
+    topRow('DIE RICHTIGE SUMME', C.cardBg),
     visualBlock(
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '28px' } },
-        headline('So startest du', 62),
-        headline('noch diese Woche.', 62),
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '24px' } },
+        headline('3 Faktoren fuer', 60),
+        headline('deine optimale', 60),
+        headline('Summe.', 60),
       ),
       h('div', { style: { display: 'flex', flexDirection: 'column', gap: '16px' } },
-        stepCard('1', 'Depot eroeffnen', 'Kostenfreies Depot bei einem ETF-Broker: Neobroker (Trade Republic, Scalable) oder Direktbank (ING, DKB)', C.green),
-        stepCard('2', 'Sparplan einrichten', 'MSCI World oder FTSE All-World ETF als monatlichen Sparplan ab 25-100 EUR einrichten', C.gold),
-        stepCard('3', 'Automatisieren & vergessen', 'Lastschrift einrichten, Freistellungsauftrag stellen – dann den Zinseszins fuer sich arbeiten lassen', C.text),
+        faktorCard('01', 'Jahreseinkommen x 3-5', 'Basis: Bruttojahreseinkommen multipliziert mit Faktor 3 bis 5 — je nach Familiengroesse', C.green, 33),
+        faktorCard('02', 'Offene Kredite addieren', 'Hypothek, Autokredite, Konsumschulden — alles muss abgesichert werden', C.gold, 66),
+        faktorCard('03', 'Kindererziehungskosten', 'Pro Kind ca. 200.000 EUR bis zum 18. Lebensjahr einplanen', C.text, 100),
       ),
     ),
-    keyLearning('Benaro Finanzen hilft dir den richtigen Einstieg zu finden', C.green),
+    keyLearning('Faustregel: Mind. 500.000 EUR bei Familie mit Kindern und Immobilie', C.green),
     igHandle(),
   );
 
-  // ── SLIDE 8: CTA ─────────────────────────────────────────────────────────────
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SLIDE 7 — TAKEAWAYS: 4 Learnings mit Progressbalken
+  // Akt 3 | Abschluss | Zusammenfassung
+  // ═══════════════════════════════════════════════════════════════════════════
 
-  // Circular progress / big logo slide
-  const ctaSvg = `<svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="150" cy="150" r="130" stroke="rgba(255,255,255,0.08)" stroke-width="20" fill="none"/>
-    <path d="M150,20 A130,130 0 1,1 149.99,20" stroke="#10B981" stroke-width="20" fill="none" stroke-linecap="round" stroke-dasharray="800" stroke-dashoffset="50"/>
-    <circle cx="150" cy="150" r="100" fill="rgba(16,185,129,0.08)"/>
-  </svg>`;
-  const ctaSrc = `data:image/svg+xml;base64,${Buffer.from(ctaSvg).toString('base64')}`;
+  const learnings = [
+    { num: '01', text: 'Kleine Witwenrente deckt nur 20% des Einkommens — Luecke ist riesig', pct: 25, color: C.red },
+    { num: '02', text: 'RLV Beitraege beginnen ab 15-30 EUR/Monat — guenstigste Absicherung', pct: 50, color: C.gold },
+    { num: '03', text: 'Versicherungssumme = 3-5x Jahreseinkommen + Schulden + Kinder', pct: 75, color: C.text },
+    { num: '04', text: 'Je juenger + gesunder du bist, desto guenstiger wird die Praemie', pct: 100, color: C.green },
+  ];
 
-  const slide8 = slideRoot(C.bgDark,
-    topRow('KOSTENLOSES ERSTGESPRÄCH', 'rgba(16,185,129,0.25)'),
+  const slide7 = slideRoot(C.bgDark,
+    topRow('DEINE TAKEAWAYS', 'rgba(16,185,129,0.2)'),
     visualBlock(
-      h('div', {
-        style: {
-          display: 'flex', flexDirection: 'column',
-          alignItems: 'center', gap: '0px',
-        },
-      },
-        h('div', { style: { display: 'flex', position: 'relative', alignItems: 'center', justifyContent: 'center', width: '300px', height: '300px' } },
-          h('img', { src: ctaSrc, width: 300, height: 300, style: { position: 'absolute', top: '0', left: '0' } }),
-          h('img', {
-            src: logoB64,
-            width: 160, height: 160,
-            style: { borderRadius: '24px', objectFit: 'cover', position: 'absolute' },
-          }),
-        ),
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '20px' } },
+        headline('Was du jetzt', 60),
+        headline('wissen musst.', 60),
       ),
-      h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', marginTop: '20px' } },
-        headline('Bereit fuer', 56),
-        headline('deinen Zinseszins?', 56),
-        h('span', {
-          style: {
-            fontSize: '28px', fontWeight: 500,
-            color: C.textMuted, lineHeight: '1.5', textAlign: 'center',
-          },
-        }, 'Folge @benarofinanzen fuer taegliche Finanztipps – kostenlos und ohne Jargon'),
-      ),
-      h('div', { style: { display: 'flex', gap: '16px', marginTop: '16px', justifyContent: 'center' } },
-        h('div', {
-          style: {
-            display: 'flex', backgroundColor: C.green,
-            borderRadius: '14px', padding: '18px 32px',
-          },
-        },
-          h('span', { style: { fontSize: '24px', fontWeight: 700, color: '#001F61' } }, 'Link in Bio – Erstgespraech'),
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px' } },
+        ...learnings.map(l =>
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px', padding: '22px 26px', backgroundColor: 'rgba(255,255,255,0.07)', borderRadius: '18px' } },
+            h('div', { style: { display: 'flex', alignItems: 'center', gap: '18px' } },
+              h('span', { style: { fontSize: '36px', fontWeight: 800, color: l.color, minWidth: '52px' } }, l.num),
+              h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.text, lineHeight: '1.3', flex: '1' } }, l.text),
+            ),
+            h('div', { style: { display: 'flex', height: '5px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' } },
+              h('div', { style: { display: 'flex', width: `${l.pct}%`, height: '5px', backgroundColor: l.color, borderRadius: '3px' } }),
+            ),
+          )
         ),
       ),
     ),
-    h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '16px' } },
-      h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.green } }, '@benarofinanzen'),
+    keyLearning('Fruehzeitig abschliessen = guenstigste Praemie + maximaler Schutz', C.green),
+    igHandle(),
+  );
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SLIDE 8 — CTA
+  // Akt 3 | Abschluss | Handlungsaufruf
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  // SVG: Ring mit Checkmark
+  const ctaRingSvg = `<svg width="260" height="260" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="130" cy="130" r="110" stroke="rgba(255,255,255,0.08)" stroke-width="18" fill="none"/>
+    <path d="M130,20 A110,110 0 1,1 129.99,20"
+      stroke="#10B981" stroke-width="18" fill="none"
+      stroke-linecap="round" stroke-dasharray="691" stroke-dashoffset="60"/>
+    <circle cx="130" cy="130" r="82" fill="rgba(16,185,129,0.08)"/>
+  </svg>`;
+  const ctaRingSrc = `data:image/svg+xml;base64,${Buffer.from(ctaRingSvg).toString('base64')}`;
+
+  const slide8 = slideRoot(C.bg,
+    topRow('JETZT HANDELN', 'rgba(16,185,129,0.25)'),
+    visualBlock(
+      h('div', {
+        style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' },
+      },
+        h('div', { style: { display: 'flex', position: 'relative', alignItems: 'center', justifyContent: 'center', width: '260px', height: '260px' } },
+          h('img', { src: ctaRingSrc, width: 260, height: 260, style: { position: 'absolute', top: '0', left: '0' } }),
+          h('img', {
+            src: logoB64,
+            width: 140, height: 140,
+            style: { borderRadius: '20px', objectFit: 'cover', position: 'absolute' },
+          }),
+        ),
+        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', marginTop: '20px' } },
+          headline('Ist deine Familie', 56),
+          headline('abgesichert?', 56),
+        ),
+        h('span', {
+          style: {
+            fontSize: '28px', fontWeight: 500, color: C.textMuted,
+            lineHeight: '1.5', textAlign: 'center', marginTop: '10px',
+          },
+        }, 'Schreib mir — ich pruefe deine Versorgungsluecke kostenlos und zeige dir den besten Schutz.'),
+        h('div', {
+          style: {
+            display: 'flex', marginTop: '20px', padding: '18px 40px',
+            backgroundColor: 'rgba(16,185,129,0.15)',
+            borderRadius: '16px', border: '2px solid rgba(16,185,129,0.4)',
+          },
+        },
+          h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.green } }, 'Link in Bio — Kostenloses Erstgespraech'),
+        ),
+        h('span', {
+          style: { fontSize: '28px', fontWeight: 700, color: C.textMuted, marginTop: '16px' },
+        }, 'Folge @benarofinanzen fuer mehr Finanztipps'),
+      ),
+    ),
+    h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '12px' } },
+      h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.green } }, '@benarofinanzen'),
     ),
   );
 
