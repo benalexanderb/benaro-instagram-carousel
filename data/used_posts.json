@@ -132,5 +132,12 @@
       "date_used": "2026-06-22",
       "inspiration_summary": "Natalie & Denis (@finanzcopilot, 13K Follower) sind bekannt für ETF-Content und Grundsatzfragen des Vermögensaufbaus. Die Debatte 'Erst Schulden tilgen oder sofort investieren?' ist ein perenniell virales Thema mit hohem Kommentar-Engagement. Kernbotschaft: Die 5%-Regel entscheidet — Zinssatz über 5% = tilgen (Dispo 13%, Ratenkredit 7%), unter 5% = parallel investieren (Baufi 3,5%). 8-Slide Carousel: Hook (Split-Karten ROT/GRÜN), Balken-Vergleich Schuldzinsen vs. ETF-Rendite, Erwartung vs. Realität (Irrtum 'erst tilgen'), 5%-Regel Entscheidungsframework (3 Kategorien), Rechenbeispiele (Dispo -300 EUR/Jahr, Ratenkredit Break-Even, Baufi ETF +11.400 EUR Vorteil über 10 Jahre), SVG Line-Chart Zinsarbitrage, 4 Takeaways mit Progress Bars, CTA A/B-Frage."
     }
+  ,
+    {
+      "profile": "@finanzcopilot",
+      "topic": "ETF-Portfolio Rebalancing 2026 — Der Fehler den 90% der Anleger machen",
+      "date_used": "2026-06-23",
+      "inspiration_summary": "Natalie & Denis (@finanzcopilot, 13K Follower) sind bekannt für ETF-Content und Vermögensaufbau. Rebalancing ist ein noch nicht verwendetes, hochaktuelles Thema — logische Fortsetzung nach MSCI World vs. S&P500 (19.06.) und Schulden-Tilgung (22.06.). Kernbotschaft: Ohne regelmässiges Rebalancing verschiebt sich die Depot-Allokation automatisch (60/40 wird zu 80/20 durch Kurssteigerungen) — im Crash verliert das unausgewogene Depot bis zu 70% mehr. Die 5%-Regel: wenn ein Anteil mehr als 5% vom Zielwert abweicht, sofort rebalancieren. 8-Slide Carousel: Hook (Pie-Charts Vorher/Nachher), Risiko-Drift-Balken, SVG Crash-Linien-Chart (rebalanciert -18% vs. unausgewogen -31%), Erwartung vs. Realität, 3-Schritt Flow-Diagramm (5%-Regel), Rechenbeispiel 10.000 EUR (82%/18% zu 70%/30%), 4 Takeaways mit Progress Bars, CTA mit Kommentar-Trigger."
+    }
   ]
 }
