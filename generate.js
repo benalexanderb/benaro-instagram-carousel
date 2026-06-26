@@ -29,7 +29,8 @@ async function main() {
   const logoB64 = 'data:image/jpeg;base64,' +
     fs.readFileSync(path.join(__dirname, 'skills/instagram-carousel-skill/templates/benaro-logo.jpg')).toString('base64');
 
-  const outDir = path.join(__dirname, 'output/carousel_2026-06-13/slides');
+  const TODAY = '2026-06-26';
+  const outDir = path.join(__dirname, `output/carousel_${TODAY}/slides`);
   fs.mkdirSync(outDir, { recursive: true });
 
   const h = (type, props, ...ch) => ({
@@ -40,7 +41,7 @@ async function main() {
     },
   });
 
-  // ── REUSABLE COMPONENTS ──────────────────────────────────────────────────────
+  // ── REUSABLE COMPONENTS ───────────────────────────────────────────────────
 
   function slideRoot(bgColor, ...children) {
     return h('div', {
@@ -79,7 +80,7 @@ async function main() {
       style: {
         fontSize: `${size || 64}px`, fontWeight: 800,
         color: C.text, lineHeight: '1.08',
-        letterSpacing: '-1.5px', marginBottom: '6px',
+        letterSpacing: '-1.5px', marginBottom: '4px',
       },
     }, text);
   }
@@ -134,276 +135,255 @@ async function main() {
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // SLIDE 1 — HOOK: "Was passiert mit deiner Familie wenn du stirbst?"
-  // Akt 1 | Spannung | Neugier + Schock
+  // STORYLINE: Betriebliche Altersvorsorge (bAV) 2026
+  // Template A: Problem -> Loesung
+  //
+  // S1 HOOK:       "Dein Chef muss dir Geld geben — und 54% wissen es nicht."
+  // S2 DATA:       Statistik bAV-Nutzung + was du verlierst
+  // S3 PROBLEM:    Flow ohne bAV: Rentenlücke wächst
+  // S4 WENDE:      Erwartung vs. Realität (3 Mythen)
+  // S5 METHODE:    So funktioniert die bAV (3 Hebel)
+  // S6 RECHNUNG:   Rechenbeispiel: 300 EUR Brutto -> 167 EUR netto
+  // S7 TAKEAWAYS:  4 Learnings mit Progressbalken
+  // S8 CTA:        Frage + @benarofinanzen
   // ═══════════════════════════════════════════════════════════════════════════
 
-  // SVG: Schild-Symbol (Shield icon)
-  const shieldSvg = `<svg width="220" height="260" viewBox="0 0 220 260" xmlns="http://www.w3.org/2000/svg">
-    <path d="M110,10 L200,45 L200,130 C200,185 155,230 110,250 C65,230 20,185 20,130 L20,45 Z"
-      stroke="rgba(239,68,68,0.8)" stroke-width="6" fill="rgba(239,68,68,0.12)" stroke-linejoin="round"/>
-    <line x1="110" y1="80" x2="110" y2="155" stroke="rgba(239,68,68,0.9)" stroke-width="10" stroke-linecap="round"/>
-    <circle cx="110" cy="178" r="8" fill="rgba(239,68,68,0.9)"/>
-  </svg>`;
-  const shieldSrc = `data:image/svg+xml;base64,${Buffer.from(shieldSvg).toString('base64')}`;
+  // ── SLIDE 1: HOOK ────────────────────────────────────────────────────────
+  // Grafik: Gebäude-Icon + Geldsack + Pfeil (Arbeitgeber zahlt)
 
-  // SVG: Family silhouette (simple)
-  const familySvg = `<svg width="520" height="180" viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="120" cy="48" r="32" stroke="rgba(255,255,255,0.6)" stroke-width="4" fill="none"/>
-    <path d="M65,180 Q80,120 120,110 Q160,120 175,180" stroke="rgba(255,255,255,0.6)" stroke-width="4" fill="none" stroke-linecap="round"/>
-    <circle cx="260" cy="44" r="36" stroke="rgba(255,255,255,0.8)" stroke-width="5" fill="none"/>
-    <path d="M200,180 Q220,115 260,104 Q300,115 320,180" stroke="rgba(255,255,255,0.8)" stroke-width="5" fill="none" stroke-linecap="round"/>
-    <circle cx="400" cy="52" r="28" stroke="rgba(255,255,255,0.5)" stroke-width="3" fill="none"/>
-    <path d="M358,180 Q370,125 400,116 Q430,125 442,180" stroke="rgba(255,255,255,0.5)" stroke-width="3" fill="none" stroke-linecap="round"/>
-    <line x1="40" y1="180" x2="480" y2="180" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+  const buildingEuroSvg = `<svg width="880" height="260" viewBox="0 0 880 260" xmlns="http://www.w3.org/2000/svg">
+    <!-- Arbeitgeber (Gebäude links) -->
+    <rect x="40" y="60" width="220" height="180" rx="10" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.25)" stroke-width="3"/>
+    <rect x="80" y="40" width="140" height="30" rx="6" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+    <rect x="76" y="100" width="38" height="50" rx="4" fill="rgba(255,255,255,0.12)"/>
+    <rect x="131" y="100" width="38" height="50" rx="4" fill="rgba(255,255,255,0.12)"/>
+    <rect x="186" y="100" width="38" height="50" rx="4" fill="rgba(255,255,255,0.12)"/>
+    <rect x="76" y="168" width="38" height="44" rx="4" fill="rgba(255,255,255,0.12)"/>
+    <rect x="131" y="168" width="38" height="44" rx="4" fill="rgba(255,255,255,0.12)"/>
+    <rect x="186" y="168" width="38" height="44" rx="4" fill="rgba(255,255,255,0.12)"/>
+    <!-- Pfeil Mitte -->
+    <line x1="290" y1="160" x2="550" y2="160" stroke="#10B981" stroke-width="6" stroke-dasharray="14,7"/>
+    <path d="M535,143 L555,160 L535,177" fill="none" stroke="#10B981" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Geldmünzen rechts (Arbeitnehmer) -->
+    <circle cx="700" cy="100" r="50" fill="rgba(16,185,129,0.15)" stroke="#10B981" stroke-width="5"/>
+    <circle cx="700" cy="100" r="35" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.5)" stroke-width="2"/>
+    <rect x="690" y="84" width="20" height="32" rx="3" fill="rgba(16,185,129,0.8)"/>
+    <rect x="685" y="80" width="30" height="8" rx="4" fill="#10B981"/>
+    <rect x="685" y="108" width="30" height="8" rx="4" fill="#10B981"/>
+    <circle cx="790" cy="140" r="36" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.4)" stroke-width="2"/>
+    <circle cx="790" cy="140" r="22" fill="rgba(16,185,129,0.08)" stroke="rgba(16,185,129,0.3)" stroke-width="1"/>
+    <circle cx="640" cy="160" r="28" fill="rgba(16,185,129,0.08)" stroke="rgba(16,185,129,0.3)" stroke-width="2"/>
+    <!-- Plus-Zeichen über Münzen -->
+    <line x1="700" y1="175" x2="700" y2="215" stroke="rgba(16,185,129,0.4)" stroke-width="3"/>
+    <line x1="680" y1="195" x2="720" y2="195" stroke="rgba(16,185,129,0.4)" stroke-width="3"/>
   </svg>`;
-  const familySrc = `data:image/svg+xml;base64,${Buffer.from(familySvg).toString('base64')}`;
+  const buildingEuroSrc = `data:image/svg+xml;base64,${Buffer.from(buildingEuroSvg).toString('base64')}`;
 
   const slide1 = slideRoot(C.bgDark,
-    topRow('ACHTUNG', 'rgba(239,68,68,0.3)'),
+    topRow('DAS MUSST DU WISSEN', 'rgba(16,185,129,0.3)'),
     visualBlock(
-      h('div', { style: { display: 'flex', gap: '28px', alignItems: 'flex-start', marginBottom: '10px' } },
-        h('img', { src: shieldSrc, width: 110, height: 130, style: { objectFit: 'contain', marginTop: '8px' } }),
-        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px', flex: '1' } },
-          headline('Was passiert', 62),
-          headline('mit deiner', 62),
-          headline('Familie, wenn', 62),
-          headline('du stirbst?', 62),
-        ),
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: '16px' } },
+        headline('Dein Chef muss', 62),
+        headline('dir Geld geben —', 62),
+        headline('und die meisten', 62),
+        headline('wissen es nicht.', 62),
       ),
-      h('img', { src: familySrc, width: 940, height: 150, style: { objectFit: 'contain', marginTop: '10px' } }),
+      h('img', { src: buildingEuroSrc, width: 880, height: 260, style: { objectFit: 'contain' } }),
       h('div', {
         style: {
-          display: 'flex', marginTop: '24px', padding: '22px 32px',
-          backgroundColor: 'rgba(239,68,68,0.15)',
+          display: 'flex', marginTop: '18px', padding: '22px 32px',
+          backgroundColor: 'rgba(16,185,129,0.12)',
           borderRadius: '16px',
-          border: '2px solid rgba(239,68,68,0.4)',
+          border: '2px solid rgba(16,185,129,0.4)',
         },
       },
         h('span', {
           style: { fontSize: '28px', fontWeight: 600, color: C.textSoft, lineHeight: '1.5' },
-        }, '25% aller Deutschen haben KEINE Risikolebensversicherung — obwohl sie eine Familie haben.'),
+        }, 'Seit 2019 gilt: Arbeitgeber MUSS mind. 15% zu deiner bAV dazulegen — per Gesetz.'),
       ),
     ),
-    keyLearning('Im Ernstfall entscheidet deine Absicherung ueber alles', C.red),
+    keyLearning('Betriebliche Altersvorsorge: der Bonus den dein Vertrag garantiert', C.green),
     igHandle(),
   );
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // SLIDE 2 — DATEN: Witwenrente Versorgungsluecke
-  // Akt 1 | Spannung | Kontext mit Zahlen
-  // ═══════════════════════════════════════════════════════════════════════════
+  // ── SLIDE 2: STATISTIK ────────────────────────────────────────────────────
+  // Big Stat + Balkendiagramm Nutzung
 
   const slide2 = slideRoot(C.bg,
-    topRow('RISIKOLEBENSVERSICHERUNG', C.cardBg),
+    topRow('BETRIEBLICHE ALTERSVORSORGE', C.cardBg),
     visualBlock(
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '20px' } },
-        headline('Was der Staat', 58),
-        headline('zahlt — und', 58),
-        headline('was fehlt.', 58),
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '20px' } },
+        headline('Wer nutzt', 58),
+        headline('seinen Anspruch?', 58),
       ),
-      // Bar-Diagramm: Einkommen vs. Witwenrente vs. Luecke
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '20px' } },
-        // Row 1: Bruttoeinkommen
-        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px' } },
-          h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
-            h('span', { style: { fontSize: '24px', fontWeight: 700, color: C.text } }, 'Bruttoeinkommen Familie'),
-            h('span', { style: { fontSize: '24px', fontWeight: 800, color: C.text } }, '3.500 EUR'),
-          ),
-          h('div', { style: { display: 'flex', height: '32px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '8px', overflow: 'hidden' } },
-            h('div', { style: { display: 'flex', width: '100%', height: '32px', backgroundColor: 'rgba(255,255,255,0.35)', borderRadius: '8px' } }),
-          ),
-        ),
-        // Row 2: Kleine Witwenrente
-        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px' } },
-          h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
-            h('span', { style: { fontSize: '24px', fontWeight: 700, color: C.textSoft } }, 'Kleine Witwenrente (Staat)'),
-            h('span', { style: { fontSize: '24px', fontWeight: 800, color: C.gold } }, '700 EUR'),
-          ),
-          h('div', { style: { display: 'flex', height: '32px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '8px', overflow: 'hidden' } },
-            h('div', { style: { display: 'flex', width: '20%', height: '32px', backgroundColor: C.gold, borderRadius: '8px' } }),
-          ),
-        ),
-        // Row 3: Luecke
-        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px' } },
-          h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
-            h('span', { style: { fontSize: '24px', fontWeight: 700, color: C.red } }, 'Monatliche Versorgungsluecke'),
-            h('span', { style: { fontSize: '24px', fontWeight: 800, color: C.red } }, '-2.800 EUR'),
-          ),
-          h('div', { style: { display: 'flex', height: '32px', backgroundColor: 'rgba(239,68,68,0.1)', borderRadius: '8px', overflow: 'hidden' } },
-            h('div', { style: { display: 'flex', width: '80%', height: '32px', backgroundColor: 'rgba(239,68,68,0.7)', borderRadius: '8px' } }),
-          ),
+      // Grosszahl
+      h('div', {
+        style: {
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '24px',
+          padding: '28px 36px', marginBottom: '18px',
+          border: '2px solid rgba(239,68,68,0.3)',
+        },
+      },
+        h('span', { style: { fontSize: '130px', fontWeight: 800, color: C.red, lineHeight: '1' } }, '54%'),
+        h('span', { style: { fontSize: '28px', fontWeight: 600, color: C.textSoft, marginTop: '8px', textAlign: 'center' } },
+          'der Arbeitnehmer haben gar keine bAV'),
+        h('span', { style: { fontSize: '22px', fontWeight: 400, color: C.textMuted, marginTop: '6px' } }, 'Quelle: BMAS Betriebsrentenreport 2025'),
+      ),
+      // Balken: bAV-Nutzung nach Betriebsgroesse
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px' } },
+        h('span', { style: { fontSize: '24px', fontWeight: 700, color: C.textMuted, letterSpacing: '2px', marginBottom: '4px' } }, 'NUTZUNG NACH UNTERNEHMENSGROESSE'),
+        ...[
+          { label: 'Grossunternehmen (500+)', pct: 78, color: C.green },
+          { label: 'Mittelstand (50-499)', pct: 52, color: C.gold },
+          { label: 'Kleinbetriebe (1-49)', pct: 29, color: C.red },
+        ].map(r =>
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
+            h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
+              h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.textSoft } }, r.label),
+              h('span', { style: { fontSize: '22px', fontWeight: 800, color: r.color } }, `${r.pct}%`),
+            ),
+            h('div', { style: { display: 'flex', height: '24px', backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: '6px', overflow: 'hidden' } },
+              h('div', { style: { display: 'flex', width: `${r.pct}%`, height: '24px', backgroundColor: r.color, borderRadius: '6px', opacity: '0.85' } }),
+            ),
+          )
         ),
       ),
     ),
-    keyLearning('Die kleine Witwenrente deckt nur 20% des Familieneinkommens', C.red),
+    keyLearning('Besonders in kleinen Betrieben lässt man bares Geld liegen', C.red),
     igHandle(),
   );
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // SLIDE 3 — PROBLEM: Was Menschen glauben vs. was wirklich passiert
-  // Akt 1 | Spannung | Die Konsequenz
-  // ═══════════════════════════════════════════════════════════════════════════
-
-  // SVG: Funnel (Dreistufig)
-  const funnelSvg = `<svg width="880" height="280" viewBox="0 0 880 280" xmlns="http://www.w3.org/2000/svg">
-    <rect x="40" y="0" width="800" height="72" rx="10" fill="rgba(255,255,255,0.18)"/>
-    <line x1="40" y1="72" x2="160" y2="144" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
-    <line x1="840" y1="72" x2="720" y2="144" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
-    <rect x="160" y="86" width="560" height="72" rx="10" fill="rgba(245,158,11,0.3)"/>
-    <line x1="160" y1="158" x2="280" y2="210" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
-    <line x1="720" y1="158" x2="600" y2="210" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
-    <rect x="280" y="202" width="320" height="72" rx="10" fill="rgba(239,68,68,0.5)"/>
-  </svg>`;
-  const funnelSrc = `data:image/svg+xml;base64,${Buffer.from(funnelSvg).toString('base64')}`;
+  // ── SLIDE 3: PROBLEM-FLOW ─────────────────────────────────────────────────
+  // Flow: Kein bAV -> Rentenlücke wächst
 
   const slide3 = slideRoot(C.bgDark,
-    topRow('RISIKOLEBENSVERSICHERUNG', C.cardBg),
+    topRow('BETRIEBLICHE ALTERSVORSORGE', C.cardBg),
     visualBlock(
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '16px' } },
-        headline('So schrumpft', 60),
-        headline('die Absicherung', 60),
-        headline('im Todesfall.', 60),
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '22px' } },
+        headline('Was passiert', 60),
+        headline('ohne bAV?', 60),
       ),
-      h('img', { src: funnelSrc, width: 880, height: 280, style: { objectFit: 'contain' } }),
-      // Labels neben dem Funnel
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '10px' } },
-        h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 20px' } },
-          h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.textSoft } }, 'Letztes Nettogehalt'),
-          h('span', { style: { fontSize: '26px', fontWeight: 800, color: C.text } }, '3.500 EUR/Monat'),
-        ),
-        h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 20px' } },
-          h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.gold } }, 'Staatliche Witwenrente'),
-          h('span', { style: { fontSize: '26px', fontWeight: 800, color: C.gold } }, '700 EUR/Monat'),
-        ),
-        h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 20px', backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '10px' } },
-          h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.red } }, 'Was wirklich bleibt'),
-          h('span', { style: { fontSize: '26px', fontWeight: 800, color: C.red } }, 'Nichts sicher'),
+      // Flow-Diagramm: 4 Stufen
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px' } },
+        ...[
+          { step: '01', title: 'Kein bAV-Vertrag', desc: 'Arbeitgeberzuschuss (15%) verfällt — dieses Geld bekommst du nie zurück', color: C.textSoft, bg: 'rgba(255,255,255,0.07)' },
+          { step: '02', title: 'Steuervorteil verspielt', desc: 'Bis 4% der Beitragsb.grenze = 3.624 EUR/Jahr könnten steuerfrei fliessen', color: C.gold, bg: 'rgba(245,158,11,0.1)' },
+          { step: '03', title: 'Rentenluecke vergroessert sich', desc: '13,5 Jahre nach Renteneintritt sind die Ersparnisse aufgebraucht — ohne Puffer', color: C.red, bg: 'rgba(239,68,68,0.1)' },
+          { step: '04', title: 'Altersarmut droht', desc: 'Gesetzliche Rente deckt im Schnitt 48% des letzten Nettolohns', color: C.red, bg: 'rgba(239,68,68,0.18)' },
+        ].map((s, i) =>
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '0px' } },
+            h('div', {
+              style: {
+                display: 'flex', alignItems: 'center', gap: '18px',
+                backgroundColor: s.bg, borderRadius: '16px',
+                padding: '18px 24px',
+                border: `1px solid ${s.color}30`,
+              },
+            },
+              h('span', { style: { fontSize: '32px', fontWeight: 800, color: s.color, minWidth: '44px' } }, s.step),
+              h('div', { style: { display: 'flex', flexDirection: 'column', gap: '3px', flex: '1' } },
+                h('span', { style: { fontSize: '24px', fontWeight: 700, color: C.text } }, s.title),
+                h('span', { style: { fontSize: '20px', fontWeight: 400, color: C.textMuted, lineHeight: '1.4' } }, s.desc),
+              ),
+            ),
+            i < 3 ? h('div', { style: { display: 'flex', justifyContent: 'flex-start', paddingLeft: '36px' } },
+              h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center' } },
+                h('div', { style: { display: 'flex', width: '3px', height: '16px', backgroundColor: 'rgba(255,255,255,0.15)' } }),
+                h('div', { style: { display: 'flex', width: '0px', height: '0px', borderLeft: '8px solid transparent', borderRight: '8px solid transparent', borderTop: '10px solid rgba(255,255,255,0.15)' } }),
+              ),
+            ) : undefined,
+          )
         ),
       ),
     ),
-    keyLearning('Kinder, Miete, Kredite — alles muss alleine gestemmt werden', C.red),
+    keyLearning('Jedes Jahr ohne bAV kostet dich den Arbeitgeberzuschuss für immer', C.red),
     igHandle(),
   );
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // SLIDE 4 — WENDEPUNKT: Erwartung vs. Realitat
-  // Akt 2 | Aufloesung | Der Irrtum wird aufgedeckt
-  // ═══════════════════════════════════════════════════════════════════════════
+  // ── SLIDE 4: ERWARTUNG vs. REALITÄT ──────────────────────────────────────
 
   const slide4 = slideRoot(C.bg,
     topRow('DAS IST DER IRRTUM', 'rgba(245,158,11,0.25)'),
     visualBlock(
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '24px' } },
-        headline('Was du glaubst', 58),
-        headline('— und was stimmt.', 58),
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '22px' } },
+        headline('Was die meisten', 58),
+        headline('denken — und', 58),
+        headline('was stimmt.', 58),
       ),
-      h('div', { style: { display: 'flex', gap: '18px' } },
+      h('div', { style: { display: 'flex', gap: '16px' } },
         // Erwartung (links)
         h('div', {
           style: {
             display: 'flex', flexDirection: 'column', flex: '1',
-            backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '20px',
-            padding: '32px 28px', gap: '16px',
-            border: '2px solid rgba(255,255,255,0.15)',
+            backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '20px',
+            padding: '28px 24px', gap: '14px',
+            border: '2px solid rgba(255,255,255,0.12)',
           },
         },
-          h('span', { style: { fontSize: '20px', fontWeight: 700, color: C.textMuted, letterSpacing: '2.5px' } }, 'ERWARTUNG'),
+          h('span', { style: { fontSize: '20px', fontWeight: 700, color: C.textMuted, letterSpacing: '2.5px' } }, 'MYTHOS'),
           h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: C.border, borderRadius: '2px' } }),
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textSoft, lineHeight: '1.55' } }, '"Mein Arbeitgeber sichert mich ab."'),
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textSoft, lineHeight: '1.55', marginTop: '10px' } }, '"Der Staat zahlt genug."'),
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textSoft, lineHeight: '1.55', marginTop: '10px' } }, '"Das passiert mir nicht."'),
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px' } },
+            ...[
+              '"Das lohnt sich nur für Gutverdiener."',
+              '"Mein AG zahlt doch gar nichts."',
+              '"Ich komme eh nicht an das Geld."',
+            ].map(m =>
+              h('div', { style: { display: 'flex', alignItems: 'flex-start', gap: '10px' } },
+                h('div', { style: { display: 'flex', width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'rgba(239,68,68,0.5)', marginTop: '10px', minWidth: '8px' } }),
+                h('span', { style: { fontSize: '22px', fontWeight: 600, color: 'rgba(255,255,255,0.55)', lineHeight: '1.5' } }, m),
+              )
+            ),
+          ),
         ),
-        // Realitaet (rechts)
+        // Realität (rechts)
         h('div', {
           style: {
             display: 'flex', flexDirection: 'column', flex: '1',
             backgroundColor: '#FFFFFF', borderRadius: '20px',
-            padding: '32px 28px', gap: '16px',
+            padding: '28px 24px', gap: '14px',
           },
         },
           h('span', { style: { fontSize: '20px', fontWeight: 700, color: 'rgba(0,31,97,0.5)', letterSpacing: '2.5px' } }, 'REALITAET'),
           h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(0,31,97,0.15)', borderRadius: '2px' } }),
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: '#001F61', lineHeight: '1.55' } }, 'Nur in Ausnahmefaellen — nicht standardmaessig.'),
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: '#001F61', lineHeight: '1.55', marginTop: '10px' } }, 'Nur 20% des Einkommens — Luecke riesig.'),
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.red, lineHeight: '1.55', marginTop: '10px' } }, 'Jeder 4. erlebt einen Ernstfall vor der Rente.'),
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px' } },
+            ...[
+              { text: 'Lohnt sich schon ab 1.500 EUR Brutto — AG-Zuschuss gilt fuer alle.', color: '#10B981' },
+              { text: 'Pflicht seit 2019: mind. 15% muss dein AG dazulegen — per Gesetz.', color: '#10B981' },
+              { text: 'Ab 62 Jahren abrufbar. Flexibler als du denkst.', color: '#10B981' },
+            ].map(r =>
+              h('div', { style: { display: 'flex', alignItems: 'flex-start', gap: '10px' } },
+                h('div', { style: { display: 'flex', width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#10B981', marginTop: '10px', minWidth: '8px' } }),
+                h('span', { style: { fontSize: '22px', fontWeight: 600, color: '#001F61', lineHeight: '1.5' } }, r.text),
+              )
+            ),
+          ),
         ),
       ),
     ),
-    keyLearning('Du bist selbst verantwortlich fuer die Absicherung deiner Familie', C.gold),
+    keyLearning('Der Arbeitgeberzuschuss gilt gesetzlich fuer JEDEN — egal wie viel du verdienst', C.green),
     igHandle(),
   );
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // SLIDE 5 — LOESUNG: RLV Kosten vs. Leistung
-  // Akt 2 | Aufloesung | Die gute Nachricht
-  // ═══════════════════════════════════════════════════════════════════════════
+  // ── SLIDE 5: METHODE — 3 Hebel der bAV ────────────────────────────────────
 
-  const slide5 = slideRoot(C.bgDark,
-    topRow('SO FUNKTIONIERT ES', 'rgba(16,185,129,0.25)'),
-    visualBlock(
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '24px' } },
-        headline('Fuer 30 EUR/Monat:', 58),
-        headline('500.000 EUR', 58),
-        headline('Schutz fuer', 58),
-        headline('deine Familie.', 58),
-      ),
-      h('div', { style: { display: 'flex', gap: '20px' } },
-        // Links: Monatsbeitrag
-        h('div', {
-          style: {
-            display: 'flex', flexDirection: 'column', flex: '1',
-            backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: '20px',
-            padding: '36px 28px', gap: '14px',
-            border: '2px solid rgba(255,255,255,0.15)',
-          },
-        },
-          h('span', { style: { fontSize: '20px', fontWeight: 700, color: C.textMuted, letterSpacing: '2px' } }, 'MONATSBEITRAG'),
-          h('span', { style: { fontSize: '76px', fontWeight: 800, color: C.text, lineHeight: '1' } }, '30'),
-          h('span', { style: { fontSize: '30px', fontWeight: 600, color: C.textSoft } }, 'EUR / Monat'),
-          h('div', { style: { display: 'flex', height: '2px', backgroundColor: C.border, borderRadius: '1px', marginTop: '8px' } }),
-          h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4' } }, 'Mann, 30 Jahre, Nichtraucher, gesund — 20 Jahre Laufzeit'),
-        ),
-        // Rechts: Versicherungssumme
-        h('div', {
-          style: {
-            display: 'flex', flexDirection: 'column', flex: '1',
-            backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '20px',
-            padding: '36px 28px', gap: '14px',
-            border: '2px solid rgba(16,185,129,0.5)',
-          },
-        },
-          h('span', { style: { fontSize: '20px', fontWeight: 700, color: C.green, letterSpacing: '2px' } }, 'VERSICHERUNGSSUMME'),
-          h('span', { style: { fontSize: '44px', fontWeight: 800, color: C.text, lineHeight: '1.1' } }, '500.000'),
-          h('span', { style: { fontSize: '30px', fontWeight: 600, color: C.green } }, 'EUR im Todesfall'),
-          h('div', { style: { display: 'flex', height: '2px', backgroundColor: 'rgba(16,185,129,0.4)', borderRadius: '1px', marginTop: '8px' } }),
-          h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4' } }, 'Sofortige Einmalzahlung an deine Familie — steuerfrei'),
-        ),
-      ),
-    ),
-    keyLearning('RLV ist die guenstigste Absicherung, die es gibt', C.green),
-    igHandle(),
-  );
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  // SLIDE 6 — METHODE: 3 Faktoren fuer die richtige Versicherungssumme
-  // Akt 2 | Aufloesung | Konkrete Anleitung
-  // ═══════════════════════════════════════════════════════════════════════════
-
-  function faktorCard(num, title, desc, color, pct) {
+  function hebelCard(num, title, desc, value, color, pct) {
     return h('div', {
       style: {
         display: 'flex', flexDirection: 'column', gap: '10px',
         backgroundColor: C.cardBg, borderRadius: '18px',
-        padding: '24px 28px',
-        border: `1px solid ${color}40`,
+        padding: '22px 26px',
+        border: `1px solid ${color}30`,
       },
     },
-      h('div', { style: { display: 'flex', alignItems: 'center', gap: '18px' } },
-        h('span', { style: { fontSize: '38px', fontWeight: 800, color, minWidth: '54px' } }, num),
-        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px', flex: '1' } },
+      h('div', { style: { display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' } },
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '3px', flex: '1' } },
+          h('span', { style: { fontSize: '20px', fontWeight: 700, color, letterSpacing: '1.5px' } }, `HEBEL ${num}`),
           h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.text, lineHeight: '1.2' } }, title),
-          h('span', { style: { fontSize: '21px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4' } }, desc),
+          h('span', { style: { fontSize: '20px', fontWeight: 400, color: C.textMuted, lineHeight: '1.4' } }, desc),
+        ),
+        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px' } },
+          h('span', { style: { fontSize: '28px', fontWeight: 800, color, lineHeight: '1' } }, value),
         ),
       ),
       h('div', { style: { display: 'flex', height: '6px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' } },
@@ -412,49 +392,143 @@ async function main() {
     );
   }
 
-  const slide6 = slideRoot(C.bg,
-    topRow('DIE RICHTIGE SUMME', C.cardBg),
+  const slide5 = slideRoot(C.bgDark,
+    topRow('SO FUNKTIONIERT ES', 'rgba(16,185,129,0.25)'),
     visualBlock(
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '24px' } },
-        headline('3 Faktoren fuer', 60),
-        headline('deine optimale', 60),
-        headline('Summe.', 60),
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '22px' } },
+        headline('3 Hebel der', 62),
+        headline('betrieblichen', 62),
+        headline('Altersvorsorge.', 62),
       ),
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '16px' } },
-        faktorCard('01', 'Jahreseinkommen x 3-5', 'Basis: Bruttojahreseinkommen multipliziert mit Faktor 3 bis 5 — je nach Familiengroesse', C.green, 33),
-        faktorCard('02', 'Offene Kredite addieren', 'Hypothek, Autokredite, Konsumschulden — alles muss abgesichert werden', C.gold, 66),
-        faktorCard('03', 'Kindererziehungskosten', 'Pro Kind ca. 200.000 EUR bis zum 18. Lebensjahr einplanen', C.text, 100),
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px' } },
+        hebelCard('01', 'Entgeltumwandlung', 'Du wandelst Bruttolohn direkt um — vor Steuern und Sozialabgaben', 'Brutto = Netto', C.text, 33),
+        hebelCard('02', 'AG-Zuschuss (Pflicht)', 'Arbeitgeber legt mind. 15% deines Beitrags obendrauf — per Gesetz seit 2019', '+15% gratis', C.gold, 66),
+        hebelCard('03', 'Steuerfreiheit 2026', 'Bis 3.624 EUR/Jahr (4% BBG) komplett steuer- und sozialabgabenfrei einzahlen', '3.624 EUR/J', C.green, 100),
       ),
     ),
-    keyLearning('Faustregel: Mind. 500.000 EUR bei Familie mit Kindern und Immobilie', C.green),
+    keyLearning('Entgeltumwandlung + AG-Zuschuss + Steuerfreiheit = der mächtigste Spar-Hebel', C.green),
     igHandle(),
   );
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // SLIDE 7 — TAKEAWAYS: 4 Learnings mit Progressbalken
-  // Akt 3 | Abschluss | Zusammenfassung
-  // ═══════════════════════════════════════════════════════════════════════════
+  // ── SLIDE 6: RECHENBEISPIEL ────────────────────────────────────────────────
+  // 300 EUR Brutto -> was kommt rein, was kostet es dich netto
+
+  const flowArrowSvg = `<svg width="60" height="40" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+    <line x1="0" y1="20" x2="42" y2="20" stroke="rgba(255,255,255,0.3)" stroke-width="4"/>
+    <path d="M38,10 L54,20 L38,30" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+  const flowArrowSrc = `data:image/svg+xml;base64,${Buffer.from(flowArrowSvg).toString('base64')}`;
+
+  const slide6 = slideRoot(C.bg,
+    topRow('DAS RECHNET SICH SO', 'rgba(16,185,129,0.25)'),
+    visualBlock(
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '22px' } },
+        headline('300 EUR Brutto', 60),
+        headline('in die bAV —', 60),
+        headline('nur 167 EUR', 60),
+        headline('aus deiner Tasche.', 60),
+      ),
+      // Flussdiagramm
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
+        // Zeile 1: Brutto-Beitrag
+        h('div', {
+          style: {
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '16px', padding: '18px 28px',
+          },
+        },
+          h('span', { style: { fontSize: '24px', fontWeight: 700, color: C.text } }, 'Brutto-Beitrag'),
+          h('span', { style: { fontSize: '28px', fontWeight: 800, color: C.text } }, '300 EUR'),
+        ),
+        // Abzüge
+        h('div', { style: { display: 'flex', gap: '12px' } },
+          h('div', {
+            style: {
+              display: 'flex', flexDirection: 'column', flex: '1', gap: '6px',
+              backgroundColor: 'rgba(239,68,68,0.1)', borderRadius: '14px', padding: '16px 22px',
+              border: '1px solid rgba(239,68,68,0.25)',
+            },
+          },
+            h('span', { style: { fontSize: '20px', fontWeight: 600, color: C.red } }, 'Steuerersparnis'),
+            h('span', { style: { fontSize: '28px', fontWeight: 800, color: C.red } }, '-90 EUR'),
+            h('span', { style: { fontSize: '19px', fontWeight: 400, color: C.textMuted } }, '(ca. 30% Grenzsteuersatz)'),
+          ),
+          h('div', {
+            style: {
+              display: 'flex', flexDirection: 'column', flex: '1', gap: '6px',
+              backgroundColor: 'rgba(245,158,11,0.1)', borderRadius: '14px', padding: '16px 22px',
+              border: '1px solid rgba(245,158,11,0.25)',
+            },
+          },
+            h('span', { style: { fontSize: '20px', fontWeight: 600, color: C.gold } }, 'SV-Ersparnis'),
+            h('span', { style: { fontSize: '28px', fontWeight: 800, color: C.gold } }, '-43 EUR'),
+            h('span', { style: { fontSize: '19px', fontWeight: 400, color: C.textMuted } }, '(ca. 14,5% gesamt)'),
+          ),
+        ),
+        // Ergebnis
+        h('div', {
+          style: {
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '16px', padding: '20px 28px',
+            border: '2px solid rgba(16,185,129,0.45)',
+          },
+        },
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '3px' } },
+            h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.textMuted } }, 'Dein Nettobeitrag'),
+            h('span', { style: { fontSize: '20px', fontWeight: 400, color: C.textMuted } }, 'was du wirklich spürst'),
+          ),
+          h('span', { style: { fontSize: '38px', fontWeight: 800, color: C.green } }, '167 EUR'),
+        ),
+        // AG-Zuschuss
+        h('div', {
+          style: {
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            backgroundColor: 'rgba(16,185,129,0.06)', borderRadius: '16px', padding: '16px 28px',
+            border: '1px solid rgba(16,185,129,0.2)',
+          },
+        },
+          h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.green } }, '+ AG-Zuschuss (15%)'),
+          h('span', { style: { fontSize: '26px', fontWeight: 800, color: C.green } }, '+45 EUR'),
+        ),
+        // Total
+        h('div', {
+          style: {
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            backgroundColor: 'rgba(16,185,129,0.22)', borderRadius: '16px', padding: '18px 28px',
+            border: '2px solid #10B981',
+          },
+        },
+          h('span', { style: { fontSize: '24px', fontWeight: 700, color: C.text } }, 'Fliessen in deine Rente'),
+          h('span', { style: { fontSize: '36px', fontWeight: 800, color: C.text } }, '345 EUR'),
+        ),
+      ),
+    ),
+    keyLearning('167 EUR aus eigener Tasche -> 345 EUR fuer die Rente: Hebel 2,1x', C.green),
+    igHandle(),
+  );
+
+  // ── SLIDE 7: TAKEAWAYS ────────────────────────────────────────────────────
 
   const learnings = [
-    { num: '01', text: 'Kleine Witwenrente deckt nur 20% des Einkommens — Luecke ist riesig', pct: 25, color: C.red },
-    { num: '02', text: 'RLV Beitraege beginnen ab 15-30 EUR/Monat — guenstigste Absicherung', pct: 50, color: C.gold },
-    { num: '03', text: 'Versicherungssumme = 3-5x Jahreseinkommen + Schulden + Kinder', pct: 75, color: C.text },
-    { num: '04', text: 'Je juenger + gesunder du bist, desto guenstiger wird die Praemie', pct: 100, color: C.green },
+    { num: '01', text: 'AG-Zuschuss 15% ist Pflicht seit 2019 — frag aktiv deinen Arbeitgeber danach', pct: 25, color: C.red },
+    { num: '02', text: 'Steuer- und sozialabgabenfrei bis 3.624 EUR/Jahr — nutze das Limit aus', pct: 50, color: C.gold },
+    { num: '03', text: 'Nettobeitrag halbiert sich durch Steuern + SV-Ersparnis — so billig wie selten', pct: 75, color: C.text },
+    { num: '04', text: 'Je früher du startest, desto laenger arbeitet der Zinseszins für dich', pct: 100, color: C.green },
   ];
 
   const slide7 = slideRoot(C.bgDark,
     topRow('DEINE TAKEAWAYS', 'rgba(16,185,129,0.2)'),
     visualBlock(
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '20px' } },
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '18px' } },
         headline('Was du jetzt', 60),
         headline('wissen musst.', 60),
       ),
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px' } },
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '12px' } },
         ...learnings.map(l =>
-          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px', padding: '22px 26px', backgroundColor: 'rgba(255,255,255,0.07)', borderRadius: '18px' } },
-            h('div', { style: { display: 'flex', alignItems: 'center', gap: '18px' } },
-              h('span', { style: { fontSize: '36px', fontWeight: 800, color: l.color, minWidth: '52px' } }, l.num),
-              h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.text, lineHeight: '1.3', flex: '1' } }, l.text),
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '9px', padding: '20px 24px', backgroundColor: 'rgba(255,255,255,0.07)', borderRadius: '18px' } },
+            h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
+              h('span', { style: { fontSize: '34px', fontWeight: 800, color: l.color, minWidth: '50px' } }, l.num),
+              h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.text, lineHeight: '1.35', flex: '1' } }, l.text),
             ),
             h('div', { style: { display: 'flex', height: '5px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' } },
               h('div', { style: { display: 'flex', width: `${l.pct}%`, height: '5px', backgroundColor: l.color, borderRadius: '3px' } }),
@@ -463,16 +537,12 @@ async function main() {
         ),
       ),
     ),
-    keyLearning('Fruehzeitig abschliessen = guenstigste Praemie + maximaler Schutz', C.green),
+    keyLearning('bAV-Vertrag ist der Spar-Hebel mit dem besten Kosten-Nutzen-Verhaeltnis', C.green),
     igHandle(),
   );
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // SLIDE 8 — CTA
-  // Akt 3 | Abschluss | Handlungsaufruf
-  // ═══════════════════════════════════════════════════════════════════════════
+  // ── SLIDE 8: CTA ──────────────────────────────────────────────────────────
 
-  // SVG: Ring mit Checkmark
   const ctaRingSvg = `<svg width="260" height="260" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
     <circle cx="130" cy="130" r="110" stroke="rgba(255,255,255,0.08)" stroke-width="18" fill="none"/>
     <path d="M130,20 A110,110 0 1,1 129.99,20"
@@ -496,16 +566,16 @@ async function main() {
             style: { borderRadius: '20px', objectFit: 'cover', position: 'absolute' },
           }),
         ),
-        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', marginTop: '20px' } },
-          headline('Ist deine Familie', 56),
-          headline('abgesichert?', 56),
+        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', marginTop: '20px' } },
+          headline('Nutzt du', 58),
+          headline('deinen bAV-Anspruch?', 54),
         ),
         h('span', {
           style: {
             fontSize: '28px', fontWeight: 500, color: C.textMuted,
-            lineHeight: '1.5', textAlign: 'center', marginTop: '10px',
+            lineHeight: '1.5', textAlign: 'center', marginTop: '12px',
           },
-        }, 'Schreib mir — ich pruefe deine Versorgungsluecke kostenlos und zeige dir den besten Schutz.'),
+        }, 'Schreib mir — ich pruefe deinen bAV-Vertrag kostenlos und zeige dir, wie viel Steuer du sparen kannst.'),
         h('div', {
           style: {
             display: 'flex', marginTop: '20px', padding: '18px 40px',
@@ -517,7 +587,7 @@ async function main() {
         ),
         h('span', {
           style: { fontSize: '28px', fontWeight: 700, color: C.textMuted, marginTop: '16px' },
-        }, 'Folge @benarofinanzen fuer mehr Finanztipps'),
+        }, 'Folge @benarofinanzen fuer mehr'),
       ),
     ),
     h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '12px' } },
@@ -525,7 +595,7 @@ async function main() {
     ),
   );
 
-  // ── RENDER ALL SLIDES ────────────────────────────────────────────────────────
+  // ── RENDER ALL SLIDES ─────────────────────────────────────────────────────
 
   const slides = [slide1, slide2, slide3, slide4, slide5, slide6, slide7, slide8];
 
