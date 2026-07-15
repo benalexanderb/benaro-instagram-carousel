@@ -1,8 +1,10 @@
+// Carousel: Vorabpauschale 2026 — Die stille ETF-Steuer die alle trifft
+// Inspiration: @finanzcopilot — Basiszins 3.20% 2026, hochaktuell fuer alle thesaurierenden ETF-Anleger
 const fs = require('fs');
 const path = require('path');
 
 async function main() {
-  const satori = (await import('satori')).default;
+  const satori = (await import('satori')).default || require('satori');
   const { Resvg } = require('@resvg/resvg-js');
 
   const fontDir = path.join(__dirname, 'node_modules/@fontsource/outfit/files');
@@ -27,6 +29,10 @@ async function main() {
     red: '#EF4444',
     gold: '#F59E0B',
   };
+
+  // ======================================================================
+  // VORABPAUSCHALE 2026 — Die stille ETF-Steuer die alle trifft
+  // ======================================================================
 
   const W = 1080, H = 1350;
 
@@ -98,438 +104,328 @@ async function main() {
   }
 
   // === SLIDE 1: HOOK ===
+  // Hook: shocking reveal — eine Steuer die automatisch abgebucht wird, ohne dass man etwas tut
   const slide1 = h('div', { style: {
     display:'flex', flexDirection:'column', width:W, height:H,
     padding:'70px', backgroundColor: C.bg, fontFamily:'Outfit'
   }},
     h('div', { style: { display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'24px' }},
-      badge('RENTENFALLE'),
+      badge('ACHTUNG ETF-ANLEGER'),
       logo()
     ),
-    headline('5,8 Mio. Selbst-staendige sehen das nicht kommen', 58),
-    subline('Das kostet sie den Ruhestand'),
+    headline('Diese Steuer wird dir im Januar einfach abgebucht', 58),
+    subline('Und 90% der ETF-Anleger wissen es nicht'),
 
     h('div', { style: { display:'flex', flex:'1', flexDirection:'column', justifyContent:'center', gap:'20px' }},
-      h('div', { style: {
-        display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
-        backgroundColor: C.cardBg, borderRadius:'24px', padding:'50px 40px', gap:'12px',
-        border:`2px solid ${C.border}`
-      }},
-        h('span', { style: { fontSize:'120px', fontWeight:800, color: C.red, lineHeight:'1', letterSpacing:'-4px' }}, '80%'),
-        h('span', { style: { fontSize:'30px', fontWeight:600, color: C.textSoft, textAlign:'center', lineHeight:'1.4' }},
-          'der Selbststaendigen in Deutschland haben KEINE ausreichende Altersvorsorge'
+      // Two contrast cards: Mythos vs. Fakt
+      h('div', { style: { display:'flex', gap:'16px' }},
+        h('div', { style: {
+          display:'flex', flex:'1', flexDirection:'column',
+          backgroundColor:'rgba(239,68,68,0.10)', borderRadius:'20px', padding:'30px', gap:'12px',
+          border:`2px solid rgba(239,68,68,0.4)`
+        }},
+          h('span', { style: { fontSize:'32px', fontWeight:800, color: C.red, lineHeight:'1' }}, 'MYTHOS'),
+          h('div', { style: { display:'flex', width:'100%', height:'3px', backgroundColor:'rgba(239,68,68,0.3)', borderRadius:'2px' }}),
+          h('span', { style: { fontSize:'26px', fontWeight:600, color: C.textSoft, lineHeight:'1.4' }},
+            'Thesaurierend bedeutet keine Steuer bis zum Verkauf'
+          )
+        ),
+        h('div', { style: {
+          display:'flex', flex:'1', flexDirection:'column',
+          backgroundColor:'rgba(16,185,129,0.10)', borderRadius:'20px', padding:'30px', gap:'12px',
+          border:`2px solid rgba(16,185,129,0.4)`
+        }},
+          h('span', { style: { fontSize:'32px', fontWeight:800, color: C.green, lineHeight:'1' }}, 'FAKT'),
+          h('div', { style: { display:'flex', width:'100%', height:'3px', backgroundColor:'rgba(16,185,129,0.3)', borderRadius:'2px' }}),
+          h('span', { style: { fontSize:'26px', fontWeight:600, color: C.textSoft, lineHeight:'1.4' }},
+            'Vorabpauschale wird JEDES JAHR automatisch besteuert'
+          )
         )
       ),
-      h('div', { style: { display:'flex', gap:'14px' }},
-        h('div', { style: { display:'flex', flex:'1', flexDirection:'column', alignItems:'center', backgroundColor: C.cardBg, borderRadius:'16px', padding:'18px 12px', gap:'8px' }},
-          h('span', { style: { fontSize:'32px', fontWeight:800, color: C.gold }}, '5,8 Mio.'),
-          h('span', { style: { fontSize:'20px', fontWeight:500, color: C.textMuted, textAlign:'center' }}, 'ohne Pflicht-rentenversicherung')
-        ),
-        h('div', { style: { display:'flex', flex:'1', flexDirection:'column', alignItems:'center', backgroundColor: C.cardBg, borderRadius:'16px', padding:'18px 12px', gap:'8px' }},
-          h('span', { style: { fontSize:'32px', fontWeight:800, color: C.red }}, '800 EUR'),
-          h('span', { style: { fontSize:'20px', fontWeight:500, color: C.textMuted, textAlign:'center' }}, 'max. gesetzl. Rente freiwillig')
-        ),
-        h('div', { style: { display:'flex', flex:'1', flexDirection:'column', alignItems:'center', backgroundColor: C.cardBg, borderRadius:'16px', padding:'18px 12px', gap:'8px' }},
-          h('span', { style: { fontSize:'32px', fontWeight:800, color: C.green }}, '2027'),
-          h('span', { style: { fontSize:'20px', fontWeight:500, color: C.textMuted, textAlign:'center' }}, 'neues Altersvorsorge-depot kommt')
+      // Basiszins stat
+      h('div', { style: {
+        display:'flex', alignItems:'center', gap:'24px',
+        backgroundColor: C.cardBg, borderRadius:'18px', padding:'28px 32px'
+      }},
+        h('div', { style: { display:'flex', flexDirection:'column', gap:'6px' }},
+          h('span', { style: { fontSize:'22px', fontWeight:600, color: C.textMuted, letterSpacing:'2px' }},
+            'BASISZINS 2026'
+          ),
+          h('span', { style: { fontSize:'76px', fontWeight:800, color: C.text, lineHeight:'1', letterSpacing:'-2px' }},
+            '3,20%'
+          ),
+          h('span', { style: { fontSize:'25px', fontWeight:500, color: C.textMuted }},
+            'Hoechster Wert seit 15 Jahren'
+          )
         )
       )
     ),
 
-    keyLearning('Bist du selbststaendig? Dann geht es um DEINE Rente.', C.red),
+    keyLearning('Was die Vorabpauschale ist und wie du dich vorbereitest', C.green),
     footer()
   );
 
-  // === SLIDE 2: STAT HERO - Rentenluecke ===
-  const barChartSvg = `<svg width="880" height="300" viewBox="0 0 880 300" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9"/>
-        <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.4"/>
-      </linearGradient>
-      <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#EF4444"/>
-        <stop offset="100%" stop-color="#EF4444" stop-opacity="0.5"/>
-      </linearGradient>
-      <linearGradient id="g3" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#10B981"/>
-        <stop offset="100%" stop-color="#10B981" stop-opacity="0.5"/>
-      </linearGradient>
-    </defs>
-    <rect x="60" y="40" width="180" height="220" rx="12" fill="url(#g1)"/>
-    <rect x="350" y="195" width="180" height="65" rx="12" fill="url(#g2)"/>
-    <rect x="640" y="115" width="180" height="145" rx="12" fill="url(#g3)"/>
-    <line x1="440" y1="195" x2="720" y2="115" stroke="rgba(255,255,255,0.25)" stroke-width="2" stroke-dasharray="8,5"/>
-    <circle cx="440" cy="195" r="6" fill="#EF4444"/>
-    <circle cx="720" cy="115" r="6" fill="#10B981"/>
-  </svg>`;
-  const barChartSrc = 'data:image/svg+xml;base64,' + Buffer.from(barChartSvg).toString('base64');
-
+  // === SLIDE 2: WIE FUNKTIONIERT DIE VORABPAUSCHALE ===
   const slide2 = h('div', { style: {
     display:'flex', flexDirection:'column', width:W, height:H,
     padding:'70px', backgroundColor: C.bgDark, fontFamily:'Outfit'
   }},
     h('div', { style: { display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'18px' }},
-      badge('DIE RENTENLUECKE'),
+      badge('DIE ERKLAERUNG'),
       logoSmall()
     ),
-    headline('3.200 EUR Luecke pro Monat', 62),
-    subline('Das ist die Realitaet fuer Selbststaendige'),
+    headline('So funktioniert die Vorabpauschale', 58),
+    subline('Jährliche Mindestbesteuerung fuer thesaurierende ETFs'),
 
     h('div', { style: { display:'flex', flex:'1', flexDirection:'column', justifyContent:'center', gap:'16px' }},
-      h('img', { src: barChartSrc, width:880, height:300, style: { objectFit:'contain' }}),
-      h('div', { style: { display:'flex', gap:'14px' }},
-        h('div', { style: { display:'flex', flex:'1', flexDirection:'column', alignItems:'center', gap:'6px' }},
-          h('span', { style: { fontSize:'40px', fontWeight:800, color: C.text }}, '4.000'),
-          h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted }}, 'Nettoeinkommen'),
-          h('span', { style: { fontSize:'20px', fontWeight:400, color: C.textMuted }}, '(heute)')
-        ),
-        h('div', { style: { display:'flex', flex:'1', flexDirection:'column', alignItems:'center', gap:'6px' }},
-          h('span', { style: { fontSize:'40px', fontWeight:800, color: C.red }}, '800'),
-          h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted }}, 'gesetzl. Rente'),
-          h('span', { style: { fontSize:'20px', fontWeight:400, color: C.textMuted }}, '(maximum)')
-        ),
-        h('div', { style: { display:'flex', flex:'1', flexDirection:'column', alignItems:'center', gap:'6px' }},
-          h('span', { style: { fontSize:'40px', fontWeight:800, color: C.green }}, '2.200'),
-          h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted }}, 'realer Bedarf'),
-          h('span', { style: { fontSize:'20px', fontWeight:400, color: C.textMuted }}, '(Zielgroesse)')
-        )
-      ),
-      h('div', { style: {
-        display:'flex', alignItems:'center', gap:'14px',
-        backgroundColor:'rgba(239,68,68,0.12)', borderRadius:'16px', padding:'20px 28px',
-        border:'1px solid rgba(239,68,68,0.3)'
-      }},
-        h('div', { style: { display:'flex', width:'12px', height:'12px', borderRadius:'6px', backgroundColor: C.red, flexShrink:'0' }}),
-        h('span', { style: { fontSize:'28px', fontWeight:600, color: C.red, lineHeight:'1.4' }},
-          'Rentenluecke: 1.400 EUR/Monat = 16.800 EUR im Jahr'
+      ...[
+        { num:'01', title:'Thesaurierender ETF reinvestiert', desc:'Kein Geld kommt auf dein Konto — ETF reinvestiert Dividenden automatisch', color:'rgba(255,255,255,0.12)' },
+        { num:'02', title:'Finanzamt besteuert trotzdem', desc:'Auf Basis des Basiszinses wird eine fiktive Mindestrendite angesetzt', color:'rgba(245,158,11,0.12)' },
+        { num:'03', title:'Abbuchung im Januar', desc:'Die Steuer wird automatisch Anfang Januar vom Verrechnungskonto abgezogen', color:'rgba(239,68,68,0.12)' },
+      ].map(item =>
+        h('div', { style: {
+          display:'flex', alignItems:'flex-start', gap:'20px',
+          backgroundColor: item.color, borderRadius:'18px', padding:'22px 28px'
+        }},
+          h('div', { style: {
+            display:'flex', width:'50px', height:'50px', borderRadius:'13px',
+            backgroundColor:'rgba(255,255,255,0.12)', alignItems:'center', justifyContent:'center', flexShrink:'0'
+          }},
+            h('span', { style: { fontSize:'22px', fontWeight:800, color: C.text }}, item.num)
+          ),
+          h('div', { style: { display:'flex', flexDirection:'column', gap:'5px' }},
+            h('span', { style: { fontSize:'28px', fontWeight:700, color: C.text, lineHeight:'1.2' }}, item.title),
+            h('span', { style: { fontSize:'23px', fontWeight:500, color: C.textMuted, lineHeight:'1.4' }}, item.desc)
+          )
         )
       )
     ),
 
-    keyLearning('Ohne aktive Vorsorge wird der Ruhestand zur Armutsfalle.', C.red),
+    keyLearning('Gilt nur fuer THESAURIERENDE ETFs — ausschuettende zahlen sofort Steuer', C.text),
     footer()
   );
 
-  // === SLIDE 3: PROBLEM FLOW ===
+  // === SLIDE 3: KONKRETE BERECHNUNG ===
   const slide3 = h('div', { style: {
     display:'flex', flexDirection:'column', width:W, height:H,
     padding:'70px', backgroundColor: C.bg, fontFamily:'Outfit'
   }},
     h('div', { style: { display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'18px' }},
-      badge('WAS OHNE PLAN PASSIERT'),
+      badge('DIE FORMEL'),
       logoSmall()
     ),
-    headline('Der Weg in die Altersarmut', 60),
-    subline('So laeuft es ab wenn man nichts tut'),
+    headline('Was du konkret zahlen wirst', 60),
+    subline('Basiszins 2026: 3,20% — Formel: Depotwert x 3,20% x 0,70'),
 
-    h('div', { style: { display:'flex', flex:'1', flexDirection:'column', justifyContent:'center', gap:'0px' }},
+    h('div', { style: { display:'flex', flex:'1', flexDirection:'column', justifyContent:'center', gap:'18px' }},
+      // Formula highlight
       h('div', { style: {
-        display:'flex', flexDirection:'column', gap:'8px',
-        backgroundColor: C.cardBg, borderRadius:'20px', padding:'28px 32px',
-        border:'1px solid rgba(255,255,255,0.10)'
+        display:'flex', flexDirection:'column', backgroundColor:'rgba(255,255,255,0.07)', borderRadius:'20px',
+        padding:'26px 32px', gap:'12px', border:'1px solid rgba(255,255,255,0.15)'
       }},
-        h('div', { style: { display:'flex', alignItems:'center', gap:'16px' }},
-          h('div', { style: {
-            display:'flex', width:'48px', height:'48px', borderRadius:'14px',
-            backgroundColor:'rgba(255,255,255,0.15)', alignItems:'center', justifyContent:'center', flexShrink:'0'
-          }},
-            h('span', { style: { fontSize:'26px', fontWeight:800, color: C.text }}, '01')
-          ),
-          h('div', { style: { display:'flex', flexDirection:'column', gap:'4px' }},
-            h('span', { style: { fontSize:'30px', fontWeight:700, color: C.text }}, 'Heute: Einkommen gut, kein Plan'),
-            h('span', { style: { fontSize:'24px', fontWeight:400, color: C.textMuted, lineHeight:'1.4' }},
-              'Selbststaendige zahlen keine gesetzliche Rentenversicherung. Jahrelang laeuft es gut.'
-            )
-          )
+        h('span', { style: { fontSize:'22px', fontWeight:700, letterSpacing:'2px', color: C.textMuted }}, 'FORMEL 2026'),
+        h('div', { style: { display:'flex', width:'100%', height:'2px', backgroundColor: C.border, borderRadius:'1px' }}),
+        h('span', { style: { fontSize:'30px', fontWeight:700, color: C.green, lineHeight:'1.5' }},
+          'Depotwert x 3,20% x 0,70 = Vorabpauschale'
+        ),
+        h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted }},
+          'davon 26,375% Abgeltungssteuer = Steuerbetrag'
         )
       ),
-      arrow(),
-      h('div', { style: {
-        display:'flex', flexDirection:'column', gap:'8px',
-        backgroundColor:'rgba(245,158,11,0.10)', borderRadius:'20px', padding:'28px 32px',
-        border:'1px solid rgba(245,158,11,0.25)'
-      }},
-        h('div', { style: { display:'flex', alignItems:'center', gap:'16px' }},
-          h('div', { style: {
-            display:'flex', width:'48px', height:'48px', borderRadius:'14px',
-            backgroundColor:'rgba(245,158,11,0.20)', alignItems:'center', justifyContent:'center', flexShrink:'0'
-          }},
-            h('span', { style: { fontSize:'26px', fontWeight:800, color: C.gold }}, '02')
+      // Depot size examples
+      ...[
+        { depot: '10.000 EUR', vp: '224 EUR', steuer: '59 EUR', fill: 20 },
+        { depot: '25.000 EUR', vp: '560 EUR', steuer: '148 EUR', fill: 50 },
+        { depot: '50.000 EUR', vp: '1.120 EUR', steuer: '295 EUR', fill: 100 },
+      ].map(item =>
+        h('div', { style: {
+          display:'flex', alignItems:'center', gap:'16px',
+          backgroundColor: C.cardBg, borderRadius:'14px', padding:'18px 24px'
+        }},
+          h('span', { style: { fontSize:'26px', fontWeight:700, color: C.text, minWidth:'170px' }}, item.depot),
+          h('div', { style: { display:'flex', flex:'1', height:'10px', backgroundColor:'rgba(255,255,255,0.1)', borderRadius:'5px', overflow:'hidden' }},
+            h('div', { style: { display:'flex', width:`${item.fill}%`, height:'10px', backgroundColor: C.green, borderRadius:'5px' }})
           ),
-          h('div', { style: { display:'flex', flexDirection:'column', gap:'4px' }},
-            h('span', { style: { fontSize:'30px', fontWeight:700, color: C.gold }}, 'Renteneintritt: Schock'),
-            h('span', { style: { fontSize:'24px', fontWeight:400, color: C.textMuted, lineHeight:'1.4' }},
-              'Privates Erspartes aufgebraucht oder reicht nur wenige Jahre. Kein laufender Puffer.'
-            )
-          )
+          h('span', { style: { fontSize:'26px', fontWeight:700, color: C.red, minWidth:'85px', textAlign:'right' }}, item.steuer)
         )
       ),
-      arrow(),
-      h('div', { style: {
-        display:'flex', flexDirection:'column', gap:'8px',
-        backgroundColor:'rgba(239,68,68,0.10)', borderRadius:'20px', padding:'28px 32px',
-        border:'1px solid rgba(239,68,68,0.25)'
-      }},
-        h('div', { style: { display:'flex', alignItems:'center', gap:'16px' }},
-          h('div', { style: {
-            display:'flex', width:'48px', height:'48px', borderRadius:'14px',
-            backgroundColor:'rgba(239,68,68,0.20)', alignItems:'center', justifyContent:'center', flexShrink:'0'
-          }},
-            h('span', { style: { fontSize:'26px', fontWeight:800, color: C.red }}, '03')
-          ),
-          h('div', { style: { display:'flex', flexDirection:'column', gap:'4px' }},
-            h('span', { style: { fontSize:'30px', fontWeight:700, color: C.red }}, 'Konsequenz: Altersarmut'),
-            h('span', { style: { fontSize:'24px', fontWeight:400, color: C.textMuted, lineHeight:'1.4' }},
-              'Abhaengig von Grundsicherung: 563 EUR/Monat. Ein Leben lang gearbeitet und am Ende nichts.'
-            )
-          )
-        )
+      h('div', { style: { display:'flex', justifyContent:'space-between', padding:'0 24px' }},
+        h('span', { style: { fontSize:'20px', fontWeight:500, color: C.textMuted }}, 'Depotwert'),
+        h('span', { style: { fontSize:'20px', fontWeight:500, color: C.red }}, 'Steuer* (abzugl. Freibetrag)')
       )
     ),
 
-    keyLearning('Selbststaendige muessen selbst vorsorgen. Der Staat springt nicht ein.', C.red),
+    keyLearning('50.000 EUR Depot = 295 EUR automatisch abgebucht im Januar 2027', C.red),
     footer()
   );
 
-  // === SLIDE 4: ERWARTUNG vs. REALITAET ===
+  // === SLIDE 4: 3 IRRTUEMER ===
   const slide4 = h('div', { style: {
     display:'flex', flexDirection:'column', width:W, height:H,
     padding:'70px', backgroundColor: C.bgDark, fontFamily:'Outfit'
   }},
     h('div', { style: { display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'18px' }},
-      badge('DER GROSSE IRRTUM'),
+      badge('3 IRRTUEMER'),
       logoSmall()
     ),
-    headline('Was die meisten denken', 62),
+    headline('Was ETF-Anleger falsch glauben', 60),
 
     h('div', { style: { display:'flex', flex:'1', flexDirection:'column', justifyContent:'center', gap:'16px' }},
-      h('div', { style: { display:'flex', gap:'16px', flex:'1' }},
+      ...[
+        { wrong:'Thesaurierend = steuerfrei bis zum Verkauf', right:'Vorabpauschale faellt jedes Jahr an' },
+        { wrong:'Steuer muss ich aktiv ueberweisen', right:'Wird automatisch vom Verrechnungskonto abgezogen' },
+        { wrong:'Freistellungsauftrag gilt nur fuer Dividenden', right:'Freistellungsauftrag deckt auch die Vorabpauschale ab' },
+      ].map(item =>
         h('div', { style: {
-          display:'flex', flex:'1', flexDirection:'column',
-          backgroundColor: C.cardBg, borderRadius:'22px', padding:'32px', gap:'14px'
+          display:'flex', flexDirection:'column', gap:'10px',
+          backgroundColor: C.cardBg, borderRadius:'18px', padding:'22px 28px'
         }},
-          h('span', { style: { fontSize:'22px', fontWeight:700, letterSpacing:'2px', color: C.textMuted }}, 'ERWARTUNG'),
-          h('div', { style: { display:'flex', width:'100%', height:'4px', backgroundColor: C.border, borderRadius:'2px' }}),
-          h('span', { style: { fontSize:'42px', fontWeight:800, color: C.textSoft, textAlign:'center', lineHeight:'1.1', marginTop:'8px' }},
-            'ETF-Depot reicht aus'
-          ),
-          h('span', { style: { fontSize:'24px', fontWeight:500, color: C.textMuted, lineHeight:'1.5', marginTop:'8px' }},
-            '"Ich spare in ETFs, das reicht als Altersvorsorge."'
-          ),
-          h('div', { style: { display:'flex', flexDirection:'column', gap:'10px', marginTop:'16px' }},
-            h('div', { style: { display:'flex', alignItems:'center', gap:'10px' }},
-              h('div', { style: { display:'flex', width:'8px', height:'8px', borderRadius:'4px', backgroundColor: C.red, flexShrink:'0' }}),
-              h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted }}, 'Kein staatlicher Bonus')
+          h('div', { style: { display:'flex', alignItems:'flex-start', gap:'14px' }},
+            h('div', { style: {
+              display:'flex', width:'30px', height:'30px', borderRadius:'8px',
+              backgroundColor:'rgba(239,68,68,0.2)', alignItems:'center', justifyContent:'center', flexShrink:'0', marginTop:'2px'
+            }},
+              h('span', { style: { fontSize:'18px', fontWeight:800, color: C.red }}, 'X')
             ),
-            h('div', { style: { display:'flex', alignItems:'center', gap:'10px' }},
-              h('div', { style: { display:'flex', width:'8px', height:'8px', borderRadius:'4px', backgroundColor: C.red, flexShrink:'0' }}),
-              h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted }}, 'Steuervorteil nicht genutzt')
-            ),
-            h('div', { style: { display:'flex', alignItems:'center', gap:'10px' }},
-              h('div', { style: { display:'flex', width:'8px', height:'8px', borderRadius:'4px', backgroundColor: C.red, flexShrink:'0' }}),
-              h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted }}, 'Keine Diversifikation')
+            h('span', { style: { fontSize:'25px', fontWeight:500, color:'rgba(255,255,255,0.4)', lineHeight:'1.4', textDecoration:'line-through' }},
+              item.wrong
             )
-          )
-        ),
-        h('div', { style: {
-          display:'flex', flex:'1', flexDirection:'column',
-          backgroundColor: '#FFFFFF', borderRadius:'22px', padding:'32px', gap:'14px'
-        }},
-          h('span', { style: { fontSize:'22px', fontWeight:700, letterSpacing:'2px', color:'rgba(0,31,96,0.5)' }}, 'REALITAET'),
-          h('div', { style: { display:'flex', width:'100%', height:'4px', backgroundColor:'rgba(0,31,96,0.15)', borderRadius:'2px' }}),
-          h('span', { style: { fontSize:'42px', fontWeight:800, color:'#001f60', textAlign:'center', lineHeight:'1.1', marginTop:'8px' }},
-            '3 Saeulen noetig'
           ),
-          h('span', { style: { fontSize:'24px', fontWeight:500, color:'rgba(0,31,96,0.65)', lineHeight:'1.5', marginTop:'8px' }},
-            'ETF allein = tausende EUR Steuervorteile und Staatsbonus verschenkt.'
-          ),
-          h('div', { style: { display:'flex', flexDirection:'column', gap:'10px', marginTop:'16px' }},
-            h('div', { style: { display:'flex', alignItems:'center', gap:'10px' }},
-              h('div', { style: { display:'flex', width:'8px', height:'8px', borderRadius:'4px', backgroundColor:'#10B981', flexShrink:'0' }}),
-              h('span', { style: { fontSize:'22px', fontWeight:600, color:'#001f60' }}, 'Ruerup spart Steuern')
+          h('div', { style: { display:'flex', alignItems:'flex-start', gap:'14px' }},
+            h('div', { style: {
+              display:'flex', width:'30px', height:'30px', borderRadius:'8px',
+              backgroundColor:'rgba(16,185,129,0.2)', alignItems:'center', justifyContent:'center', flexShrink:'0', marginTop:'2px'
+            }},
+              h('span', { style: { fontSize:'16px', fontWeight:800, color: C.green }}, 'OK')
             ),
-            h('div', { style: { display:'flex', alignItems:'center', gap:'10px' }},
-              h('div', { style: { display:'flex', width:'8px', height:'8px', borderRadius:'4px', backgroundColor:'#10B981', flexShrink:'0' }}),
-              h('span', { style: { fontSize:'22px', fontWeight:600, color:'#001f60' }}, '600 EUR Bonus ab 2027')
-            ),
-            h('div', { style: { display:'flex', alignItems:'center', gap:'10px' }},
-              h('div', { style: { display:'flex', width:'8px', height:'8px', borderRadius:'4px', backgroundColor:'#10B981', flexShrink:'0' }}),
-              h('span', { style: { fontSize:'22px', fontWeight:600, color:'#001f60' }}, 'ETF bleibt flexibel')
+            h('span', { style: { fontSize:'25px', fontWeight:700, color: C.text, lineHeight:'1.4' }},
+              item.right
             )
           )
         )
       )
     ),
 
-    keyLearning('Nur ETF-Sparen kostet dich bis zu 15.000 EUR in Steuervorteilen.'),
+    keyLearning('Ohne Freistellungsauftrag zahlt die Bank automatisch volle Steuer', C.red),
     footer()
   );
 
-  // === SLIDE 5: 3 SAEULEN ===
+  // === SLIDE 5: FREISTELLUNGSAUFTRAG ===
   const slide5 = h('div', { style: {
     display:'flex', flexDirection:'column', width:W, height:H,
     padding:'70px', backgroundColor: C.bg, fontFamily:'Outfit'
   }},
     h('div', { style: { display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'18px' }},
-      badge('DIE LOESUNG'),
+      badge('DEIN SCHUTZSCHILD'),
       logoSmall()
     ),
-    headline('3 Saeulen fuer Selbststaendige', 60),
-    subline('Kombiniere alle 3 fuer optimale Absicherung'),
+    headline('Freistellungsauftrag richtig nutzen', 58),
+    subline('1.000 EUR Sparerpauschbetrag pro Person — steuerfrei'),
 
-    h('div', { style: { display:'flex', flex:'1', flexDirection:'column', justifyContent:'center', gap:'16px' }},
-      h('div', { style: {
-        display:'flex', alignItems:'center', gap:'20px',
-        backgroundColor: C.cardBg, borderRadius:'20px', padding:'26px 32px',
-        border:'1px solid rgba(16,185,129,0.25)'
-      }},
+    h('div', { style: { display:'flex', flex:'1', flexDirection:'column', justifyContent:'center', gap:'18px' }},
+      // Single / Paar
+      h('div', { style: { display:'flex', gap:'16px' }},
         h('div', { style: {
-          display:'flex', width:'68px', height:'68px', borderRadius:'18px',
-          backgroundColor:'rgba(16,185,129,0.15)', alignItems:'center', justifyContent:'center', flexShrink:'0'
+          display:'flex', flex:'1', flexDirection:'column', alignItems:'center',
+          backgroundColor:'rgba(16,185,129,0.10)', borderRadius:'20px', padding:'28px', gap:'10px',
+          border:'2px solid rgba(16,185,129,0.35)'
         }},
-          h('span', { style: { fontSize:'30px', fontWeight:800, color: C.green }}, '01')
+          h('span', { style: { fontSize:'22px', fontWeight:700, letterSpacing:'2px', color: C.green }}, 'SINGLE'),
+          h('div', { style: { display:'flex', width:'100%', height:'3px', backgroundColor:'rgba(16,185,129,0.3)', borderRadius:'2px' }}),
+          h('span', { style: { fontSize:'58px', fontWeight:800, color: C.text, lineHeight:'1' }}, '1.000'),
+          h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted }}, 'EUR/Jahr steuerfrei')
         ),
-        h('div', { style: { display:'flex', flexDirection:'column', gap:'4px' }},
-          h('span', { style: { fontSize:'30px', fontWeight:700, color: C.text }}, 'Ruerup-Rente'),
-          h('span', { style: { fontSize:'23px', fontWeight:400, color: C.textMuted, lineHeight:'1.4' }},
-            'Bis 29.344 EUR/Jahr steuerlich absetzbar. Steuervorteil bis 42% fuer Gutverdiener.'
-          ),
-          h('div', { style: { display:'flex', alignSelf:'flex-start', backgroundColor:'rgba(16,185,129,0.12)', borderRadius:'8px', padding:'5px 12px' }},
-            h('span', { style: { fontSize:'19px', fontWeight:700, color: C.green }}, 'STEUERVORTEIL BIS 12.324 EUR/JAHR')
-          )
+        h('div', { style: {
+          display:'flex', flex:'1', flexDirection:'column', alignItems:'center',
+          backgroundColor:'rgba(16,185,129,0.10)', borderRadius:'20px', padding:'28px', gap:'10px',
+          border:'2px solid rgba(16,185,129,0.35)'
+        }},
+          h('span', { style: { fontSize:'22px', fontWeight:700, letterSpacing:'2px', color: C.green }}, 'EHEPAAR'),
+          h('div', { style: { display:'flex', width:'100%', height:'3px', backgroundColor:'rgba(16,185,129,0.3)', borderRadius:'2px' }}),
+          h('span', { style: { fontSize:'58px', fontWeight:800, color: C.text, lineHeight:'1' }}, '2.000'),
+          h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted }}, 'EUR/Jahr steuerfrei')
         )
       ),
-
-      h('div', { style: {
-        display:'flex', alignItems:'center', gap:'20px',
-        backgroundColor: C.cardBg, borderRadius:'20px', padding:'26px 32px',
-        border:'1px solid rgba(245,158,11,0.25)'
-      }},
+      // 3 Action Steps
+      ...[
+        { n:'1', step:'Freistellungsauftrag stellen', info:'Direkt bei deinem Broker oder deiner Bank beantragen' },
+        { n:'2', step:'Bei mehreren Depots aufteilen', info:'Gesamtfreibetrag anteilig auf alle Broker verteilen' },
+        { n:'3', step:'Verrechnungskonto fuellen', info:'Vor Januar genug Guthaben sichern — sonst ETF-Verkauf!' },
+      ].map(item =>
         h('div', { style: {
-          display:'flex', width:'68px', height:'68px', borderRadius:'18px',
-          backgroundColor:'rgba(245,158,11,0.15)', alignItems:'center', justifyContent:'center', flexShrink:'0'
+          display:'flex', alignItems:'flex-start', gap:'16px',
+          backgroundColor: C.cardBg, borderRadius:'16px', padding:'18px 22px'
         }},
-          h('span', { style: { fontSize:'30px', fontWeight:800, color: C.gold }}, '02')
-        ),
-        h('div', { style: { display:'flex', flexDirection:'column', gap:'4px' }},
-          h('span', { style: { fontSize:'30px', fontWeight:700, color: C.text }}, 'Altersvorsorgedepot 2027'),
-          h('span', { style: { fontSize:'23px', fontWeight:400, color: C.textMuted, lineHeight:'1.4' }},
-            'NEU: 20% staatl. Bonus auf max. 3.000 EUR/Jahr = 600 EUR Gratisgeld. Auch fuer Selbststaendige!'
+          h('div', { style: {
+            display:'flex', width:'38px', height:'38px', borderRadius:'10px',
+            backgroundColor: C.green, alignItems:'center', justifyContent:'center', flexShrink:'0'
+          }},
+            h('span', { style: { fontSize:'20px', fontWeight:800, color:'#001f60' }}, item.n)
           ),
-          h('div', { style: { display:'flex', alignSelf:'flex-start', backgroundColor:'rgba(245,158,11,0.12)', borderRadius:'8px', padding:'5px 12px' }},
-            h('span', { style: { fontSize:'19px', fontWeight:700, color: C.gold }}, 'AB JANUAR 2027 VERFUEGBAR')
-          )
-        )
-      ),
-
-      h('div', { style: {
-        display:'flex', alignItems:'center', gap:'20px',
-        backgroundColor: C.cardBg, borderRadius:'20px', padding:'26px 32px',
-        border:'1px solid rgba(255,255,255,0.12)'
-      }},
-        h('div', { style: {
-          display:'flex', width:'68px', height:'68px', borderRadius:'18px',
-          backgroundColor:'rgba(255,255,255,0.08)', alignItems:'center', justifyContent:'center', flexShrink:'0'
-        }},
-          h('span', { style: { fontSize:'30px', fontWeight:800, color: C.text }}, '03')
-        ),
-        h('div', { style: { display:'flex', flexDirection:'column', gap:'4px' }},
-          h('span', { style: { fontSize:'30px', fontWeight:700, color: C.text }}, 'ETF-Depot (flexibel)'),
-          h('span', { style: { fontSize:'23px', fontWeight:400, color: C.textMuted, lineHeight:'1.4' }},
-            'Jederzeit verfuegbar, kein Foerderrahmen. Sparerpauschbetrag 1.000 EUR/Jahr nutzbar.'
-          ),
-          h('div', { style: { display:'flex', alignSelf:'flex-start', backgroundColor:'rgba(255,255,255,0.08)', borderRadius:'8px', padding:'5px 12px' }},
-            h('span', { style: { fontSize:'19px', fontWeight:700, color: C.textSoft }}, 'JEDERZEIT KUENDBAR')
+          h('div', { style: { display:'flex', flexDirection:'column', gap:'4px' }},
+            h('span', { style: { fontSize:'26px', fontWeight:700, color: C.text }}, item.step),
+            h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted, lineHeight:'1.4' }}, item.info)
           )
         )
       )
     ),
 
-    keyLearning('Alle 3 Saeulen kombiniert: maximaler Schutz und maximale Rendite.', C.green),
+    keyLearning('Freistellungsauftrag = erste Pflicht bei jedem neuen ETF-Depot', C.green),
     footer()
   );
 
-  // === SLIDE 6: RECHENBEISPIEL ===
-  const barSvg2 = `<svg width="860" height="260" viewBox="0 0 860 260" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="gA" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#10B981"/>
-        <stop offset="100%" stop-color="#10B981" stop-opacity="0.5"/>
-      </linearGradient>
-      <linearGradient id="gB" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#F59E0B"/>
-        <stop offset="100%" stop-color="#F59E0B" stop-opacity="0.5"/>
-      </linearGradient>
-      <linearGradient id="gC" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9"/>
-        <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.35"/>
-      </linearGradient>
-    </defs>
-    <rect x="60" y="30" width="200" height="200" rx="12" fill="url(#gA)"/>
-    <rect x="330" y="79" width="200" height="151" rx="12" fill="url(#gB)"/>
-    <rect x="600" y="55" width="200" height="175" rx="12" fill="url(#gC)"/>
-  </svg>`;
-  const barSrc2 = 'data:image/svg+xml;base64,' + Buffer.from(barSvg2).toString('base64');
-
+  // === SLIDE 6: WANN KEINE VORABPAUSCHALE ===
   const slide6 = h('div', { style: {
     display:'flex', flexDirection:'column', width:W, height:H,
     padding:'70px', backgroundColor: C.bgDark, fontFamily:'Outfit'
   }},
     h('div', { style: { display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'18px' }},
-      badge('DAS RECHNET SICH'),
+      badge('SONDERFAELLE'),
       logoSmall()
     ),
-    headline('300 EUR/Monat in 3 Wege', 62),
-    subline('Ergebnis nach 25 Jahren bei 7% p.a.'),
+    headline('Wann faellt KEINE Vorabpauschale an?', 54),
+    subline('4 Situationen die du kennen solltest'),
 
-    h('div', { style: { display:'flex', flex:'1', flexDirection:'column', justifyContent:'center', gap:'16px' }},
-      h('img', { src: barSrc2, width:860, height:260, style: { objectFit:'contain' }}),
-      h('div', { style: { display:'flex', gap:'14px' }},
-        h('div', { style: { display:'flex', flex:'1', flexDirection:'column', alignItems:'center', gap:'6px' }},
-          h('span', { style: { fontSize:'44px', fontWeight:800, color: C.green }}, '129k'),
-          h('span', { style: { fontSize:'22px', fontWeight:600, color: C.textSoft }}, 'Ruerup'),
-          h('span', { style: { fontSize:'20px', fontWeight:400, color: C.textMuted }}, '120 EUR/Mon.'),
-          h('div', { style: { display:'flex', backgroundColor:'rgba(16,185,129,0.15)', borderRadius:'8px', padding:'4px 12px', marginTop:'4px' }},
-            h('span', { style: { fontSize:'18px', fontWeight:700, color: C.green }}, 'Steuervorteil')
-          )
-        ),
-        h('div', { style: { display:'flex', flex:'1', flexDirection:'column', alignItems:'center', gap:'6px' }},
-          h('span', { style: { fontSize:'44px', fontWeight:800, color: C.gold }}, '85k'),
-          h('span', { style: { fontSize:'22px', fontWeight:600, color: C.textSoft }}, 'AVD 2027'),
-          h('span', { style: { fontSize:'20px', fontWeight:400, color: C.textMuted }}, '80 EUR/Mon.'),
-          h('div', { style: { display:'flex', backgroundColor:'rgba(245,158,11,0.15)', borderRadius:'8px', padding:'4px 12px', marginTop:'4px' }},
-            h('span', { style: { fontSize:'18px', fontWeight:700, color: C.gold }}, '600 EUR Bonus')
-          )
-        ),
-        h('div', { style: { display:'flex', flex:'1', flexDirection:'column', alignItems:'center', gap:'6px' }},
-          h('span', { style: { fontSize:'44px', fontWeight:800, color: C.text }}, '97k'),
-          h('span', { style: { fontSize:'22px', fontWeight:600, color: C.textSoft }}, 'ETF-Depot'),
-          h('span', { style: { fontSize:'20px', fontWeight:400, color: C.textMuted }}, '100 EUR/Mon.'),
-          h('div', { style: { display:'flex', backgroundColor:'rgba(255,255,255,0.08)', borderRadius:'8px', padding:'4px 12px', marginTop:'4px' }},
-            h('span', { style: { fontSize:'18px', fontWeight:700, color: C.textSoft }}, 'flexibel')
+    h('div', { style: { display:'flex', flex:'1', flexDirection:'column', justifyContent:'center', gap:'15px' }},
+      ...[
+        { label:'ETF hat Kursverlust gemacht', desc:'Kurs zum Jahresende tiefer als Jahresanfang — Vorabpauschale = 0 EUR', highlight: true },
+        { label:'Freistellungsauftrag deckt alles ab', desc:'Dein Freibetrag (1.000 EUR) ist groesser als die Vorabpauschale', highlight: true },
+        { label:'Ausschuettender ETF', desc:'Dividenden werden direkt besteuert — keine zusaetzliche Vorabpauschale', highlight: false },
+        { label:'Basiszins war negativ', desc:'War in 2021/22 der Fall — seitdem ist er stark gestiegen', highlight: false },
+      ].map(item =>
+        h('div', { style: {
+          display:'flex', alignItems:'flex-start', gap:'16px',
+          backgroundColor: item.highlight ? 'rgba(16,185,129,0.10)' : C.cardBg,
+          borderRadius:'16px', padding:'20px 24px',
+          border: item.highlight ? '1px solid rgba(16,185,129,0.3)' : '1px solid rgba(255,255,255,0.06)'
+        }},
+          h('div', { style: {
+            display:'flex', width:'40px', height:'40px', borderRadius:'10px',
+            backgroundColor: item.highlight ? 'rgba(16,185,129,0.2)' : 'rgba(255,255,255,0.08)',
+            alignItems:'center', justifyContent:'center', flexShrink:'0'
+          }},
+            h('span', { style: { fontSize:'20px', fontWeight:800, color: item.highlight ? C.green : C.textMuted }},
+              item.highlight ? 'OK' : '~'
+            )
+          ),
+          h('div', { style: { display:'flex', flexDirection:'column', gap:'4px' }},
+            h('span', { style: { fontSize:'26px', fontWeight:700, color: C.text } }, item.label),
+            h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted, lineHeight:'1.4' }}, item.desc)
           )
         )
-      ),
-      h('div', { style: {
-        display:'flex', alignItems:'center', justifyContent:'center', gap:'14px',
-        backgroundColor:'rgba(16,185,129,0.10)', borderRadius:'16px', padding:'22px 28px',
-        border:'1px solid rgba(16,185,129,0.3)'
-      }},
-        h('span', { style: { fontSize:'28px', fontWeight:700, color: C.green }}, 'Gesamt: 311.000 EUR aus nur 300 EUR/Monat')
       )
     ),
 
-    keyLearning('300 EUR/Monat klug verteilt = 311.000 EUR Altersvorsorge.', C.green),
+    keyLearning('Verlustjahr = 0 EUR Vorabpauschale — gut zu wissen fuer die Steuerplanung', C.green),
     footer()
   );
 
-  // === SLIDE 7: TAKEAWAYS ===
+  // === SLIDE 7: 4 TAKEAWAYS ===
   const learnings = [
-    { num:'01', text:'Rentenluecke berechnen: Wie viel fehlt dir monatlich im Alter?', pct:25 },
-    { num:'02', text:'Ruerup-Rente 2026 starten und Steuervorteil bis 42% sichern', pct:50 },
-    { num:'03', text:'Altersvorsorgedepot ab Januar 2027 planen — 600 EUR Bonus nicht verpassen', pct:75 },
-    { num:'04', text:'ETF-Depot parallel fuehren fuer maximale Flexibilitaet im Alter', pct:100 },
+    { num:'01', text:'Freistellungsauftrag bei deinem Broker pruefen und stellen', pct:25 },
+    { num:'02', text:'Verrechnungskonto vor Januar 2027 mit ausreichend Guthaben fuellen', pct:50 },
+    { num:'03', text:'Depot-Groesse pruefen: Ueberschreitet es 44.000 EUR? Dann Freibetrag aufbrauchen', pct:75 },
+    { num:'04', text:'Vorabpauschale wird spaeter auf Abgeltungssteuer beim Verkauf angerechnet — kein Doppelte Besteuerung', pct:100 },
   ];
 
   const slide7 = h('div', { style: {
@@ -537,30 +433,30 @@ async function main() {
     padding:'70px', backgroundColor: C.bg, fontFamily:'Outfit'
   }},
     h('div', { style: { display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'18px' }},
-      badge('DEIN FAHRPLAN'),
+      badge('DEINE 4 TAKEAWAYS'),
       logoSmall()
     ),
-    headline('4 Schritte fuer Selbststaendige', 58),
-    subline('Sofort umsetzbar'),
+    headline('Was du jetzt sofort tun solltest', 58),
+    subline('Vorbereitung fuer Januar 2027'),
 
     h('div', { style: { display:'flex', flex:'1', flexDirection:'column', justifyContent:'center', gap:'14px' }},
       ...learnings.map(l =>
         h('div', { style: {
           display:'flex', flexDirection:'column', gap:'10px',
-          padding:'22px 28px', backgroundColor: C.cardBg, borderRadius:'18px'
+          padding:'20px 26px', backgroundColor: C.cardBg, borderRadius:'18px'
         }},
-          h('div', { style: { display:'flex', alignItems:'center', gap:'18px' }},
+          h('div', { style: { display:'flex', alignItems:'center', gap:'16px' }},
             h('span', { style: {
               fontSize:'36px', fontWeight:800,
-              color: l.pct === 100 ? C.green : (l.pct >= 75 ? C.gold : C.text),
-              minWidth:'56px'
+              color: l.pct === 100 ? C.green : C.text,
+              minWidth:'54px'
             }}, l.num),
-            h('span', { style: { fontSize:'26px', fontWeight:600, color: C.text, lineHeight:'1.3' }}, l.text)
+            h('span', { style: { fontSize:'24px', fontWeight:600, color: C.text, lineHeight:'1.3' }}, l.text)
           ),
           h('div', { style: { display:'flex', height:'6px', backgroundColor: C.border, borderRadius:'3px', overflow:'hidden' }},
             h('div', { style: {
               display:'flex', width:`${l.pct}%`, height:'6px',
-              backgroundColor: l.pct === 100 ? C.green : (l.pct >= 75 ? C.gold : C.text),
+              backgroundColor: l.pct === 100 ? C.green : C.text,
               borderRadius:'3px'
             }})
           )
@@ -568,7 +464,7 @@ async function main() {
       )
     ),
 
-    keyLearning('Wer frueh anfaengt gewinnt. Zeit ist dein groesstes Asset.', C.green),
+    keyLearning('Wer vorbereitet ist zahlt nie mehr als noetig', C.green),
     footer()
   );
 
@@ -586,35 +482,46 @@ async function main() {
       display:'flex', flex:'1', flexDirection:'column', alignItems:'center',
       justifyContent:'center', gap:'28px', width:'100%'
     }},
-      badge('DEINE MEINUNG ZAEHLT'),
+      badge('JETZT HANDELN'),
       h('span', { style: {
         fontSize:'58px', fontWeight:800, color: C.text,
         textAlign:'center', lineHeight:'1.1', letterSpacing:'-1.5px'
-      }}, 'Bist du selbststaendig und hast bereits vorgesorgt?'),
+      }}, 'Hast du deinen Freistellungsauftrag schon gestellt?'),
       h('span', { style: {
         fontSize:'28px', fontWeight:500, color: C.textMuted,
         textAlign:'center', lineHeight:'1.5'
-      }}, 'Schreib es uns in die Kommentare und hilf anderen mit deiner Erfahrung.'),
-      h('div', { style: { display:'flex', flexDirection:'column', alignItems:'center', gap:'12px' }},
-        h('span', { style: { fontSize:'28px', fontWeight:600, color: C.textSoft, textAlign:'center' }},
-          'Speichere diesen Post als Erinnerung'
+      }}, 'Schreib JA oder NEIN in die Kommentare'),
+      h('div', { style: { display:'flex', flexDirection:'column', gap:'14px', width:'100%' }},
+        h('div', { style: {
+          display:'flex', alignItems:'center', gap:'16px',
+          backgroundColor: C.cardBg, borderRadius:'16px', padding:'18px 26px'
+        }},
+          h('div', { style: { display:'flex', width:'10px', height:'10px', borderRadius:'5px', backgroundColor: C.green }}),
+          h('span', { style: { fontSize:'25px', fontWeight:600, color: C.textSoft }},
+            'Diesen Post speichern — vor Januar lesen'
+          )
         ),
-        h('div', { style: { width:'80px', height:'2px', backgroundColor: C.border, borderRadius:'1px' }}),
-        h('span', { style: { fontSize:'24px', fontWeight:500, color: C.textMuted, textAlign:'center' }},
-          'Mehr kostenlose Finanztipps findest du bei @benarofinanzen'
+        h('div', { style: {
+          display:'flex', alignItems:'center', gap:'16px',
+          backgroundColor: C.cardBg, borderRadius:'16px', padding:'18px 26px'
+        }},
+          h('div', { style: { display:'flex', width:'10px', height:'10px', borderRadius:'5px', backgroundColor: C.green }}),
+          h('span', { style: { fontSize:'25px', fontWeight:600, color: C.textSoft }},
+            'Mit deinem ETF-Sparplan-Freund teilen'
+          )
         )
       )
     ),
 
     h('div', { style: { display:'flex', flexDirection:'column', alignItems:'center', gap:'10px', width:'100%' }},
-      h('img', { src: logoB64, width:120, height:120, style: { borderRadius:'16px', objectFit:'cover' }}),
-      h('span', { style: { fontSize:'28px', fontWeight:700, color: C.text }}, 'Benaro Finanzen'),
-      h('span', { style: { fontSize:'24px', fontWeight:500, color: C.textMuted }}, '@benarofinanzen')
+      h('img', { src: logoB64, width:110, height:110, style: { borderRadius:'16px', objectFit:'cover' }}),
+      h('span', { style: { fontSize:'26px', fontWeight:700, color: C.text }}, 'Benaro Finanzen'),
+      h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted }}, '@benarofinanzen')
     )
   );
 
   const slides = [slide1, slide2, slide3, slide4, slide5, slide6, slide7, slide8];
-  const outDir = path.join(__dirname, 'output', 'carousel_2026-07-14', 'slides');
+  const outDir = path.join(__dirname, 'output', 'carousel_2026-07-15', 'slides');
   if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
 
   for (let i = 0; i < slides.length; i++) {
