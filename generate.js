@@ -1,5 +1,5 @@
-// Carousel: Die 4%-Regel — Wie du deinen ETF-Sparplan im Ruhestand sicher entsparst
-// Inspiration: @finanzcopilot — Entsparphase & Ruhestandsplanung, hochaktuelles Thema Juli 2026
+// Carousel: Freistellungsauftrag 2026 — Der 1.000 EUR Steuervorteil den 63% vergessen
+// Inspiration: @finanzcopilot — Steuer-Content, hochaktuelles Follow-Up zur Vorabpauschale
 const fs = require('fs');
 const path = require('path');
 
@@ -18,7 +18,7 @@ async function main() {
   ).toString('base64');
 
   const C = {
-    bg: '#001f60',
+    bg: '#001f61',
     text: '#FFFFFF',
     textSoft: '#E5E7EB',
     textMuted: '#9CA3AF',
@@ -81,7 +81,7 @@ async function main() {
   }
 
   function logoImg(size) {
-    size = size || 100;
+    size = size || 120;
     return h('img', { src: logoB64, width: size, height: size, style: { borderRadius: '12px', objectFit: 'cover' } });
   }
 
@@ -93,7 +93,7 @@ async function main() {
       }
     },
       h('div', { style: { display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' } },
-        logoImg(96)
+        logoImg(120)
       ),
       ...children
     );
@@ -104,37 +104,37 @@ async function main() {
   // =========================================================
   const slide1 = slideWrap([
     badge('ACHTUNG'),
-    headline('Du sparst fleissig ETFs an.', 66),
-    headline('Aber weisst du wie du das Geld sicher zurueckholst?', 50),
+    headline('Dein Broker zieht Steuern ab — obwohl er das nicht muss.', 56),
+    subline('1.000 EUR im Jahr sind steuerfrei. Aber nur wenn du aktiv wirst.'),
     h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '20px' } },
       h('div', { style: { display: 'flex', gap: '18px' } },
+        // Card: OHNE Freistellungsauftrag
         h('div', {
           style: {
             display: 'flex', flex: '1', flexDirection: 'column', alignItems: 'center', gap: '14px',
-            backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '20px', padding: '30px 20px',
-            border: '2px solid rgba(16,185,129,0.35)'
-          }
-        },
-          h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' } },
-            h('div', { style: { display: 'flex', width: '0', height: '0', borderLeft: '22px solid transparent', borderRight: '22px solid transparent', borderBottom: '36px solid #10B981' } }),
-            h('div', { style: { display: 'flex', width: '14px', height: '50px', backgroundColor: '#10B981', borderRadius: '0 0 4px 4px' } })
-          ),
-          h('span', { style: { fontSize: '26px', fontWeight: 800, color: '#10B981', textAlign: 'center' } }, 'ANSPARPHASE'),
-          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, textAlign: 'center', lineHeight: '1.4' } }, '20-40 Jahre sparst du fleissig')
-        ),
-        h('div', {
-          style: {
-            display: 'flex', flex: '1', flexDirection: 'column', alignItems: 'center', gap: '14px',
-            backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '20px', padding: '30px 20px',
+            backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '20px', padding: '32px 20px',
             border: '2px solid rgba(239,68,68,0.35)'
           }
         },
-          h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' } },
-            h('div', { style: { display: 'flex', width: '14px', height: '50px', backgroundColor: '#EF4444', borderRadius: '4px 4px 0 0' } }),
-            h('div', { style: { display: 'flex', width: '0', height: '0', borderLeft: '22px solid transparent', borderRight: '22px solid transparent', borderTop: '36px solid #EF4444' } })
-          ),
-          h('span', { style: { fontSize: '26px', fontWeight: 800, color: '#EF4444', textAlign: 'center' } }, 'ENTSPARPHASE'),
-          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, textAlign: 'center', lineHeight: '1.4' } }, 'Ohne Plan = groesstes Risiko')
+          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '3px', color: C.red } }, 'OHNE FA'),
+          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(239,68,68,0.3)', borderRadius: '2px' } }),
+          h('span', { style: { fontSize: '62px', fontWeight: 800, color: C.red, lineHeight: '1' } }, '263'),
+          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.red } }, 'EUR Steuer'),
+          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, textAlign: 'center', lineHeight: '1.4' } }, 'auf 1.000 EUR Kapitalertrage/Jahr')
+        ),
+        // Card: MIT Freistellungsauftrag
+        h('div', {
+          style: {
+            display: 'flex', flex: '1', flexDirection: 'column', alignItems: 'center', gap: '14px',
+            backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '20px', padding: '32px 20px',
+            border: '2px solid rgba(16,185,129,0.35)'
+          }
+        },
+          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '3px', color: C.green } }, 'MIT FA'),
+          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(16,185,129,0.3)', borderRadius: '2px' } }),
+          h('span', { style: { fontSize: '62px', fontWeight: 800, color: C.green, lineHeight: '1' } }, '0'),
+          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.green } }, 'EUR Steuer'),
+          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, textAlign: 'center', lineHeight: '1.4' } }, 'auf 1.000 EUR Kapitalertrage/Jahr')
         )
       ),
       h('div', {
@@ -143,262 +143,261 @@ async function main() {
           backgroundColor: C.cardBg, borderRadius: '16px', padding: '22px 28px'
         }
       },
-        h('span', { style: { fontSize: '30px', fontWeight: 700, color: C.text, textAlign: 'center', lineHeight: '1.35' } },
-          'Die meisten planen die Ansparphase perfekt — und ignorieren die Entsparphase komplett'
+        h('span', { style: { fontSize: '29px', fontWeight: 700, color: C.text, textAlign: 'center', lineHeight: '1.4' } },
+          'Der Freistellungsauftrag ist kostenlos, dauert 2 Minuten — und kaum jemand nutzt ihn.'
         )
       )
     ),
-    keyLearning('Wer keinen Entnahmeplan hat, riskiert sein Depot in 10-15 Jahren aufzubrauchen'),
+    keyLearning('Lies alle 8 Slides — am Ende weisst du, wie du sofort Steuern sparst.'),
     footer()
   ]);
 
   // =========================================================
-  // SLIDE 2 — STAT HERO: 73% haben keinen Entsparplan
+  // SLIDE 2 — STAT HERO: 63% ohne Freistellungsauftrag
   // =========================================================
+  const barSvg = `<svg width="900" height="280" viewBox="0 0 900 280" xmlns="http://www.w3.org/2000/svg">
+    <line x1="0" y1="240" x2="900" y2="240" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+    <line x1="0" y1="180" x2="900" y2="180" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <line x1="0" y1="120" x2="900" y2="120" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <line x1="0" y1="60" x2="900" y2="60" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <rect x="40" y="192" width="140" height="48" rx="6" fill="rgba(239,68,68,0.65)"/>
+    <rect x="240" y="158" width="140" height="82" rx="6" fill="rgba(239,68,68,0.55)"/>
+    <rect x="440" y="130" width="140" height="110" rx="6" fill="rgba(16,185,129,0.55)"/>
+    <rect x="640" y="96" width="140" height="144" rx="6" fill="rgba(16,185,129,0.80)"/>
+  </svg>`;
+  const barSrc = 'data:image/svg+xml;base64,' + Buffer.from(barSvg).toString('base64');
+
   const slide2 = slideWrap([
     badge('DAS PROBLEM'),
-    headline('Kaum ein ETF-Anleger plant die Entsparphase', 52),
+    headline('63% verschenken 1.000 EUR im Jahr.', 56),
     h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '22px' } },
       h('div', {
         style: {
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '24px', padding: '40px 50px', gap: '12px',
-          border: '2px solid rgba(239,68,68,0.3)', width: '100%'
+          display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px',
+          backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '20px', padding: '28px 34px',
+          border: '2px solid rgba(239,68,68,0.3)'
         }
       },
-        h('span', { style: { fontSize: '136px', fontWeight: 800, color: '#EF4444', lineHeight: '1', letterSpacing: '-4px' } }, '73%'),
-        h('span', { style: { fontSize: '30px', fontWeight: 600, color: C.textSoft, textAlign: 'center', lineHeight: '1.4' } },
-          'der ETF-Anleger haben KEINEN konkreten Plan, wie sie ihr Depot im Ruhestand entsparen'
+        h('span', { style: { fontSize: '120px', fontWeight: 800, color: C.red, lineHeight: '1', letterSpacing: '-4px' } }, '63%'),
+        h('span', { style: { fontSize: '28px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4' } },
+          'haben keinen gultig gestellten Freistellungsauftrag'
         )
       ),
-      h('div', { style: { display: 'flex', gap: '16px', width: '100%' } },
-        h('div', {
-          style: {
-            display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: C.cardBg,
-            borderRadius: '18px', padding: '22px', gap: '8px', alignItems: 'center'
-          }
-        },
-          h('span', { style: { fontSize: '44px', fontWeight: 800, color: C.green } }, '27%'),
-          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, textAlign: 'center', lineHeight: '1.3' } }, 'haben einen Entnahmeplan')
+      // Bar chart with age groups
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px' } },
+        h('img', { src: barSrc, width: 900, height: 280, style: { objectFit: 'contain', width: '100%' } }),
+        h('div', { style: { display: 'flex', justifyContent: 'space-around', paddingTop: '4px' } },
+          ...[ ['18-30', '20%', C.red], ['31-45', '34%', C.red], ['46-60', '46%', C.green], ['60+', '60%', C.green] ].map(([age, pct, color]) =>
+            h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' } },
+              h('span', { style: { fontSize: '26px', fontWeight: 800, color: color } }, pct),
+              h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted } }, age)
+            )
+          )
         ),
-        h('div', {
-          style: {
-            display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: C.cardBg,
-            borderRadius: '18px', padding: '22px', gap: '8px', alignItems: 'center'
-          }
-        },
-          h('span', { style: { fontSize: '44px', fontWeight: 800, color: '#EF4444' } }, '73%'),
-          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, textAlign: 'center', lineHeight: '1.3' } }, 'improvisieren oder kein Plan')
-        )
+        h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted, textAlign: 'center', marginTop: '4px' } }, 'Anteil MIT gesetztem Freistellungsauftrag — nach Alter')
       )
     ),
-    keyLearning('Fleissiges Ansparen allein reicht nicht — der Entnahmeplan entscheidet alles'),
+    keyLearning('Besonders junge Anleger verlieren Jahr fur Jahr Geld — obwohl es gratis zu verhindern ware.'),
     footer()
   ]);
 
   // =========================================================
-  // SLIDE 3 — SEQUENZRISIKO mit SVG Chart
+  // SLIDE 3 — PROBLEM: Wie viel verlierst du wirklich?
   // =========================================================
-  const chartSvg = `<svg width="900" height="310" viewBox="0 0 900 310" xmlns="http://www.w3.org/2000/svg">
-  <line x1="60" y1="15" x2="60" y2="280" stroke="rgba(255,255,255,0.25)" stroke-width="2"/>
-  <line x1="60" y1="280" x2="880" y2="280" stroke="rgba(255,255,255,0.25)" stroke-width="2"/>
-  <line x1="60" y1="90" x2="880" y2="90" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="8,6"/>
-  <line x1="60" y1="185" x2="880" y2="185" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="8,6"/>
-  <path d="M 60 230 C 120 215 170 225 250 205 C 310 190 340 200 390 180 C 410 150 430 135 470 125 C 550 105 630 90 720 75 C 790 62 850 58 880 52" fill="none" stroke="#10B981" stroke-width="3.5"/>
-  <path d="M 60 230 C 120 215 170 225 250 205 C 310 190 340 200 390 180 C 400 220 410 258 440 268 C 500 278 590 279 700 280 C 780 280 840 280 880 280" fill="none" stroke="#EF4444" stroke-width="3.5"/>
-  <circle cx="390" cy="180" r="7" fill="rgba(255,255,255,0.9)"/>
-  <line x1="390" y1="25" x2="390" y2="280" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-dasharray="6,4"/>
-  <path d="M 60 230 C 120 215 170 225 250 205 C 310 190 340 200 390 180 C 410 125 470 125 470 125" fill="rgba(16,185,129,0.08)" stroke="none"/>
-  </svg>`;
-
-  const chartSrc = 'data:image/svg+xml;base64,' + Buffer.from(chartSvg).toString('base64');
-
   const slide3 = slideWrap([
-    badge('VERSTECKTES RISIKO'),
-    headline('1 Crash im Jahr 1 der Rente kann das Depot ruinieren', 50),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '18px' } },
-      h('img', { src: chartSrc, width: 900, height: 310, style: { objectFit: 'contain', width: '100%' } }),
-      h('div', { style: { display: 'flex', gap: '50px', justifyContent: 'center' } },
-        h('div', { style: { display: 'flex', alignItems: 'center', gap: '10px' } },
-          h('div', { style: { display: 'flex', width: '32px', height: '4px', backgroundColor: '#10B981', borderRadius: '2px' } }),
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: '#10B981' } }, 'Guter Rentenstart')
-        ),
-        h('div', { style: { display: 'flex', alignItems: 'center', gap: '10px' } },
-          h('div', { style: { display: 'flex', width: '32px', height: '4px', backgroundColor: '#EF4444', borderRadius: '2px' } }),
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: '#EF4444' } }, 'Crash im 1. Rentenjahr')
+    badge('DEINE STEUERLUCKE'),
+    headline('So viel zahlst du unnotigerweise ans Finanzamt.', 52),
+    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '16px' } },
+      ...[
+        { depot: '10.000 EUR Depot', zinsen: '250 EUR Ertrage (2,5% p.a.)', tax: '65 EUR/Jahr', pct: 25, isHigh: false },
+        { depot: '25.000 EUR Depot', zinsen: '625 EUR Ertrage (2,5% p.a.)', tax: '163 EUR/Jahr', pct: 50, isHigh: false },
+        { depot: '50.000 EUR Depot', zinsen: '1.250 EUR Ertrage (2,5% p.a.)', tax: '263 EUR/Jahr', pct: 100, isHigh: true },
+      ].map((item) =>
+        h('div', {
+          style: {
+            display: 'flex', flexDirection: 'column', gap: '10px', padding: '22px 26px',
+            backgroundColor: C.cardBg, borderRadius: '18px',
+            border: item.isHigh ? '2px solid rgba(239,68,68,0.4)' : '2px solid transparent'
+          }
+        },
+          h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
+            h('div', { style: { display: 'flex', flexDirection: 'column', gap: '3px' } },
+              h('span', { style: { fontSize: '27px', fontWeight: 700, color: C.text } }, item.depot),
+              h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted } }, item.zinsen)
+            ),
+            h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px' } },
+              h('span', { style: { fontSize: '30px', fontWeight: 800, color: item.isHigh ? C.red : C.textSoft } }, item.tax),
+              h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted } }, 'verschenkt')
+            )
+          ),
+          h('div', { style: { display: 'flex', height: '8px', backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: '4px', overflow: 'hidden' } },
+            h('div', { style: { display: 'flex', width: item.pct + '%', height: '8px', backgroundColor: item.isHigh ? C.red : C.textMuted, borderRadius: '4px' } })
+          )
         )
       ),
       h('div', {
         style: {
-          display: 'flex', alignItems: 'flex-start', gap: '12px',
-          backgroundColor: 'rgba(239,68,68,0.10)', borderRadius: '14px', padding: '20px 24px',
+          display: 'flex', alignItems: 'center', gap: '14px',
+          backgroundColor: 'rgba(239,68,68,0.10)', borderRadius: '14px', padding: '18px 22px',
           border: '1px solid rgba(239,68,68,0.25)'
         }
       },
-        h('div', { style: { display: 'flex', width: '12px', height: '12px', borderRadius: '6px', backgroundColor: '#EF4444', marginTop: '8px', flexShrink: '0' } }),
-        h('span', { style: { fontSize: '26px', fontWeight: 600, color: '#EF4444', lineHeight: '1.4' } },
-          'Sequenzrisiko: Bei fruehen Entnahmen + Crash erholt sich das Depot nie wieder vollstaendig'
+        h('div', { style: { display: 'flex', width: '12px', height: '12px', borderRadius: '6px', backgroundColor: C.red, flexShrink: '0', marginTop: '4px' } }),
+        h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.red, lineHeight: '1.4' } },
+          'Ohne Freistellungsauftrag: Bis 263 EUR Steuern pro Jahr — uber 10 Jahre sind das 2.630 EUR verloren'
         )
       )
     ),
-    keyLearning('Der Zeitpunkt der ersten Entnahme ist genauso wichtig wie die Langzeit-Rendite'),
+    keyLearning('Mit dem Freistellungsauftrag: 0 EUR — und das Geld bleibt komplett im Depot.', C.red),
     footer()
   ]);
 
   // =========================================================
-  // SLIDE 4 — ERWARTUNG vs REALITAET
+  // SLIDE 4 — ERWARTUNG vs REALITAT: 3 Mythen
   // =========================================================
   const slide4 = slideWrap([
-    badge('DER IRRTUM'),
-    headline('Was die meisten denken vs. was wirklich passiert', 50),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '18px' } },
-      h('div', { style: { display: 'flex', gap: '16px' } },
-        h('div', {
-          style: {
-            display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: C.cardBg,
-            borderRadius: '20px', padding: '28px', gap: '14px'
-          }
+    badge('IRRTUM AUFGEDECKT'),
+    headline('Was die meisten denken — und was wirklich stimmt.', 52),
+    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '16px' } },
+      ...[
+        {
+          mythos: '"Die Bank stellt den Freistellungsauftrag automatisch ein."',
+          fakt: 'Nein — du musst ihn aktiv beantragen. Pro Bank einzeln.'
         },
-          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: C.textMuted } }, 'ERWARTUNG'),
-          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: C.border, borderRadius: '2px' } }),
-          h('span', { style: { fontSize: '27px', fontWeight: 600, color: C.textSoft, lineHeight: '1.45' } },
-            '"Ich entnehme einfach monatlich was ich brauche. Das Depot reicht schon irgendwie."'
-          )
-        ),
-        h('div', {
-          style: {
-            display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: '#FFFFFF',
-            borderRadius: '20px', padding: '28px', gap: '14px'
-          }
+        {
+          mythos: '"Einmal ausgefullt gilt er fur immer."',
+          fakt: 'Beim Bankwechsel, Kontoschliessung oder Depot-Ubertrag verfällt der FA.'
         },
-          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: 'rgba(0,31,96,0.5)' } }, 'REALITAET'),
-          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(0,31,96,0.15)', borderRadius: '2px' } }),
-          h('span', { style: { fontSize: '27px', fontWeight: 600, color: '#001f60', lineHeight: '1.45' } },
-            'Ohne Strategie kann ein schlechtes Boersenjahr das Depot in 10-12 Jahren komplett aufzehren.'
-          )
-        )
-      ),
-      h('div', {
-        style: {
-          display: 'flex', flexDirection: 'column', gap: '10px', backgroundColor: C.cardBg,
-          borderRadius: '18px', padding: '22px 26px'
+        {
+          mythos: '"Das lohnt sich erst bei grossem Depot."',
+          fakt: 'Schon ab 250 EUR Ertragen im Jahr sparst du uber 65 EUR Steuern — kostenlos.'
         }
-      },
-        h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.textMuted, letterSpacing: '2px' } }, 'DAS ECHTE PROBLEM'),
-        h('span', { style: { fontSize: '27px', fontWeight: 600, color: C.text, lineHeight: '1.4' } },
-          'Zu hohe Entnahmen + schlechte Marktphase = Depot leer bevor das Leben endet'
+      ].map(item =>
+        h('div', { style: { display: 'flex', gap: '12px' } },
+          h('div', {
+            style: {
+              display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(239,68,68,0.10)',
+              borderRadius: '16px', padding: '20px 22px', gap: '8px',
+              border: '1px solid rgba(239,68,68,0.20)'
+            }
+          },
+            h('span', { style: { fontSize: '18px', fontWeight: 700, letterSpacing: '2px', color: C.red } }, 'MYTHOS'),
+            h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, lineHeight: '1.4' } }, item.mythos)
+          ),
+          h('div', {
+            style: {
+              display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(16,185,129,0.10)',
+              borderRadius: '16px', padding: '20px 22px', gap: '8px',
+              border: '1px solid rgba(16,185,129,0.20)'
+            }
+          },
+            h('span', { style: { fontSize: '18px', fontWeight: 700, letterSpacing: '2px', color: C.green } }, 'FAKT'),
+            h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, lineHeight: '1.4' } }, item.fakt)
+          )
         )
       )
     ),
-    keyLearning('Eine Entnahme-Strategie ist genauso wichtig wie ein Anspar-Plan'),
+    keyLearning('Aktiv handeln zahlt sich aus — die Bank ubernimmt das NICHT fur dich.'),
     footer()
   ]);
 
   // =========================================================
-  // SLIDE 5 — DIE 4%-REGEL erklaert
+  // SLIDE 5 — DIE LOSUNG: 3-Schritt Anleitung
   // =========================================================
-  const slide5 = slideWrap([
-    badge('DIE LOESUNG'),
-    headline('Die 4%-Regel: Dein sicherer Entnahmeplan', 54),
-    subline('Entwickelt aus 50+ Jahren Boersen-Daten'),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '18px' } },
-      h('div', {
-        style: {
-          display: 'flex', flexDirection: 'column', gap: '10px',
-          backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '20px', padding: '26px 30px',
-          border: '2px solid rgba(16,185,129,0.35)'
-        }
-      },
-        h('span', { style: { fontSize: '22px', fontWeight: 700, color: '#10B981', letterSpacing: '2px' } }, 'DIE FORMEL'),
-        h('span', { style: { fontSize: '36px', fontWeight: 800, color: C.text, lineHeight: '1.2' } },
-          'Depotwert x 4% / 12 = Sichere Monatsentnahme'
-        )
-      ),
-      h('div', { style: { display: 'flex', gap: '14px' } },
-        h('div', {
-          style: {
-            display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: C.cardBg,
-            borderRadius: '18px', padding: '22px', gap: '8px', alignItems: 'center'
-          }
-        },
-          h('span', { style: { fontSize: '35px', fontWeight: 800, color: '#10B981' } }, '100 T'),
-          h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted, textAlign: 'center' } }, 'EUR Depot'),
-          h('div', { style: { display: 'flex', width: '100%', height: '2px', backgroundColor: C.border } }),
-          h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.text } }, '333 EUR/Mon')
-        ),
-        h('div', {
-          style: {
-            display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: C.cardBg,
-            borderRadius: '18px', padding: '22px', gap: '8px', alignItems: 'center'
-          }
-        },
-          h('span', { style: { fontSize: '35px', fontWeight: 800, color: '#10B981' } }, '250 T'),
-          h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted, textAlign: 'center' } }, 'EUR Depot'),
-          h('div', { style: { display: 'flex', width: '100%', height: '2px', backgroundColor: C.border } }),
-          h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.text } }, '833 EUR/Mon')
-        ),
-        h('div', {
-          style: {
-            display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: C.cardBg,
-            borderRadius: '18px', padding: '22px', gap: '8px', alignItems: 'center'
-          }
-        },
-          h('span', { style: { fontSize: '35px', fontWeight: 800, color: '#10B981' } }, '500 T'),
-          h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted, textAlign: 'center' } }, 'EUR Depot'),
-          h('div', { style: { display: 'flex', width: '100%', height: '2px', backgroundColor: C.border } }),
-          h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.text } }, '1.666 EUR/Mon')
-        )
-      ),
-      h('div', {
-        style: {
-          display: 'flex', alignItems: 'flex-start', gap: '12px', backgroundColor: C.cardBg,
-          borderRadius: '14px', padding: '18px 22px'
-        }
-      },
-        h('div', { style: { display: 'flex', width: '10px', height: '10px', borderRadius: '5px', backgroundColor: '#10B981', marginTop: '10px', flexShrink: '0' } }),
-        h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textSoft, lineHeight: '1.4' } },
-          'Das Depot bleibt dabei nominell erhalten oder waechst sogar weiter'
-        )
-      )
-    ),
-    keyLearning('4% pro Jahr ist die Grenze bei der dein Depot statistisch 30+ Jahre haelt', C.green),
-    footer()
-  ]);
-
-  // =========================================================
-  // SLIDE 6 — BEWEIS: Trinity Study
-  // =========================================================
-  const bars = [
-    { rate: '3%', pct: 100, label: '100% aller Szenarien erfolgreich', color: '#10B981' },
-    { rate: '4%', pct: 95, label: '95% — optimaler Mittelweg', color: '#10B981' },
-    { rate: '5%', pct: 82, label: '82% — schon riskant', color: '#F59E0B' },
-    { rate: '6%', pct: 68, label: '68% — hohes Depot-Pleite-Risiko', color: '#EF4444' },
+  const steps = [
+    { num: '01', title: 'Einloggen beim Broker oder deiner Bank', desc: 'App oder Online-Banking offnen. Meist unter "Steuer", "Service" oder "Einstellungen".' },
+    { num: '02', title: '"Freistellungsauftrag" suchen und offnen', desc: 'Feld fur den jahrlichen Betrag ausfullen. Maximalbetrag: 1.000 EUR (Single) oder 2.000 EUR (Eheleute).' },
+    { num: '03', title: 'Betrag festlegen und bestatigen', desc: 'Sofort wirksam — auch ruckwirkend fur das laufende Kalenderjahr. Fertig.' },
   ];
 
+  const slide5 = slideWrap([
+    badge('DIE LOSUNG'),
+    headline('In 3 Schritten zum kostenlosen Steuervorteil.', 54),
+    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '0' } },
+      ...steps.flatMap((step, i) => [
+        h('div', {
+          style: {
+            display: 'flex', alignItems: 'flex-start', gap: '20px', padding: '24px 28px',
+            backgroundColor: C.cardBg, borderRadius: '18px'
+          }
+        },
+          h('div', {
+            style: {
+              display: 'flex', width: '58px', height: '58px', borderRadius: '14px',
+              backgroundColor: i === 2 ? 'rgba(16,185,129,0.25)' : 'rgba(255,255,255,0.12)',
+              alignItems: 'center', justifyContent: 'center', flexShrink: '0',
+              border: i === 2 ? '2px solid rgba(16,185,129,0.6)' : '2px solid transparent'
+            }
+          },
+            h('span', { style: { fontSize: '26px', fontWeight: 800, color: i === 2 ? C.green : C.text } }, step.num)
+          ),
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
+            h('span', { style: { fontSize: '27px', fontWeight: 700, color: C.text, lineHeight: '1.3' } }, step.title),
+            h('span', { style: { fontSize: '23px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4' } }, step.desc)
+          )
+        ),
+        i < steps.length - 1 ? h('div', { style: { display: 'flex', justifyContent: 'center', padding: '4px 0' } },
+          h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center' } },
+            h('div', { style: { display: 'flex', width: '4px', height: '22px', backgroundColor: 'rgba(255,255,255,0.20)' } }),
+            h('div', { style: { display: 'flex', width: '0', height: '0', borderLeft: '8px solid transparent', borderRight: '8px solid transparent', borderTop: '10px solid rgba(255,255,255,0.20)' } })
+          )
+        ) : h('div', { style: { display: 'flex' } })
+      ])
+    ),
+    keyLearning('Zeitaufwand: 2 Minuten. Steuerersparnis: bis 263 EUR pro Jahr. Immer und immer wieder.', C.green),
+    footer()
+  ]);
+
+  // =========================================================
+  // SLIDE 6 — PROFI-TIPP: Mehrere Banken und Eheleute
+  // =========================================================
   const slide6 = slideWrap([
-    badge('DER BEWEIS'),
-    headline('Trinity Study: 30 Jahre Marktdaten', 56),
-    subline('Depot-Ueberlebensrate je nach jaehrlicher Entnahme-Rate'),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '18px' } },
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px' } },
-        ...bars.map(b =>
-          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px' } },
-            h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
-              h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
-                h('div', {
-                  style: {
-                    display: 'flex', width: '68px', alignItems: 'center', justifyContent: 'center',
-                    backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: '10px', padding: '8px 12px'
-                  }
-                },
-                  h('span', { style: { fontSize: '27px', fontWeight: 800, color: b.color } }, b.rate)
-                ),
-                h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textSoft } }, b.label)
-              ),
-              h('span', { style: { fontSize: '30px', fontWeight: 800, color: b.color } }, b.pct + '%')
+    badge('PROFI-TIPP'),
+    headline('Mehrere Banken? So teilst du richtig auf.', 56),
+    subline('Den Gesamtbetrag kannst du beliebig auf Konten und Banken aufteilen.'),
+    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '20px' } },
+      h('div', { style: { display: 'flex', gap: '18px' } },
+        // Card: Single
+        h('div', {
+          style: {
+            display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: C.cardBg,
+            borderRadius: '20px', padding: '28px', gap: '14px'
+          }
+        },
+          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '3px', color: C.textMuted } }, 'SINGLE'),
+          h('div', { style: { display: 'flex', width: '100%', height: '2px', backgroundColor: C.border } }),
+          h('span', { style: { fontSize: '46px', fontWeight: 800, color: C.green, lineHeight: '1' } }, '1.000 EUR'),
+          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, lineHeight: '1.4' } }, 'Jahresbetrag — auf alle Banken zusammen'),
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' } },
+            h('div', { style: { display: 'flex', justifyContent: 'space-between', padding: '10px 14px', backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '10px' } },
+              h('span', { style: { fontSize: '22px', color: C.textSoft } }, 'Scalable Capital'),
+              h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.text } }, '600 EUR')
             ),
-            h('div', { style: { display: 'flex', height: '12px', backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: '6px', overflow: 'hidden' } },
-              h('div', { style: { display: 'flex', width: b.pct + '%', height: '12px', backgroundColor: b.color, borderRadius: '6px' } })
+            h('div', { style: { display: 'flex', justifyContent: 'space-between', padding: '10px 14px', backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '10px' } },
+              h('span', { style: { fontSize: '22px', color: C.textSoft } }, 'Tagesgeldkonto'),
+              h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.text } }, '400 EUR')
+            )
+          )
+        ),
+        // Card: Eheleute
+        h('div', {
+          style: {
+            display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: C.cardBg,
+            borderRadius: '20px', padding: '28px', gap: '14px'
+          }
+        },
+          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '3px', color: C.textMuted } }, 'EHELEUTE'),
+          h('div', { style: { display: 'flex', width: '100%', height: '2px', backgroundColor: C.border } }),
+          h('span', { style: { fontSize: '46px', fontWeight: 800, color: C.green, lineHeight: '1' } }, '2.000 EUR'),
+          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, lineHeight: '1.4' } }, 'Gemeinsam oder je 1.000 EUR einzeln'),
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' } },
+            h('div', { style: { display: 'flex', justifyContent: 'space-between', padding: '10px 14px', backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '10px' } },
+              h('span', { style: { fontSize: '22px', color: C.textSoft } }, 'Ehepartner 1'),
+              h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.text } }, '1.000 EUR')
+            ),
+            h('div', { style: { display: 'flex', justifyContent: 'space-between', padding: '10px 14px', backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '10px' } },
+              h('span', { style: { fontSize: '22px', color: C.textSoft } }, 'Ehepartner 2'),
+              h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.text } }, '1.000 EUR')
             )
           )
         )
@@ -406,33 +405,33 @@ async function main() {
       h('div', {
         style: {
           display: 'flex', alignItems: 'flex-start', gap: '12px',
-          backgroundColor: 'rgba(16,185,129,0.10)', borderRadius: '14px', padding: '18px 22px',
-          border: '1px solid rgba(16,185,129,0.25)'
+          backgroundColor: 'rgba(239,68,68,0.10)', borderRadius: '14px', padding: '18px 22px',
+          border: '1px solid rgba(239,68,68,0.25)'
         }
       },
-        h('div', { style: { display: 'flex', width: '12px', height: '12px', borderRadius: '6px', backgroundColor: '#10B981', marginTop: '8px', flexShrink: '0' } }),
-        h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4' } },
-          '4% ist der goldene Mittelweg: Hohe Sicherheit UND noch genug Lebensqualitaet im Alter'
+        h('div', { style: { display: 'flex', width: '12px', height: '12px', borderRadius: '6px', backgroundColor: C.red, flexShrink: '0', marginTop: '7px' } }),
+        h('span', { style: { fontSize: '25px', fontWeight: 600, color: C.red, lineHeight: '1.4' } },
+          'Wichtig: Gesamtbetrag uber alle Banken darf 1.000 EUR (Single) nicht uberschreiten — das Finanzamt gleicht ab!'
         )
       )
     ),
-    keyLearning('Ab 5% Entnahme steigt das Depot-Pleite-Risiko auf 18% — die 4%-Regel ist kein Zufall', C.green),
+    keyLearning('Aufteilen ist erlaubt und sinnvoll — uberschreiten wird automatisch korrigiert.'),
     footer()
   ]);
 
   // =========================================================
-  // SLIDE 7 — 4-SCHRITT FAHRPLAN
+  // SLIDE 7 — LEARNINGS: 4 Takeaways
   // =========================================================
   const learnings = [
-    { num: '01', text: 'Zieldepot berechnen: Jaehrl. Bedarf x 25 = noetiges Depot', pct: 25 },
-    { num: '02', text: 'Liquiditaetspuffer anlegen: 2 Jahrsentnahmen als Tagesgeld', pct: 50 },
-    { num: '03', text: '4%-Regel als Basis nutzen und jaehrlich neu berechnen', pct: 75 },
-    { num: '04', text: 'Jaehrliches Rebalancing beibehalten — nie auslassen', pct: 100 },
+    { num: '01', text: 'Freistellungsauftrag stellen — kostenlos, sofort, bei jeder Bank einzeln.', pct: 25 },
+    { num: '02', text: '1.000 EUR/Jahr steuerfrei (Single) | 2.000 EUR/Jahr (Eheleute).', pct: 50 },
+    { num: '03', text: 'Gilt ab Antragsdatum — auch ruckwirkend im laufenden Kalenderjahr.', pct: 75 },
+    { num: '04', text: 'Bankwechsel? Freistellungsauftrag bei neuer Bank immer neu beantragen.', pct: 100 },
   ];
 
   const slide7 = slideWrap([
-    badge('DEIN FAHRPLAN'),
-    headline('4 Schritte zur sicheren Entsparphase', 55),
+    badge('DEINE TAKEAWAYS'),
+    headline('4 Dinge, die du jetzt weisst.', 60),
     h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '14px' } },
       ...learnings.map(l =>
         h('div', {
@@ -442,16 +441,16 @@ async function main() {
           }
         },
           h('div', { style: { display: 'flex', alignItems: 'center', gap: '18px' } },
-            h('span', { style: { fontSize: '36px', fontWeight: 800, color: l.pct === 100 ? '#10B981' : C.text, minWidth: '56px' } }, l.num),
-            h('span', { style: { fontSize: '25px', fontWeight: 600, color: C.text, lineHeight: '1.3' } }, l.text)
+            h('span', { style: { fontSize: '36px', fontWeight: 800, color: l.pct === 100 ? C.green : C.text, minWidth: '56px' } }, l.num),
+            h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.3' } }, l.text)
           ),
           h('div', { style: { display: 'flex', height: '6px', backgroundColor: C.border, borderRadius: '3px', overflow: 'hidden' } },
-            h('div', { style: { display: 'flex', width: l.pct + '%', height: '6px', backgroundColor: l.pct === 100 ? '#10B981' : C.text, borderRadius: '3px' } })
+            h('div', { style: { display: 'flex', width: l.pct + '%', height: '6px', backgroundColor: l.pct === 100 ? C.green : C.text, borderRadius: '3px' } })
           )
         )
       )
     ),
-    keyLearning('Mit diesen 4 Schritten sorgst du dafuer dass dein Depot laenger haelt als du lebst', C.green),
+    keyLearning('Kostenloser Steuervorteil — jetzt sofort in der Banking-App umsetzen.', C.green),
     footer()
   ]);
 
@@ -459,41 +458,35 @@ async function main() {
   // SLIDE 8 — CTA
   // =========================================================
   const slide8 = slideWrap([
-    badge('JETZT DU'),
-    headline('Wie gross muss dein persoenliches Zieldepot sein?', 52),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '22px', alignItems: 'center' } },
+    badge('UND JETZT DU'),
+    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '28px' } },
+      headline('Hast du deinen Freistellungsauftrag bereits gestellt?', 50),
       h('div', {
         style: {
-          display: 'flex', flexDirection: 'column', backgroundColor: 'rgba(16,185,129,0.12)',
-          borderRadius: '24px', padding: '32px 40px', gap: '16px', width: '100%',
-          border: '2px solid rgba(16,185,129,0.35)', alignItems: 'center'
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px',
+          backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '20px', padding: '28px 36px',
+          border: '2px solid rgba(16,185,129,0.35)', width: '100%'
         }
       },
-        h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textMuted, letterSpacing: '2px' } }, 'DEINE FORMEL'),
-        h('span', { style: { fontSize: '44px', fontWeight: 800, color: C.text, textAlign: 'center', lineHeight: '1.15' } },
-          'Jaehrl. Bedarf x 25 = Zieldepot'
+        h('span', { style: { fontSize: '32px', fontWeight: 700, color: C.text, textAlign: 'center', lineHeight: '1.35' } },
+          'Schreib "JA" oder "NEIN" in die Kommentare.'
         ),
-        h('div', { style: { display: 'flex', width: '100%', height: '2px', backgroundColor: 'rgba(16,185,129,0.3)' } }),
-        h('span', { style: { fontSize: '28px', fontWeight: 600, color: C.textSoft, textAlign: 'center', lineHeight: '1.35' } },
-          '24.000 EUR Jahresbedarf x 25 = 600.000 EUR Zieldepot'
+        h('span', { style: { fontSize: '27px', fontWeight: 500, color: C.textSoft, textAlign: 'center', lineHeight: '1.4' } },
+          'Wir antworten auf jeden Kommentar.'
         )
       ),
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' } },
-        h('span', { style: { fontSize: '34px', fontWeight: 700, color: C.text, textAlign: 'center', lineHeight: '1.3' } },
-          'Speichern nicht vergessen! Rechne jetzt deinen Zielwert.'
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px', alignItems: 'center', width: '100%' } },
+        h('div', {
+          style: {
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            backgroundColor: C.cardBg, borderRadius: '16px', padding: '18px 32px', width: '100%'
+          }
+        },
+          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.green } }, 'Speichern nicht vergessen')
         ),
         h('span', { style: { fontSize: '27px', fontWeight: 500, color: C.textMuted, textAlign: 'center', lineHeight: '1.4' } },
-          'Schreib uns in die Kommentare: Wie weit bist du auf dem Weg zu deinem Zieldepot?'
+          'Folge @benarofinanzen fur mehr\nkostenlose Steuertipps und Finanzwissen.'
         )
-      ),
-      h('div', {
-        style: {
-          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px',
-          backgroundColor: C.cardBg, borderRadius: '16px', padding: '18px 36px', width: '100%'
-        }
-      },
-        h('span', { style: { fontSize: '25px', fontWeight: 600, color: C.textSoft, textAlign: 'center' } }, 'Folge uns fuer mehr Finanzwissen'),
-        h('span', { style: { fontSize: '28px', fontWeight: 700, color: '#10B981' } }, '@benarofinanzen')
       )
     ),
     footer()
@@ -503,7 +496,7 @@ async function main() {
   // GENERATE ALL SLIDES
   // =========================================================
   const slides = [slide1, slide2, slide3, slide4, slide5, slide6, slide7, slide8];
-  const outDir = path.join(__dirname, 'output', 'carousel_2026-07-16', 'slides');
+  const outDir = path.join(__dirname, 'output', 'carousel_2026-07-17', 'slides');
   if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
 
   for (let i = 0; i < slides.length; i++) {
