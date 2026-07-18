@@ -1,5 +1,5 @@
-// Carousel: Freistellungsauftrag 2026 — Der 1.000 EUR Steuervorteil den 63% vergessen
-// Inspiration: @finanzcopilot — Steuer-Content, hochaktuelles Follow-Up zur Vorabpauschale
+// Carousel: Finanz-Fahrplan 2026 — 5 Schritte zur finanziellen Freiheit
+// Inspiration: @richlife.original — "The Rich Life Roadmap for 2026 (Step-by-Step)" DXM6jaUDIll
 const fs = require('fs');
 const path = require('path');
 
@@ -18,7 +18,7 @@ async function main() {
   ).toString('base64');
 
   const C = {
-    bg: '#001f61',
+    bg: '#001F61',
     text: '#FFFFFF',
     textSoft: '#E5E7EB',
     textMuted: '#9CA3AF',
@@ -85,364 +85,315 @@ async function main() {
     return h('img', { src: logoB64, width: size, height: size, style: { borderRadius: '12px', objectFit: 'cover' } });
   }
 
+  function headerRow(badgeText) {
+    return h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' } },
+      badge(badgeText),
+      logoImg(120)
+    );
+  }
+
   function slideWrap(children) {
     return h('div', {
       style: {
         display: 'flex', flexDirection: 'column', width: W, height: H,
         padding: '70px', backgroundColor: C.bg, fontFamily: 'Outfit'
       }
-    },
-      h('div', { style: { display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' } },
-        logoImg(120)
-      ),
-      ...children
-    );
+    }, ...children);
   }
 
   // =========================================================
-  // SLIDE 1 — HOOK
+  // SLIDE 1 — HOOK: Die meisten ueberspringen Schritt 3
   // =========================================================
   const slide1 = slideWrap([
-    badge('ACHTUNG'),
-    headline('Dein Broker zieht Steuern ab — obwohl er das nicht muss.', 56),
-    subline('1.000 EUR im Jahr sind steuerfrei. Aber nur wenn du aktiv wirst.'),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '20px' } },
-      h('div', { style: { display: 'flex', gap: '18px' } },
-        // Card: OHNE Freistellungsauftrag
-        h('div', {
-          style: {
-            display: 'flex', flex: '1', flexDirection: 'column', alignItems: 'center', gap: '14px',
-            backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '20px', padding: '32px 20px',
-            border: '2px solid rgba(239,68,68,0.35)'
-          }
-        },
-          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '3px', color: C.red } }, 'OHNE FA'),
-          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(239,68,68,0.3)', borderRadius: '2px' } }),
-          h('span', { style: { fontSize: '62px', fontWeight: 800, color: C.red, lineHeight: '1' } }, '263'),
-          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.red } }, 'EUR Steuer'),
-          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, textAlign: 'center', lineHeight: '1.4' } }, 'auf 1.000 EUR Kapitalertrage/Jahr')
-        ),
-        // Card: MIT Freistellungsauftrag
-        h('div', {
-          style: {
-            display: 'flex', flex: '1', flexDirection: 'column', alignItems: 'center', gap: '14px',
-            backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '20px', padding: '32px 20px',
-            border: '2px solid rgba(16,185,129,0.35)'
-          }
-        },
-          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '3px', color: C.green } }, 'MIT FA'),
-          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(16,185,129,0.3)', borderRadius: '2px' } }),
-          h('span', { style: { fontSize: '62px', fontWeight: 800, color: C.green, lineHeight: '1' } }, '0'),
-          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.green } }, 'EUR Steuer'),
-          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, textAlign: 'center', lineHeight: '1.4' } }, 'auf 1.000 EUR Kapitalertrage/Jahr')
-        )
-      ),
-      h('div', {
-        style: {
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          backgroundColor: C.cardBg, borderRadius: '16px', padding: '22px 28px'
-        }
-      },
-        h('span', { style: { fontSize: '29px', fontWeight: 700, color: C.text, textAlign: 'center', lineHeight: '1.4' } },
-          'Der Freistellungsauftrag ist kostenlos, dauert 2 Minuten — und kaum jemand nutzt ihn.'
-        )
-      )
+    h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' } },
+      badge('ACHTUNG'),
+      logoImg(120)
     ),
-    keyLearning('Lies alle 8 Slides — am Ende weisst du, wie du sofort Steuern sparst.'),
+    headline('Die meisten\nDeutschen\nueberspringen\nSchritt 3.', 58),
+    subline('Dein Finanz-Fahrplan 2026 — 5 Schritte zur finanziellen Freiheit'),
+    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '12px' } },
+      ...([
+        { num: '01', label: 'Notgroschen aufbauen', ok: true, skip: false },
+        { num: '02', label: 'Schulden tilgen', ok: true, skip: false },
+        { num: '03', label: 'Absicherung', ok: false, skip: true },
+        { num: '04', label: 'ETF-Sparplan starten', ok: true, skip: false },
+        { num: '05', label: 'Optimieren', ok: true, skip: false },
+      ].map(({ num, label, skip }) =>
+        h('div', {
+          style: {
+            display: 'flex', alignItems: 'center', gap: '16px',
+            backgroundColor: skip ? 'rgba(239,68,68,0.12)' : C.cardBg,
+            borderRadius: '14px', padding: '14px 22px',
+            border: skip ? '1px solid rgba(239,68,68,0.40)' : 'none',
+          }
+        },
+          h('div', {
+            style: {
+              display: 'flex', width: '44px', height: '44px', borderRadius: '10px',
+              backgroundColor: skip ? C.red : 'rgba(16,185,129,0.20)',
+              alignItems: 'center', justifyContent: 'center', flexShrink: '0',
+            }
+          },
+            h('span', { style: { fontSize: '20px', fontWeight: 800, color: '#FFFFFF' } }, num)
+          ),
+          h('span', { style: { fontSize: '27px', fontWeight: 700, color: skip ? C.red : C.text } }, label),
+          skip ? h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.red, marginLeft: 'auto' } }, 'Wird uebersprungen!') : h('span', {})
+        )
+      ))
+    ),
+    keyLearning('Warum Schritt 3 entscheidend ist — und was passiert wenn du ihn auslasst.', C.red),
     footer()
   ]);
 
   // =========================================================
-  // SLIDE 2 — STAT HERO: 63% ohne Freistellungsauftrag
+  // SLIDE 2 — STAT HERO: Das Risiko ohne Absicherung
   // =========================================================
-  const barSvg = `<svg width="900" height="280" viewBox="0 0 900 280" xmlns="http://www.w3.org/2000/svg">
-    <line x1="0" y1="240" x2="900" y2="240" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-    <line x1="0" y1="180" x2="900" y2="180" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-    <line x1="0" y1="120" x2="900" y2="120" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-    <line x1="0" y1="60" x2="900" y2="60" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-    <rect x="40" y="192" width="140" height="48" rx="6" fill="rgba(239,68,68,0.65)"/>
-    <rect x="240" y="158" width="140" height="82" rx="6" fill="rgba(239,68,68,0.55)"/>
-    <rect x="440" y="130" width="140" height="110" rx="6" fill="rgba(16,185,129,0.55)"/>
-    <rect x="640" y="96" width="140" height="144" rx="6" fill="rgba(16,185,129,0.80)"/>
+  const riskSvg = `<svg width="860" height="240" viewBox="0 0 860 240" xmlns="http://www.w3.org/2000/svg">
+    <line x1="0" y1="200" x2="860" y2="200" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+    <rect x="30" y="80" width="160" height="120" rx="8" fill="rgba(239,68,68,0.50)"/>
+    <rect x="230" y="50" width="160" height="150" rx="8" fill="rgba(239,68,68,0.65)"/>
+    <rect x="430" y="30" width="160" height="170" rx="8" fill="rgba(239,68,68,0.80)"/>
+    <rect x="630" y="10" width="160" height="190" rx="8" fill="rgba(239,68,68,0.95)"/>
   </svg>`;
-  const barSrc = 'data:image/svg+xml;base64,' + Buffer.from(barSvg).toString('base64');
+  const riskSrc = 'data:image/svg+xml;base64,' + Buffer.from(riskSvg).toString('base64');
 
   const slide2 = slideWrap([
-    badge('DAS PROBLEM'),
-    headline('63% verschenken 1.000 EUR im Jahr.', 56),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '22px' } },
+    h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' } },
+      badge('DAS RISIKO'),
+      logoImg(120)
+    ),
+    headline('1 von 4 Arbeitnehmern wird berufsunfaehig.', 56),
+    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '18px' } },
       h('div', {
         style: {
-          display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px',
-          backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '20px', padding: '28px 34px',
-          border: '2px solid rgba(239,68,68,0.3)'
+          display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '6px',
+          backgroundColor: 'rgba(239,68,68,0.10)', borderRadius: '20px', padding: '28px 34px',
+          border: '2px solid rgba(239,68,68,0.30)'
         }
       },
-        h('span', { style: { fontSize: '120px', fontWeight: 800, color: C.red, lineHeight: '1', letterSpacing: '-4px' } }, '63%'),
+        h('span', { style: { fontSize: '110px', fontWeight: 800, color: C.red, lineHeight: '1', letterSpacing: '-4px' } }, '1/4'),
         h('span', { style: { fontSize: '28px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4' } },
-          'haben keinen gultig gestellten Freistellungsauftrag'
+          'scheidet vor dem 65. Lebensjahr krankheitsbedingt aus dem Beruf aus'
         )
       ),
-      // Bar chart with age groups
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px' } },
-        h('img', { src: barSrc, width: 900, height: 280, style: { objectFit: 'contain', width: '100%' } }),
-        h('div', { style: { display: 'flex', justifyContent: 'space-around', paddingTop: '4px' } },
-          ...[ ['18-30', '20%', C.red], ['31-45', '34%', C.red], ['46-60', '46%', C.green], ['60+', '60%', C.green] ].map(([age, pct, color]) =>
-            h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' } },
-              h('span', { style: { fontSize: '26px', fontWeight: 800, color: color } }, pct),
-              h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted } }, age)
-            )
-          )
-        ),
-        h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted, textAlign: 'center', marginTop: '4px' } }, 'Anteil MIT gesetztem Freistellungsauftrag — nach Alter')
-      )
+      h('img', { src: riskSrc, width: 860, height: 240, style: { objectFit: 'contain', width: '100%' } }),
+      h('div', { style: { display: 'flex', justifyContent: 'space-around' } },
+        ...(['25 J.', '35 J.', '45 J.', '55 J.'].map(age =>
+          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted } }, age)
+        ))
+      ),
+      h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted, textAlign: 'center' } }, 'Kumulatives BU-Risiko je Altersgruppe — steigt mit jedem Jahrzehnt')
     ),
-    keyLearning('Besonders junge Anleger verlieren Jahr fur Jahr Geld — obwohl es gratis zu verhindern ware.'),
+    keyLearning('ETF-Depot allein genuegt nicht — ohne BU-Schutz ist alles auf Sand gebaut.', C.red),
     footer()
   ]);
 
   // =========================================================
-  // SLIDE 3 — PROBLEM: Wie viel verlierst du wirklich?
+  // SLIDE 3 — PROBLEM FLOW: Der Dominoeffekt
   // =========================================================
   const slide3 = slideWrap([
-    badge('DEINE STEUERLUCKE'),
-    headline('So viel zahlst du unnotigerweise ans Finanzamt.', 52),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '16px' } },
-      ...[
-        { depot: '10.000 EUR Depot', zinsen: '250 EUR Ertrage (2,5% p.a.)', tax: '65 EUR/Jahr', pct: 25, isHigh: false },
-        { depot: '25.000 EUR Depot', zinsen: '625 EUR Ertrage (2,5% p.a.)', tax: '163 EUR/Jahr', pct: 50, isHigh: false },
-        { depot: '50.000 EUR Depot', zinsen: '1.250 EUR Ertrage (2,5% p.a.)', tax: '263 EUR/Jahr', pct: 100, isHigh: true },
-      ].map((item) =>
-        h('div', {
-          style: {
-            display: 'flex', flexDirection: 'column', gap: '10px', padding: '22px 26px',
-            backgroundColor: C.cardBg, borderRadius: '18px',
-            border: item.isHigh ? '2px solid rgba(239,68,68,0.4)' : '2px solid transparent'
-          }
-        },
-          h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
-            h('div', { style: { display: 'flex', flexDirection: 'column', gap: '3px' } },
-              h('span', { style: { fontSize: '27px', fontWeight: 700, color: C.text } }, item.depot),
-              h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted } }, item.zinsen)
-            ),
-            h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px' } },
-              h('span', { style: { fontSize: '30px', fontWeight: 800, color: item.isHigh ? C.red : C.textSoft } }, item.tax),
-              h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted } }, 'verschenkt')
-            )
-          ),
-          h('div', { style: { display: 'flex', height: '8px', backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: '4px', overflow: 'hidden' } },
-            h('div', { style: { display: 'flex', width: item.pct + '%', height: '8px', backgroundColor: item.isHigh ? C.red : C.textMuted, borderRadius: '4px' } })
+    h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' } },
+      badge('DER DOMINOEFFEKT'),
+      logoImg(120)
+    ),
+    headline('So verliert man\nalles — auch mit\nETF-Depot.', 58),
+    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '10px' } },
+      ...([
+        { num: '01', title: 'Unfall oder schwere Krankheit', detail: 'Trifft jeden — unabhaengig von Alter oder Fitness', bg: C.cardBg, tc: C.text },
+        { num: '02', title: 'Einkommen faellt weg', detail: 'Staatliche Erwerbsminderungsrente: ca. 900 EUR/Monat', bg: 'rgba(239,68,68,0.08)', tc: C.red },
+        { num: '03', title: 'Sparplan muss pausieren', detail: 'Zinseszins bricht ab — jahrelanger Aufbau unterbrochen', bg: 'rgba(239,68,68,0.12)', tc: C.red },
+        { num: '04', title: 'Ersparnisse aufbrauchen', detail: 'Das muehsam aufgebaute Depot wird aufgeloest', bg: 'rgba(239,68,68,0.18)', tc: C.red },
+        { num: '05', title: 'Altersarmut trotz Disziplin', detail: 'Jahrzehnte sparen — durch ein Ereignis zunichte', bg: 'rgba(239,68,68,0.24)', tc: C.red },
+      ].map(({ num, title, detail, bg, tc }) =>
+        h('div', { style: { display: 'flex', alignItems: 'center', gap: '14px', backgroundColor: bg, borderRadius: '12px', padding: '14px 20px' } },
+          h('span', { style: { fontSize: '30px', fontWeight: 800, color: tc, minWidth: '44px' } }, num),
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '2px' } },
+            h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.text } }, title),
+            h('span', { style: { fontSize: '21px', fontWeight: 500, color: C.textMuted } }, detail)
           )
         )
-      ),
-      h('div', {
-        style: {
-          display: 'flex', alignItems: 'center', gap: '14px',
-          backgroundColor: 'rgba(239,68,68,0.10)', borderRadius: '14px', padding: '18px 22px',
-          border: '1px solid rgba(239,68,68,0.25)'
-        }
-      },
-        h('div', { style: { display: 'flex', width: '12px', height: '12px', borderRadius: '6px', backgroundColor: C.red, flexShrink: '0', marginTop: '4px' } }),
-        h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.red, lineHeight: '1.4' } },
-          'Ohne Freistellungsauftrag: Bis 263 EUR Steuern pro Jahr — uber 10 Jahre sind das 2.630 EUR verloren'
-        )
-      )
+      ))
     ),
-    keyLearning('Mit dem Freistellungsauftrag: 0 EUR — und das Geld bleibt komplett im Depot.', C.red),
+    keyLearning('Erst absichern — dann investieren. Diese Reihenfolge ist nicht verhandelbar.', C.red),
     footer()
   ]);
 
   // =========================================================
-  // SLIDE 4 — ERWARTUNG vs REALITAT: 3 Mythen
+  // SLIDE 4 — ERWARTUNG vs. REALITAET
   // =========================================================
   const slide4 = slideWrap([
-    badge('IRRTUM AUFGEDECKT'),
-    headline('Was die meisten denken — und was wirklich stimmt.', 52),
+    h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' } },
+      badge('MYTHOS ENTLARVT'),
+      logoImg(120)
+    ),
+    headline('Was die meisten\ndenken vs. was\nwirklich stimmt.', 56),
     h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '16px' } },
-      ...[
-        {
-          mythos: '"Die Bank stellt den Freistellungsauftrag automatisch ein."',
-          fakt: 'Nein — du musst ihn aktiv beantragen. Pro Bank einzeln.'
-        },
-        {
-          mythos: '"Einmal ausgefullt gilt er fur immer."',
-          fakt: 'Beim Bankwechsel, Kontoschliessung oder Depot-Ubertrag verfällt der FA.'
-        },
-        {
-          mythos: '"Das lohnt sich erst bei grossem Depot."',
-          fakt: 'Schon ab 250 EUR Ertragen im Jahr sparst du uber 65 EUR Steuern — kostenlos.'
-        }
-      ].map(item =>
-        h('div', { style: { display: 'flex', gap: '12px' } },
-          h('div', {
-            style: {
-              display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(239,68,68,0.10)',
-              borderRadius: '16px', padding: '20px 22px', gap: '8px',
-              border: '1px solid rgba(239,68,68,0.20)'
-            }
-          },
-            h('span', { style: { fontSize: '18px', fontWeight: 700, letterSpacing: '2px', color: C.red } }, 'MYTHOS'),
-            h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, lineHeight: '1.4' } }, item.mythos)
+      h('div', { style: { display: 'flex', gap: '14px', flex: '1', maxHeight: '480px' } },
+        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: C.cardBg, borderRadius: '20px', padding: '26px', gap: '12px' } },
+          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: C.textMuted } }, 'ERWARTUNG'),
+          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: C.border, borderRadius: '2px' } }),
+          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft, lineHeight: '1.45' } },
+            '"Ich bin jung und gesund — Versicherungen kommen spaeter."'
           ),
-          h('div', {
-            style: {
-              display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(16,185,129,0.10)',
-              borderRadius: '16px', padding: '20px 22px', gap: '8px',
-              border: '1px solid rgba(16,185,129,0.20)'
-            }
-          },
-            h('span', { style: { fontSize: '18px', fontWeight: 700, letterSpacing: '2px', color: C.green } }, 'FAKT'),
-            h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, lineHeight: '1.4' } }, item.fakt)
-          )
-        )
-      )
-    ),
-    keyLearning('Aktiv handeln zahlt sich aus — die Bank ubernimmt das NICHT fur dich.'),
-    footer()
-  ]);
-
-  // =========================================================
-  // SLIDE 5 — DIE LOSUNG: 3-Schritt Anleitung
-  // =========================================================
-  const steps = [
-    { num: '01', title: 'Einloggen beim Broker oder deiner Bank', desc: 'App oder Online-Banking offnen. Meist unter "Steuer", "Service" oder "Einstellungen".' },
-    { num: '02', title: '"Freistellungsauftrag" suchen und offnen', desc: 'Feld fur den jahrlichen Betrag ausfullen. Maximalbetrag: 1.000 EUR (Single) oder 2.000 EUR (Eheleute).' },
-    { num: '03', title: 'Betrag festlegen und bestatigen', desc: 'Sofort wirksam — auch ruckwirkend fur das laufende Kalenderjahr. Fertig.' },
-  ];
-
-  const slide5 = slideWrap([
-    badge('DIE LOSUNG'),
-    headline('In 3 Schritten zum kostenlosen Steuervorteil.', 54),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '0' } },
-      ...steps.flatMap((step, i) => [
-        h('div', {
-          style: {
-            display: 'flex', alignItems: 'flex-start', gap: '20px', padding: '24px 28px',
-            backgroundColor: C.cardBg, borderRadius: '18px'
-          }
-        },
-          h('div', {
-            style: {
-              display: 'flex', width: '58px', height: '58px', borderRadius: '14px',
-              backgroundColor: i === 2 ? 'rgba(16,185,129,0.25)' : 'rgba(255,255,255,0.12)',
-              alignItems: 'center', justifyContent: 'center', flexShrink: '0',
-              border: i === 2 ? '2px solid rgba(16,185,129,0.6)' : '2px solid transparent'
-            }
-          },
-            h('span', { style: { fontSize: '26px', fontWeight: 800, color: i === 2 ? C.green : C.text } }, step.num)
+          h('div', { style: { display: 'flex', height: '1px', backgroundColor: C.border } }),
+          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft, lineHeight: '1.45' } },
+            '"Erst Geld sparen, dann absichern."'
           ),
-          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
-            h('span', { style: { fontSize: '27px', fontWeight: 700, color: C.text, lineHeight: '1.3' } }, step.title),
-            h('span', { style: { fontSize: '23px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4' } }, step.desc)
+          h('div', { style: { display: 'flex', height: '1px', backgroundColor: C.border } }),
+          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft, lineHeight: '1.45' } },
+            '"BU-Versicherung ist teuer und unnoetig."'
           )
         ),
-        i < steps.length - 1 ? h('div', { style: { display: 'flex', justifyContent: 'center', padding: '4px 0' } },
-          h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center' } },
-            h('div', { style: { display: 'flex', width: '4px', height: '22px', backgroundColor: 'rgba(255,255,255,0.20)' } }),
-            h('div', { style: { display: 'flex', width: '0', height: '0', borderLeft: '8px solid transparent', borderRight: '8px solid transparent', borderTop: '10px solid rgba(255,255,255,0.20)' } })
-          )
-        ) : h('div', { style: { display: 'flex' } })
-      ])
-    ),
-    keyLearning('Zeitaufwand: 2 Minuten. Steuerersparnis: bis 263 EUR pro Jahr. Immer und immer wieder.', C.green),
-    footer()
-  ]);
-
-  // =========================================================
-  // SLIDE 6 — PROFI-TIPP: Mehrere Banken und Eheleute
-  // =========================================================
-  const slide6 = slideWrap([
-    badge('PROFI-TIPP'),
-    headline('Mehrere Banken? So teilst du richtig auf.', 56),
-    subline('Den Gesamtbetrag kannst du beliebig auf Konten und Banken aufteilen.'),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '20px' } },
-      h('div', { style: { display: 'flex', gap: '18px' } },
-        // Card: Single
-        h('div', {
-          style: {
-            display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: C.cardBg,
-            borderRadius: '20px', padding: '28px', gap: '14px'
-          }
-        },
-          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '3px', color: C.textMuted } }, 'SINGLE'),
-          h('div', { style: { display: 'flex', width: '100%', height: '2px', backgroundColor: C.border } }),
-          h('span', { style: { fontSize: '46px', fontWeight: 800, color: C.green, lineHeight: '1' } }, '1.000 EUR'),
-          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, lineHeight: '1.4' } }, 'Jahresbetrag — auf alle Banken zusammen'),
-          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' } },
-            h('div', { style: { display: 'flex', justifyContent: 'space-between', padding: '10px 14px', backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '10px' } },
-              h('span', { style: { fontSize: '22px', color: C.textSoft } }, 'Scalable Capital'),
-              h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.text } }, '600 EUR')
-            ),
-            h('div', { style: { display: 'flex', justifyContent: 'space-between', padding: '10px 14px', backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '10px' } },
-              h('span', { style: { fontSize: '22px', color: C.textSoft } }, 'Tagesgeldkonto'),
-              h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.text } }, '400 EUR')
-            )
-          )
-        ),
-        // Card: Eheleute
-        h('div', {
-          style: {
-            display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: C.cardBg,
-            borderRadius: '20px', padding: '28px', gap: '14px'
-          }
-        },
-          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '3px', color: C.textMuted } }, 'EHELEUTE'),
-          h('div', { style: { display: 'flex', width: '100%', height: '2px', backgroundColor: C.border } }),
-          h('span', { style: { fontSize: '46px', fontWeight: 800, color: C.green, lineHeight: '1' } }, '2.000 EUR'),
-          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, lineHeight: '1.4' } }, 'Gemeinsam oder je 1.000 EUR einzeln'),
-          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' } },
-            h('div', { style: { display: 'flex', justifyContent: 'space-between', padding: '10px 14px', backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '10px' } },
-              h('span', { style: { fontSize: '22px', color: C.textSoft } }, 'Ehepartner 1'),
-              h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.text } }, '1.000 EUR')
-            ),
-            h('div', { style: { display: 'flex', justifyContent: 'space-between', padding: '10px 14px', backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '10px' } },
-              h('span', { style: { fontSize: '22px', color: C.textSoft } }, 'Ehepartner 2'),
-              h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.text } }, '1.000 EUR')
-            )
+        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: '#FFFFFF', borderRadius: '20px', padding: '26px', gap: '12px' } },
+          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: 'rgba(0,31,97,0.5)' } }, 'REALITAET'),
+          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(0,31,97,0.12)', borderRadius: '2px' } }),
+          h('span', { style: { fontSize: '26px', fontWeight: 600, color: '#001F61', lineHeight: '1.45' } },
+            'BU-Faelle treffen am haeufigsten 30- bis 45-Jaehrige.'
+          ),
+          h('div', { style: { display: 'flex', height: '1px', backgroundColor: 'rgba(0,31,97,0.1)' } }),
+          h('span', { style: { fontSize: '26px', fontWeight: 600, color: '#001F61', lineHeight: '1.45' } },
+            'Ohne BU loest du das Depot auf — bevor Zinseszins wirkt.'
+          ),
+          h('div', { style: { display: 'flex', height: '1px', backgroundColor: 'rgba(0,31,97,0.1)' } }),
+          h('span', { style: { fontSize: '26px', fontWeight: 600, color: '#001F61', lineHeight: '1.45' } },
+            'BU mit 25 kostet ca. 40 EUR/Monat — spaeter das Dreifache.'
           )
         )
       ),
-      h('div', {
-        style: {
-          display: 'flex', alignItems: 'flex-start', gap: '12px',
-          backgroundColor: 'rgba(239,68,68,0.10)', borderRadius: '14px', padding: '18px 22px',
-          border: '1px solid rgba(239,68,68,0.25)'
-        }
-      },
-        h('div', { style: { display: 'flex', width: '12px', height: '12px', borderRadius: '6px', backgroundColor: C.red, flexShrink: '0', marginTop: '7px' } }),
-        h('span', { style: { fontSize: '25px', fontWeight: 600, color: C.red, lineHeight: '1.4' } },
-          'Wichtig: Gesamtbetrag uber alle Banken darf 1.000 EUR (Single) nicht uberschreiten — das Finanzamt gleicht ab!'
+      h('div', { style: { display: 'flex', alignItems: 'center', gap: '12px', backgroundColor: 'rgba(16,185,129,0.08)', borderRadius: '12px', padding: '16px 22px', border: '1px solid rgba(16,185,129,0.25)' } },
+        h('div', { style: { display: 'flex', width: '6px', minHeight: '32px', backgroundColor: C.green, borderRadius: '3px' } }),
+        h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4' } },
+          'Je frueher du abschliessest, desto guenstiger bleibt die BU-Praemie.'
         )
       )
     ),
-    keyLearning('Aufteilen ist erlaubt und sinnvoll — uberschreiten wird automatisch korrigiert.'),
     footer()
   ]);
 
   // =========================================================
-  // SLIDE 7 — LEARNINGS: 4 Takeaways
+  // SLIDE 5 — DER 5-SCHRITTE-FAHRPLAN
+  // =========================================================
+  const slide5 = slideWrap([
+    h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' } },
+      badge('DEIN FAHRPLAN'),
+      logoImg(120)
+    ),
+    headline('5 Schritte zur\nfinanziellen\nFreiheit.', 64),
+    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '12px' } },
+      ...([
+        { num: '01', title: 'Notgroschen', detail: '3 Monatsgehaelter auf Tagesgeld', green: false },
+        { num: '02', title: 'Schulden tilgen', detail: 'Zinsen ueber 5%? Zuerst zurueckzahlen', green: false },
+        { num: '03', title: 'Absicherung', detail: 'BU + Risikoleben + Haftpflicht', green: true },
+        { num: '04', title: 'ETF-Sparplan', detail: 'Ab 50 EUR/Monat — MSCI World oder FTSE All-World', green: false },
+        { num: '05', title: 'Optimieren', detail: 'bAV, VL, Steuern — jeden Hebel nutzen', green: false },
+      ].map(({ num, title, detail, green: isGreen }) =>
+        h('div', {
+          style: {
+            display: 'flex', alignItems: 'center', gap: '16px',
+            backgroundColor: isGreen ? 'rgba(16,185,129,0.12)' : C.cardBg,
+            borderRadius: '14px', padding: '16px 22px',
+            border: isGreen ? '1px solid rgba(16,185,129,0.35)' : 'none',
+          }
+        },
+          h('div', {
+            style: {
+              display: 'flex', width: '48px', height: '48px', borderRadius: '12px',
+              backgroundColor: isGreen ? C.green : 'rgba(255,255,255,0.15)',
+              alignItems: 'center', justifyContent: 'center', flexShrink: '0',
+            }
+          },
+            h('span', { style: { fontSize: '22px', fontWeight: 800, color: '#FFFFFF' } }, num)
+          ),
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '2px' } },
+            h('span', { style: { fontSize: '27px', fontWeight: 700, color: isGreen ? C.green : C.text } }, title),
+            h('span', { style: { fontSize: '21px', fontWeight: 500, color: C.textMuted } }, detail)
+          ),
+          isGreen ? h('span', { style: { fontSize: '20px', fontWeight: 700, color: C.green, marginLeft: 'auto' } }, 'PFLICHT') : h('span', {})
+        )
+      ))
+    ),
+    keyLearning('Schritt 1-3 zuerst — ohne Fundament ist jede Investition ein Risiko.'),
+    footer()
+  ]);
+
+  // =========================================================
+  // SLIDE 6 — RECHENBEISPIEL: Fruhstart vs. Spaetstart
+  // =========================================================
+  const slide6 = slideWrap([
+    h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' } },
+      badge('DER ZINSESZINS'),
+      logoImg(120)
+    ),
+    headline('Was 10 Jahre\nFruehstart wirklich\nbedeutet.', 60),
+    subline('150 EUR/Monat ETF-Sparplan bei 7% p.a.'),
+    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '16px' } },
+      h('div', { style: { display: 'flex', gap: '14px' } },
+        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(16,185,129,0.10)', borderRadius: '20px', padding: '24px', gap: '8px', border: '1px solid rgba(16,185,129,0.30)' } },
+          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: C.green } }, 'START MIT 25'),
+          h('div', { style: { display: 'flex', height: '2px', backgroundColor: C.green, borderRadius: '1px', opacity: '0.4' } }),
+          h('span', { style: { fontSize: '44px', fontWeight: 800, color: C.green, lineHeight: '1.1' } }, '395.000 EUR'),
+          h('span', { style: { fontSize: '21px', fontWeight: 500, color: C.textMuted } }, 'mit 65 Jahren'),
+          h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textSoft } }, '40 Jahre | Eingezahlt: 72.000 EUR')
+        ),
+        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: C.cardBg, borderRadius: '20px', padding: '24px', gap: '8px' } },
+          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: C.textMuted } }, 'START MIT 35'),
+          h('div', { style: { display: 'flex', height: '2px', backgroundColor: C.border, borderRadius: '1px' } }),
+          h('span', { style: { fontSize: '44px', fontWeight: 800, color: C.textSoft, lineHeight: '1.1' } }, '184.000 EUR'),
+          h('span', { style: { fontSize: '21px', fontWeight: 500, color: C.textMuted } }, 'mit 65 Jahren'),
+          h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textSoft } }, '30 Jahre | Eingezahlt: 54.000 EUR')
+        )
+      ),
+      // Visual bar comparison
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
+        h('span', { style: { fontSize: '20px', fontWeight: 700, color: C.textMuted, letterSpacing: '2px' } }, 'ENDVERMOEGEN IM VERGLEICH'),
+        h('div', { style: { display: 'flex', gap: '12px', alignItems: 'flex-end', height: '80px' } },
+          h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', alignItems: 'center', gap: '6px' } },
+            h('div', { style: { display: 'flex', width: '100%', height: '70px', backgroundColor: C.green, borderRadius: '8px 8px 0 0' } }),
+            h('span', { style: { fontSize: '20px', fontWeight: 600, color: C.green } }, 'Fruehstart')
+          ),
+          h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', alignItems: 'center', gap: '6px' } },
+            h('div', { style: { display: 'flex', width: '100%', height: '33px', backgroundColor: 'rgba(255,255,255,0.25)', borderRadius: '8px 8px 0 0' } }),
+            h('span', { style: { fontSize: '20px', fontWeight: 600, color: C.textMuted } }, 'Spaetstart')
+          )
+        )
+      ),
+      h('div', { style: { display: 'flex', alignItems: 'center', gap: '12px', backgroundColor: 'rgba(16,185,129,0.08)', borderRadius: '12px', padding: '16px 22px', border: '1px solid rgba(16,185,129,0.20)' } },
+        h('div', { style: { display: 'flex', width: '6px', minHeight: '32px', backgroundColor: C.green, borderRadius: '3px' } }),
+        h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4' } },
+          '10 Jahre frueher starten = 211.000 EUR mehr Vermoegen bei gleicher Sparrate.'
+        )
+      )
+    ),
+    footer()
+  ]);
+
+  // =========================================================
+  // SLIDE 7 — 4 TAKEAWAYS
   // =========================================================
   const learnings = [
-    { num: '01', text: 'Freistellungsauftrag stellen — kostenlos, sofort, bei jeder Bank einzeln.', pct: 25 },
-    { num: '02', text: '1.000 EUR/Jahr steuerfrei (Single) | 2.000 EUR/Jahr (Eheleute).', pct: 50 },
-    { num: '03', text: 'Gilt ab Antragsdatum — auch ruckwirkend im laufenden Kalenderjahr.', pct: 75 },
-    { num: '04', text: 'Bankwechsel? Freistellungsauftrag bei neuer Bank immer neu beantragen.', pct: 100 },
+    { num: '01', text: 'Notgroschen zuerst — 3 Monatsgehaelter auf Tagesgeld parken', pct: 25 },
+    { num: '02', text: 'Schulden tilgen wenn Zinssatz ueber 5% — vor dem Investieren', pct: 50 },
+    { num: '03', text: 'BU + RLV + PHV sind Pflicht — kein ETF ohne Absicherung', pct: 75 },
+    { num: '04', text: 'Sofort anfangen — Zeit ist dein wertvollster Vermoegenswert', pct: 100 },
   ];
 
   const slide7 = slideWrap([
-    badge('DEINE TAKEAWAYS'),
-    headline('4 Dinge, die du jetzt weisst.', 60),
+    h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' } },
+      badge('DEINE LEARNINGS'),
+      logoImg(120)
+    ),
+    headline('Das nimmst du\njetzt mit.', 64),
     h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '14px' } },
       ...learnings.map(l =>
         h('div', {
           style: {
             display: 'flex', flexDirection: 'column', gap: '10px',
-            padding: '20px 24px', backgroundColor: C.cardBg, borderRadius: '18px'
+            padding: '18px 22px', backgroundColor: C.cardBg, borderRadius: '16px'
           }
         },
-          h('div', { style: { display: 'flex', alignItems: 'center', gap: '18px' } },
-            h('span', { style: { fontSize: '36px', fontWeight: 800, color: l.pct === 100 ? C.green : C.text, minWidth: '56px' } }, l.num),
-            h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.3' } }, l.text)
+          h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
+            h('span', { style: { fontSize: '34px', fontWeight: 800, color: l.pct === 100 ? C.green : C.text, minWidth: '52px' } }, l.num),
+            h('span', { style: { fontSize: '25px', fontWeight: 600, color: C.text, lineHeight: '1.3' } }, l.text)
           ),
           h('div', { style: { display: 'flex', height: '6px', backgroundColor: C.border, borderRadius: '3px', overflow: 'hidden' } },
             h('div', { style: { display: 'flex', width: l.pct + '%', height: '6px', backgroundColor: l.pct === 100 ? C.green : C.text, borderRadius: '3px' } })
@@ -450,7 +401,7 @@ async function main() {
         )
       )
     ),
-    keyLearning('Kostenloser Steuervorteil — jetzt sofort in der Banking-App umsetzen.', C.green),
+    keyLearning('Die Reihenfolge ist entscheidend — nicht die Hoehe des Betrags.', C.green),
     footer()
   ]);
 
@@ -458,35 +409,21 @@ async function main() {
   // SLIDE 8 — CTA
   // =========================================================
   const slide8 = slideWrap([
-    badge('UND JETZT DU'),
+    h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' } },
+      badge('JETZT STARTEN'),
+      logoImg(120)
+    ),
     h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '28px' } },
-      headline('Hast du deinen Freistellungsauftrag bereits gestellt?', 50),
-      h('div', {
-        style: {
-          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px',
-          backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '20px', padding: '28px 36px',
-          border: '2px solid rgba(16,185,129,0.35)', width: '100%'
-        }
-      },
-        h('span', { style: { fontSize: '32px', fontWeight: 700, color: C.text, textAlign: 'center', lineHeight: '1.35' } },
-          'Schreib "JA" oder "NEIN" in die Kommentare.'
-        ),
-        h('span', { style: { fontSize: '27px', fontWeight: 500, color: C.textSoft, textAlign: 'center', lineHeight: '1.4' } },
-          'Wir antworten auf jeden Kommentar.'
-        )
+      logoImg(140),
+      h('span', { style: { fontSize: '50px', fontWeight: 800, color: C.text, textAlign: 'center', lineHeight: '1.1', letterSpacing: '-1px' } },
+        'Wo stehst du in\ndeinem Finanz-\nFahrplan?'
       ),
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px', alignItems: 'center', width: '100%' } },
-        h('div', {
-          style: {
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            backgroundColor: C.cardBg, borderRadius: '16px', padding: '18px 32px', width: '100%'
-          }
-        },
-          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.green } }, 'Speichern nicht vergessen')
-        ),
-        h('span', { style: { fontSize: '27px', fontWeight: 500, color: C.textMuted, textAlign: 'center', lineHeight: '1.4' } },
-          'Folge @benarofinanzen fur mehr\nkostenlose Steuertipps und Finanzwissen.'
-        )
+      h('span', { style: { fontSize: '28px', fontWeight: 500, color: C.textMuted, textAlign: 'center', lineHeight: '1.5' } },
+        'Schreib uns in die Kommentare.\nWir helfen dir beim naechsten Schritt.'
+      ),
+      h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' } },
+        h('span', { style: { fontSize: '30px', fontWeight: 700, color: C.green } }, 'Speichern nicht vergessen'),
+        h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted } }, 'damit du den Fahrplan immer griffbereit hast')
       )
     ),
     footer()
@@ -496,7 +433,7 @@ async function main() {
   // GENERATE ALL SLIDES
   // =========================================================
   const slides = [slide1, slide2, slide3, slide4, slide5, slide6, slide7, slide8];
-  const outDir = path.join(__dirname, 'output', 'carousel_2026-07-17', 'slides');
+  const outDir = path.join(__dirname, 'output', 'carousel_2026-07-18', 'slides');
   if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
 
   for (let i = 0; i < slides.length; i++) {
