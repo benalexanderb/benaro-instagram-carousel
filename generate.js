@@ -1,10 +1,10 @@
-// Carousel: Finanz-Fahrplan 2026 — 5 Schritte zur finanziellen Freiheit
-// Inspiration: @richlife.original — "The Rich Life Roadmap for 2026 (Step-by-Step)" DXM6jaUDIll
+// Carousel: Factor-ETFs 2026 — Small Cap Value schlaegt Growth um 9 Punkte
+// Inspiration: @finanzcopilot — Factor-Investing / Small Cap Value Outperformance 2026
 const fs = require('fs');
 const path = require('path');
 
 async function main() {
-  const satori = (await import('satori')).default || require('satori');
+  const satori = (await import('satori')).default;
   const { Resvg } = require('@resvg/resvg-js');
 
   const fontDir = path.join(__dirname, 'node_modules/@fontsource/outfit/files');
@@ -13,428 +13,423 @@ async function main() {
     { name: 'Outfit', weight: w, style: 'normal', data: fs.readFileSync(path.join(fontDir, `outfit-latin-ext-${w}-normal.woff`)) },
   ]);
 
-  const logoB64 = 'data:image/jpeg;base64,' + fs.readFileSync(
-    path.join(__dirname, 'skills/instagram-carousel-skill/templates/benaro-logo.jpg')
-  ).toString('base64');
-
   const C = {
     bg: '#001F61',
+    bgDark: '#001542',
     text: '#FFFFFF',
     textSoft: '#E5E7EB',
     textMuted: '#9CA3AF',
     cardBg: 'rgba(255,255,255,0.10)',
-    border: 'rgba(255,255,255,0.20)',
+    border: 'rgba(255,255,255,0.18)',
     green: '#10B981',
     red: '#EF4444',
+    yellow: '#F59E0B',
   };
 
   const W = 1080, H = 1350;
+  const PAD = 70;
+
+  const logoB64 = 'data:image/jpeg;base64,' + fs.readFileSync('/tmp/workspace/skills/instagram-carousel-skill/templates/benaro-logo.jpg').toString('base64');
 
   const h = (type, props, ...ch) => ({
     type,
     props: { ...props, children: ch.length === 1 ? ch[0] : ch.length === 0 ? undefined : ch }
   });
 
+  function logo() {
+    return h('img', { src: logoB64, width: 90, height: 90, style: { borderRadius: '12px', objectFit: 'cover' } });
+  }
+
   function badge(text) {
-    return h('div', { style: { display: 'flex', marginBottom: '16px' } },
-      h('span', {
-        style: {
-          display: 'flex', fontSize: '22px', fontWeight: 700, letterSpacing: '3px',
-          color: C.text, backgroundColor: C.cardBg,
-          padding: '10px 22px', borderRadius: '12px'
-        }
-      }, text)
+    return h('div', { style: { display: 'flex', marginBottom: '14px' } },
+      h('span', { style: { display: 'flex', fontSize: '20px', fontWeight: 700, letterSpacing: '3px', color: C.text, backgroundColor: C.cardBg, padding: '10px 22px', borderRadius: '12px' } }, text)
     );
   }
 
   function headline(text, size) {
-    return h('span', {
-      style: {
-        fontSize: (size || 64) + 'px', fontWeight: 800, color: C.text,
-        lineHeight: '1.08', letterSpacing: '-1.5px', marginBottom: '6px'
-      }
-    }, text);
+    return h('span', { style: { fontSize: `${size || 64}px`, fontWeight: 800, color: C.text, lineHeight: '1.08', letterSpacing: '-1.5px', marginBottom: '8px' } }, text);
   }
 
   function subline(text) {
-    return h('span', {
-      style: { fontSize: '28px', fontWeight: 500, color: C.textMuted, lineHeight: '1.5', marginTop: '8px' }
-    }, text);
+    return h('span', { style: { fontSize: '28px', fontWeight: 500, color: C.textMuted, lineHeight: '1.5', marginTop: '8px' } }, text);
   }
 
-  function keyLearning(text, accentColor) {
-    return h('div', {
-      style: {
-        display: 'flex', alignItems: 'center', gap: '14px',
-        backgroundColor: C.cardBg, borderRadius: '16px', padding: '22px 28px', marginTop: 'auto'
-      }
-    },
-      h('div', { style: { display: 'flex', width: '6px', minHeight: '40px', backgroundColor: accentColor || C.text, borderRadius: '3px' } }),
+  function keyLearning(text, accent) {
+    return h('div', { style: { display: 'flex', alignItems: 'center', gap: '14px', backgroundColor: C.cardBg, borderRadius: '16px', padding: '22px 28px', marginTop: '16px' } },
+      h('div', { style: { display: 'flex', width: '6px', minHeight: '44px', backgroundColor: accent || C.green, borderRadius: '3px', flexShrink: '0' } }),
       h('span', { style: { fontSize: '27px', fontWeight: 600, color: C.text, lineHeight: '1.4' } }, text)
     );
   }
 
-  function footer() {
-    return h('div', { style: { display: 'flex', alignItems: 'center', marginTop: '14px' } },
-      h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted } }, '@benarofinanzen')
+  function igHandle() {
+    return h('div', { style: { display: 'flex', alignItems: 'center', marginTop: '12px' } },
+      h('span', { style: { fontSize: '23px', fontWeight: 500, color: C.textMuted } }, '@benarofinanzen')
     );
-  }
-
-  function logoImg(size) {
-    size = size || 120;
-    return h('img', { src: logoB64, width: size, height: size, style: { borderRadius: '12px', objectFit: 'cover' } });
   }
 
   function headerRow(badgeText) {
-    return h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' } },
+    return h('div', { style: { display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4px' } },
       badge(badgeText),
-      logoImg(120)
+      logo()
     );
   }
 
-  function slideWrap(children) {
-    return h('div', {
-      style: {
-        display: 'flex', flexDirection: 'column', width: W, height: H,
-        padding: '70px', backgroundColor: C.bg, fontFamily: 'Outfit'
-      }
-    }, ...children);
+  function slideRoot(bg, children) {
+    return h('div', { style: { display: 'flex', flexDirection: 'column', width: W, height: H, padding: `${PAD}px`, backgroundColor: bg, fontFamily: 'Outfit' } },
+      ...children
+    );
   }
 
-  // =========================================================
-  // SLIDE 1 — HOOK: Die meisten ueberspringen Schritt 3
-  // =========================================================
-  const slide1 = slideWrap([
-    h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' } },
-      badge('ACHTUNG'),
-      logoImg(120)
-    ),
-    headline('Die meisten\nDeutschen\nueberspringen\nSchritt 3.', 58),
-    subline('Dein Finanz-Fahrplan 2026 — 5 Schritte zur finanziellen Freiheit'),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '12px' } },
-      ...([
-        { num: '01', label: 'Notgroschen aufbauen', ok: true, skip: false },
-        { num: '02', label: 'Schulden tilgen', ok: true, skip: false },
-        { num: '03', label: 'Absicherung', ok: false, skip: true },
-        { num: '04', label: 'ETF-Sparplan starten', ok: true, skip: false },
-        { num: '05', label: 'Optimieren', ok: true, skip: false },
-      ].map(({ num, label, skip }) =>
-        h('div', {
-          style: {
-            display: 'flex', alignItems: 'center', gap: '16px',
-            backgroundColor: skip ? 'rgba(239,68,68,0.12)' : C.cardBg,
-            borderRadius: '14px', padding: '14px 22px',
-            border: skip ? '1px solid rgba(239,68,68,0.40)' : 'none',
-          }
-        },
-          h('div', {
-            style: {
-              display: 'flex', width: '44px', height: '44px', borderRadius: '10px',
-              backgroundColor: skip ? C.red : 'rgba(16,185,129,0.20)',
-              alignItems: 'center', justifyContent: 'center', flexShrink: '0',
-            }
-          },
-            h('span', { style: { fontSize: '20px', fontWeight: 800, color: '#FFFFFF' } }, num)
+  // =====================
+  // SLIDE 1 — HOOK
+  // =====================
+  const slide1 = slideRoot(C.bg, [
+    headerRow('BREAKING 2026'),
+    headline('Small Cap\nValue schlaegt\nGrowth um\n9 Punkte', 72),
+    subline('Was ETF-Anleger 2026 dringend wissen muessen'),
+    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '20px' } },
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '22px' } },
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
+          h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
+            h('span', { style: { fontSize: '27px', fontWeight: 700, color: C.green } }, 'Small Cap Value'),
+            h('span', { style: { fontSize: '32px', fontWeight: 800, color: C.green } }, '+9 Punkte Vorsprung')
           ),
-          h('span', { style: { fontSize: '27px', fontWeight: 700, color: skip ? C.red : C.text } }, label),
-          skip ? h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.red, marginLeft: 'auto' } }, 'Wird uebersprungen!') : h('span', {})
-        )
-      ))
-    ),
-    keyLearning('Warum Schritt 3 entscheidend ist — und was passiert wenn du ihn auslasst.', C.red),
-    footer()
-  ]);
-
-  // =========================================================
-  // SLIDE 2 — STAT HERO: Das Risiko ohne Absicherung
-  // =========================================================
-  const riskSvg = `<svg width="860" height="240" viewBox="0 0 860 240" xmlns="http://www.w3.org/2000/svg">
-    <line x1="0" y1="200" x2="860" y2="200" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-    <rect x="30" y="80" width="160" height="120" rx="8" fill="rgba(239,68,68,0.50)"/>
-    <rect x="230" y="50" width="160" height="150" rx="8" fill="rgba(239,68,68,0.65)"/>
-    <rect x="430" y="30" width="160" height="170" rx="8" fill="rgba(239,68,68,0.80)"/>
-    <rect x="630" y="10" width="160" height="190" rx="8" fill="rgba(239,68,68,0.95)"/>
-  </svg>`;
-  const riskSrc = 'data:image/svg+xml;base64,' + Buffer.from(riskSvg).toString('base64');
-
-  const slide2 = slideWrap([
-    h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' } },
-      badge('DAS RISIKO'),
-      logoImg(120)
-    ),
-    headline('1 von 4 Arbeitnehmern wird berufsunfaehig.', 56),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '18px' } },
-      h('div', {
-        style: {
-          display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '6px',
-          backgroundColor: 'rgba(239,68,68,0.10)', borderRadius: '20px', padding: '28px 34px',
-          border: '2px solid rgba(239,68,68,0.30)'
-        }
-      },
-        h('span', { style: { fontSize: '110px', fontWeight: 800, color: C.red, lineHeight: '1', letterSpacing: '-4px' } }, '1/4'),
-        h('span', { style: { fontSize: '28px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4' } },
-          'scheidet vor dem 65. Lebensjahr krankheitsbedingt aus dem Beruf aus'
-        )
-      ),
-      h('img', { src: riskSrc, width: 860, height: 240, style: { objectFit: 'contain', width: '100%' } }),
-      h('div', { style: { display: 'flex', justifyContent: 'space-around' } },
-        ...(['25 J.', '35 J.', '45 J.', '55 J.'].map(age =>
-          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted } }, age)
-        ))
-      ),
-      h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted, textAlign: 'center' } }, 'Kumulatives BU-Risiko je Altersgruppe — steigt mit jedem Jahrzehnt')
-    ),
-    keyLearning('ETF-Depot allein genuegt nicht — ohne BU-Schutz ist alles auf Sand gebaut.', C.red),
-    footer()
-  ]);
-
-  // =========================================================
-  // SLIDE 3 — PROBLEM FLOW: Der Dominoeffekt
-  // =========================================================
-  const slide3 = slideWrap([
-    h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' } },
-      badge('DER DOMINOEFFEKT'),
-      logoImg(120)
-    ),
-    headline('So verliert man\nalles — auch mit\nETF-Depot.', 58),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '10px' } },
-      ...([
-        { num: '01', title: 'Unfall oder schwere Krankheit', detail: 'Trifft jeden — unabhaengig von Alter oder Fitness', bg: C.cardBg, tc: C.text },
-        { num: '02', title: 'Einkommen faellt weg', detail: 'Staatliche Erwerbsminderungsrente: ca. 900 EUR/Monat', bg: 'rgba(239,68,68,0.08)', tc: C.red },
-        { num: '03', title: 'Sparplan muss pausieren', detail: 'Zinseszins bricht ab — jahrelanger Aufbau unterbrochen', bg: 'rgba(239,68,68,0.12)', tc: C.red },
-        { num: '04', title: 'Ersparnisse aufbrauchen', detail: 'Das muehsam aufgebaute Depot wird aufgeloest', bg: 'rgba(239,68,68,0.18)', tc: C.red },
-        { num: '05', title: 'Altersarmut trotz Disziplin', detail: 'Jahrzehnte sparen — durch ein Ereignis zunichte', bg: 'rgba(239,68,68,0.24)', tc: C.red },
-      ].map(({ num, title, detail, bg, tc }) =>
-        h('div', { style: { display: 'flex', alignItems: 'center', gap: '14px', backgroundColor: bg, borderRadius: '12px', padding: '14px 20px' } },
-          h('span', { style: { fontSize: '30px', fontWeight: 800, color: tc, minWidth: '44px' } }, num),
-          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '2px' } },
-            h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.text } }, title),
-            h('span', { style: { fontSize: '21px', fontWeight: 500, color: C.textMuted } }, detail)
+          h('div', { style: { display: 'flex', height: '26px', backgroundColor: C.cardBg, borderRadius: '13px', overflow: 'hidden' } },
+            h('div', { style: { display: 'flex', width: '90%', height: '26px', backgroundColor: C.green, borderRadius: '13px' } })
+          )
+        ),
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
+          h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
+            h('span', { style: { fontSize: '27px', fontWeight: 700, color: 'rgba(255,255,255,0.5)' } }, 'MSCI World'),
+            h('span', { style: { fontSize: '32px', fontWeight: 800, color: 'rgba(255,255,255,0.5)' } }, 'Mitte')
+          ),
+          h('div', { style: { display: 'flex', height: '26px', backgroundColor: C.cardBg, borderRadius: '13px', overflow: 'hidden' } },
+            h('div', { style: { display: 'flex', width: '68%', height: '26px', backgroundColor: 'rgba(255,255,255,0.35)', borderRadius: '13px' } })
+          )
+        ),
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
+          h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
+            h('span', { style: { fontSize: '27px', fontWeight: 700, color: C.textMuted } }, 'Large Growth ETF'),
+            h('span', { style: { fontSize: '32px', fontWeight: 800, color: C.textMuted } }, 'Benchmark')
+          ),
+          h('div', { style: { display: 'flex', height: '26px', backgroundColor: C.cardBg, borderRadius: '13px', overflow: 'hidden' } },
+            h('div', { style: { display: 'flex', width: '50%', height: '26px', backgroundColor: C.textMuted, borderRadius: '13px' } })
           )
         )
-      ))
+      ),
+      h('div', { style: { display: 'flex', backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '14px', padding: '14px 22px' } },
+        h('span', { style: { fontSize: '23px', fontWeight: 600, color: C.green } }, 'Quelle: 24/7 Wall Street, Juni 2026 — YTD-Performance 2026')
+      )
     ),
-    keyLearning('Erst absichern — dann investieren. Diese Reihenfolge ist nicht verhandelbar.', C.red),
-    footer()
+    keyLearning('Factor-Investing ist das ETF-Upgrade das 90% der Anleger verpassen.', C.green),
+    igHandle()
   ]);
 
-  // =========================================================
-  // SLIDE 4 — ERWARTUNG vs. REALITAET
-  // =========================================================
-  const slide4 = slideWrap([
-    h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' } },
-      badge('MYTHOS ENTLARVT'),
-      logoImg(120)
-    ),
-    headline('Was die meisten\ndenken vs. was\nwirklich stimmt.', 56),
+  // =====================
+  // SLIDE 2 — WAS SIND FACTOR-ETFs?
+  // =====================
+  const slide2 = slideRoot(C.bgDark, [
+    headerRow('FACTOR-INVESTING'),
+    headline('Was sind\nFactor-ETFs?', 68),
+    subline('Das Upgrade zum Standard-ETF'),
     h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '16px' } },
-      h('div', { style: { display: 'flex', gap: '14px', flex: '1', maxHeight: '480px' } },
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: C.cardBg, borderRadius: '20px', padding: '26px', gap: '12px' } },
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '16px' } },
+        h('div', { style: { display: 'flex', backgroundColor: C.cardBg, borderRadius: '20px', padding: '26px 30px', gap: '22px', alignItems: 'center' } },
+          h('div', { style: { display: 'flex', width: '52px', height: '52px', borderRadius: '14px', backgroundColor: 'rgba(255,255,255,0.12)', alignItems: 'center', justifyContent: 'center', flexShrink: '0' } },
+            h('span', { style: { fontSize: '26px', fontWeight: 800, color: C.text } }, '1')
+          ),
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px' } },
+            h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.text } }, 'Standard-ETF (MSCI World)'),
+            h('span', { style: { fontSize: '23px', fontWeight: 500, color: C.textMuted } }, 'Kauft den gesamten Markt — erzielt Marktrendite.')
+          )
+        ),
+        h('div', { style: { display: 'flex', backgroundColor: 'rgba(16,185,129,0.15)', borderRadius: '20px', padding: '26px 30px', gap: '22px', alignItems: 'center', border: '1px solid rgba(16,185,129,0.35)' } },
+          h('div', { style: { display: 'flex', width: '52px', height: '52px', borderRadius: '14px', backgroundColor: C.green, alignItems: 'center', justifyContent: 'center', flexShrink: '0' } },
+            h('span', { style: { fontSize: '26px', fontWeight: 800, color: '#FFFFFF' } }, '2')
+          ),
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px' } },
+            h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.green } }, 'Factor-ETF (z.B. AVUV, ISCF)'),
+            h('span', { style: { fontSize: '23px', fontWeight: 500, color: C.textSoft } }, 'Kauft gezielt Aktien mit bewiesenen Rendite-Praemien.')
+          )
+        ),
+        h('div', { style: { display: 'flex', backgroundColor: C.cardBg, borderRadius: '20px', padding: '26px 30px', gap: '22px', alignItems: 'center' } },
+          h('div', { style: { display: 'flex', width: '52px', height: '52px', borderRadius: '14px', backgroundColor: 'rgba(255,255,255,0.12)', alignItems: 'center', justifyContent: 'center', flexShrink: '0' } },
+            h('span', { style: { fontSize: '26px', fontWeight: 800, color: C.text } }, '3')
+          ),
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px' } },
+            h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.text } }, 'Grundlage: Fama-French Forschung'),
+            h('span', { style: { fontSize: '23px', fontWeight: 500, color: C.textMuted } }, 'Nobelpreis 2013. Factor-Praemien seit 100 Jahren belegt.')
+          )
+        )
+      )
+    ),
+    keyLearning('Factor-ETFs sind kein Trend — sie basieren auf 100 Jahren Marktdaten.', C.text),
+    igHandle()
+  ]);
+
+  // =====================
+  // SLIDE 3 — PROBLEM
+  // =====================
+  const slide3 = slideRoot(C.bg, [
+    headerRow('DAS PROBLEM'),
+    headline('95% kennen\nnur einen\nETF-Typ', 70),
+    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '18px' } },
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px' } },
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px' } },
+          h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' } },
+            h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.text } }, 'MSCI World / S&P 500'),
+            h('span', { style: { fontSize: '26px', fontWeight: 800, color: C.text } }, '95%')
+          ),
+          h('div', { style: { display: 'flex', height: '20px', backgroundColor: C.cardBg, borderRadius: '10px', overflow: 'hidden' } },
+            h('div', { style: { display: 'flex', width: '95%', height: '20px', backgroundColor: C.text, borderRadius: '10px' } })
+          )
+        ),
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px' } },
+          h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' } },
+            h('span', { style: { fontSize: '26px', fontWeight: 700, color: 'rgba(255,255,255,0.55)' } }, 'Dividenden-ETF'),
+            h('span', { style: { fontSize: '26px', fontWeight: 800, color: 'rgba(255,255,255,0.55)' } }, '38%')
+          ),
+          h('div', { style: { display: 'flex', height: '20px', backgroundColor: C.cardBg, borderRadius: '10px', overflow: 'hidden' } },
+            h('div', { style: { display: 'flex', width: '38%', height: '20px', backgroundColor: 'rgba(255,255,255,0.4)', borderRadius: '10px' } })
+          )
+        ),
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px' } },
+          h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' } },
+            h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.green } }, 'Factor-ETF (Value, Size, Momentum)'),
+            h('span', { style: { fontSize: '26px', fontWeight: 800, color: C.green } }, '5%')
+          ),
+          h('div', { style: { display: 'flex', height: '20px', backgroundColor: C.cardBg, borderRadius: '10px', overflow: 'hidden' } },
+            h('div', { style: { display: 'flex', width: '5%', height: '20px', backgroundColor: C.green, borderRadius: '10px' } })
+          )
+        ),
+        h('div', { style: { display: 'flex', backgroundColor: 'rgba(239,68,68,0.10)', borderRadius: '16px', padding: '18px 24px', marginTop: '10px' } },
+          h('span', { style: { fontSize: '25px', fontWeight: 600, color: C.red, lineHeight: '1.4' } },
+            'Factor-ETFs haben keine grosse Marketing-Kampagne. Deshalb fehlen sie in fast jedem Depot.')
+        )
+      )
+    ),
+    keyLearning('Was die breite Masse nicht kennt, kann nicht fuer das Depot genutzt werden.', C.red),
+    igHandle()
+  ]);
+
+  // =====================
+  // SLIDE 4 — ERWARTUNG VS. REALITAET
+  // =====================
+  const slide4 = slideRoot(C.bgDark, [
+    headerRow('DER IRRTUM'),
+    headline('Alle ETFs\nsind doch gleich\n— oder?', 66),
+    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '16px' } },
+      h('div', { style: { display: 'flex', gap: '16px' } },
+        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: C.cardBg, borderRadius: '20px', padding: '28px', gap: '14px' } },
           h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: C.textMuted } }, 'ERWARTUNG'),
           h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: C.border, borderRadius: '2px' } }),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft, lineHeight: '1.45' } },
-            '"Ich bin jung und gesund — Versicherungen kommen spaeter."'
-          ),
-          h('div', { style: { display: 'flex', height: '1px', backgroundColor: C.border } }),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft, lineHeight: '1.45' } },
-            '"Erst Geld sparen, dann absichern."'
-          ),
-          h('div', { style: { display: 'flex', height: '1px', backgroundColor: C.border } }),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft, lineHeight: '1.45' } },
-            '"BU-Versicherung ist teuer und unnoetig."'
+          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft, lineHeight: '1.45' } }, 'MSCI World kaufen und fertig. Alle ETFs sind dasselbe — Markt ist Markt.'),
+          h('div', { style: { display: 'flex', alignItems: 'center', gap: '10px', marginTop: '8px' } },
+            h('div', { style: { display: 'flex', width: '10px', height: '10px', borderRadius: '5px', backgroundColor: C.red } }),
+            h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.red } }, 'IRRTUM')
           )
         ),
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: '#FFFFFF', borderRadius: '20px', padding: '26px', gap: '12px' } },
-          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: 'rgba(0,31,97,0.5)' } }, 'REALITAET'),
+        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: '#FFFFFF', borderRadius: '20px', padding: '28px', gap: '14px' } },
+          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: 'rgba(0,31,97,0.45)' } }, 'REALITAET'),
           h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(0,31,97,0.12)', borderRadius: '2px' } }),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: '#001F61', lineHeight: '1.45' } },
-            'BU-Faelle treffen am haeufigsten 30- bis 45-Jaehrige.'
-          ),
-          h('div', { style: { display: 'flex', height: '1px', backgroundColor: 'rgba(0,31,97,0.1)' } }),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: '#001F61', lineHeight: '1.45' } },
-            'Ohne BU loest du das Depot auf — bevor Zinseszins wirkt.'
-          ),
-          h('div', { style: { display: 'flex', height: '1px', backgroundColor: 'rgba(0,31,97,0.1)' } }),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: '#001F61', lineHeight: '1.45' } },
-            'BU mit 25 kostet ca. 40 EUR/Monat — spaeter das Dreifache.'
+          h('span', { style: { fontSize: '26px', fontWeight: 600, color: '#001F61', lineHeight: '1.45' } }, 'Innerhalb von ETFs gibt es bewiesene Rendite-Unterschiede. Die Wissenschaft nennt sie Faktoren.'),
+          h('div', { style: { display: 'flex', alignItems: 'center', gap: '10px', marginTop: '8px' } },
+            h('div', { style: { display: 'flex', width: '10px', height: '10px', borderRadius: '5px', backgroundColor: C.green } }),
+            h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.green } }, 'RICHTIG')
           )
         )
       ),
-      h('div', { style: { display: 'flex', alignItems: 'center', gap: '12px', backgroundColor: 'rgba(16,185,129,0.08)', borderRadius: '12px', padding: '16px 22px', border: '1px solid rgba(16,185,129,0.25)' } },
-        h('div', { style: { display: 'flex', width: '6px', minHeight: '32px', backgroundColor: C.green, borderRadius: '3px' } }),
-        h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4' } },
-          'Je frueher du abschliessest, desto guenstiger bleibt die BU-Praemie.'
-        )
+      h('div', { style: { display: 'flex', backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '14px', padding: '18px 24px', marginTop: '6px' } },
+        h('span', { style: { fontSize: '25px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4' } },
+          'Marktrendite ist das Minimum — Factor-Praemien sind das Upgrade.')
       )
     ),
-    footer()
+    keyLearning('Nicht jeder ETF ist gleich. Factor-ETFs nutzen bewiesene Rendite-Muster.', C.text),
+    igHandle()
   ]);
 
-  // =========================================================
-  // SLIDE 5 — DER 5-SCHRITTE-FAHRPLAN
-  // =========================================================
-  const slide5 = slideWrap([
-    h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' } },
-      badge('DEIN FAHRPLAN'),
-      logoImg(120)
-    ),
-    headline('5 Schritte zur\nfinanziellen\nFreiheit.', 64),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '12px' } },
-      ...([
-        { num: '01', title: 'Notgroschen', detail: '3 Monatsgehaelter auf Tagesgeld', green: false },
-        { num: '02', title: 'Schulden tilgen', detail: 'Zinsen ueber 5%? Zuerst zurueckzahlen', green: false },
-        { num: '03', title: 'Absicherung', detail: 'BU + Risikoleben + Haftpflicht', green: true },
-        { num: '04', title: 'ETF-Sparplan', detail: 'Ab 50 EUR/Monat — MSCI World oder FTSE All-World', green: false },
-        { num: '05', title: 'Optimieren', detail: 'bAV, VL, Steuern — jeden Hebel nutzen', green: false },
-      ].map(({ num, title, detail, green: isGreen }) =>
-        h('div', {
-          style: {
-            display: 'flex', alignItems: 'center', gap: '16px',
-            backgroundColor: isGreen ? 'rgba(16,185,129,0.12)' : C.cardBg,
-            borderRadius: '14px', padding: '16px 22px',
-            border: isGreen ? '1px solid rgba(16,185,129,0.35)' : 'none',
-          }
-        },
-          h('div', {
-            style: {
-              display: 'flex', width: '48px', height: '48px', borderRadius: '12px',
-              backgroundColor: isGreen ? C.green : 'rgba(255,255,255,0.15)',
-              alignItems: 'center', justifyContent: 'center', flexShrink: '0',
-            }
-          },
-            h('span', { style: { fontSize: '22px', fontWeight: 800, color: '#FFFFFF' } }, num)
-          ),
-          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '2px' } },
-            h('span', { style: { fontSize: '27px', fontWeight: 700, color: isGreen ? C.green : C.text } }, title),
-            h('span', { style: { fontSize: '21px', fontWeight: 500, color: C.textMuted } }, detail)
-          ),
-          isGreen ? h('span', { style: { fontSize: '20px', fontWeight: 700, color: C.green, marginLeft: 'auto' } }, 'PFLICHT') : h('span', {})
-        )
-      ))
-    ),
-    keyLearning('Schritt 1-3 zuerst — ohne Fundament ist jede Investition ein Risiko.'),
-    footer()
-  ]);
-
-  // =========================================================
-  // SLIDE 6 — RECHENBEISPIEL: Fruhstart vs. Spaetstart
-  // =========================================================
-  const slide6 = slideWrap([
-    h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' } },
-      badge('DER ZINSESZINS'),
-      logoImg(120)
-    ),
-    headline('Was 10 Jahre\nFruehstart wirklich\nbedeutet.', 60),
-    subline('150 EUR/Monat ETF-Sparplan bei 7% p.a.'),
+  // =====================
+  // SLIDE 5 — DIE 4 FAKTOREN
+  // =====================
+  const slide5 = slideRoot(C.bg, [
+    headerRow('DIE FAKTOREN'),
+    headline('4 Factor-Praemien\nmit 100 Jahren\nDaten', 62),
     h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '16px' } },
-      h('div', { style: { display: 'flex', gap: '14px' } },
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(16,185,129,0.10)', borderRadius: '20px', padding: '24px', gap: '8px', border: '1px solid rgba(16,185,129,0.30)' } },
-          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: C.green } }, 'START MIT 25'),
-          h('div', { style: { display: 'flex', height: '2px', backgroundColor: C.green, borderRadius: '1px', opacity: '0.4' } }),
-          h('span', { style: { fontSize: '44px', fontWeight: 800, color: C.green, lineHeight: '1.1' } }, '395.000 EUR'),
-          h('span', { style: { fontSize: '21px', fontWeight: 500, color: C.textMuted } }, 'mit 65 Jahren'),
-          h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textSoft } }, '40 Jahre | Eingezahlt: 72.000 EUR')
-        ),
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: C.cardBg, borderRadius: '20px', padding: '24px', gap: '8px' } },
-          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: C.textMuted } }, 'START MIT 35'),
-          h('div', { style: { display: 'flex', height: '2px', backgroundColor: C.border, borderRadius: '1px' } }),
-          h('span', { style: { fontSize: '44px', fontWeight: 800, color: C.textSoft, lineHeight: '1.1' } }, '184.000 EUR'),
-          h('span', { style: { fontSize: '21px', fontWeight: 500, color: C.textMuted } }, 'mit 65 Jahren'),
-          h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textSoft } }, '30 Jahre | Eingezahlt: 54.000 EUR')
-        )
-      ),
-      // Visual bar comparison
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
-        h('span', { style: { fontSize: '20px', fontWeight: 700, color: C.textMuted, letterSpacing: '2px' } }, 'ENDVERMOEGEN IM VERGLEICH'),
-        h('div', { style: { display: 'flex', gap: '12px', alignItems: 'flex-end', height: '80px' } },
-          h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', alignItems: 'center', gap: '6px' } },
-            h('div', { style: { display: 'flex', width: '100%', height: '70px', backgroundColor: C.green, borderRadius: '8px 8px 0 0' } }),
-            h('span', { style: { fontSize: '20px', fontWeight: 600, color: C.green } }, 'Fruehstart')
+      h('div', { style: { display: 'flex', gap: '16px' } },
+        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: C.cardBg, borderRadius: '20px', padding: '26px', gap: '12px' } },
+          h('div', { style: { display: 'flex', width: '52px', height: '52px', borderRadius: '14px', backgroundColor: 'rgba(16,185,129,0.20)', alignItems: 'center', justifyContent: 'center' } },
+            h('span', { style: { fontSize: '28px', fontWeight: 800, color: C.green } }, 'V')
           ),
-          h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', alignItems: 'center', gap: '6px' } },
-            h('div', { style: { display: 'flex', width: '100%', height: '33px', backgroundColor: 'rgba(255,255,255,0.25)', borderRadius: '8px 8px 0 0' } }),
-            h('span', { style: { fontSize: '20px', fontWeight: 600, color: C.textMuted } }, 'Spaetstart')
-          )
+          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.text } }, 'Value'),
+          h('span', { style: { fontSize: '23px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4' } }, 'Guenstige Aktien schlagen teure langfristig')
+        ),
+        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(16,185,129,0.15)', borderRadius: '20px', padding: '26px', gap: '12px', border: '1px solid rgba(16,185,129,0.30)' } },
+          h('div', { style: { display: 'flex', width: '52px', height: '52px', borderRadius: '14px', backgroundColor: C.green, alignItems: 'center', justifyContent: 'center' } },
+            h('span', { style: { fontSize: '28px', fontWeight: 800, color: '#FFFFFF' } }, 'S')
+          ),
+          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.green } }, 'Small Cap'),
+          h('span', { style: { fontSize: '23px', fontWeight: 500, color: C.textSoft, lineHeight: '1.4' } }, 'Kleine Unternehmen schlagen Grosse')
         )
       ),
-      h('div', { style: { display: 'flex', alignItems: 'center', gap: '12px', backgroundColor: 'rgba(16,185,129,0.08)', borderRadius: '12px', padding: '16px 22px', border: '1px solid rgba(16,185,129,0.20)' } },
-        h('div', { style: { display: 'flex', width: '6px', minHeight: '32px', backgroundColor: C.green, borderRadius: '3px' } }),
-        h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4' } },
-          '10 Jahre frueher starten = 211.000 EUR mehr Vermoegen bei gleicher Sparrate.'
+      h('div', { style: { display: 'flex', gap: '16px' } },
+        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: C.cardBg, borderRadius: '20px', padding: '26px', gap: '12px' } },
+          h('div', { style: { display: 'flex', width: '52px', height: '52px', borderRadius: '14px', backgroundColor: 'rgba(245,158,11,0.22)', alignItems: 'center', justifyContent: 'center' } },
+            h('span', { style: { fontSize: '28px', fontWeight: 800, color: C.yellow } }, 'Q')
+          ),
+          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.text } }, 'Quality'),
+          h('span', { style: { fontSize: '23px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4' } }, 'Starke Bilanzen schlagen schwache')
+        ),
+        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: C.cardBg, borderRadius: '20px', padding: '26px', gap: '12px' } },
+          h('div', { style: { display: 'flex', width: '52px', height: '52px', borderRadius: '14px', backgroundColor: 'rgba(255,255,255,0.15)', alignItems: 'center', justifyContent: 'center' } },
+            h('span', { style: { fontSize: '28px', fontWeight: 800, color: C.text } }, 'M')
+          ),
+          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.text } }, 'Momentum'),
+          h('span', { style: { fontSize: '23px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4' } }, 'Gewinner-Aktien bleiben haeufiger Gewinner')
         )
       )
     ),
-    footer()
+    keyLearning('Fama-French Forschung: Belegt seit 1993, Datenbasis seit 1926. Nobelpreis 2013.', C.green),
+    igHandle()
   ]);
 
-  // =========================================================
-  // SLIDE 7 — 4 TAKEAWAYS
-  // =========================================================
+  // =====================
+  // SLIDE 6 — VERGLEICH (WIE ES FUNKTIONIERT)
+  // =====================
+  const slide6 = slideRoot(C.bgDark, [
+    headerRow('DAS PRINZIP'),
+    headline('Factor-ETF:\nGleicher Preis,\nmehr Rendite-\nPotenzial', 62),
+    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '16px' } },
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '12px' } },
+        h('div', { style: { display: 'flex', gap: '10px' } },
+          h('div', { style: { display: 'flex', flex: '3' } }),
+          h('div', { style: { display: 'flex', flex: '2', justifyContent: 'center' } },
+            h('span', { style: { fontSize: '21px', fontWeight: 700, color: C.textMuted, letterSpacing: '1px' } }, 'MSCI WORLD')
+          ),
+          h('div', { style: { display: 'flex', flex: '2', justifyContent: 'center' } },
+            h('span', { style: { fontSize: '21px', fontWeight: 700, color: C.green, letterSpacing: '1px' } }, 'SCV FACTOR')
+          )
+        ),
+        h('div', { style: { display: 'flex', gap: '10px', backgroundColor: C.cardBg, borderRadius: '14px', padding: '16px 18px', alignItems: 'center' } },
+          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textSoft, flex: '3' } }, 'Kosten (TER/Jahr)'),
+          h('div', { style: { display: 'flex', flex: '2', justifyContent: 'center' } },
+            h('span', { style: { fontSize: '25px', fontWeight: 700, color: C.text } }, '~0,12%')
+          ),
+          h('div', { style: { display: 'flex', flex: '2', justifyContent: 'center' } },
+            h('span', { style: { fontSize: '25px', fontWeight: 700, color: C.text } }, '~0,25%')
+          )
+        ),
+        h('div', { style: { display: 'flex', gap: '10px', backgroundColor: C.cardBg, borderRadius: '14px', padding: '16px 18px', alignItems: 'center' } },
+          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textSoft, flex: '3' } }, 'Diversifikation'),
+          h('div', { style: { display: 'flex', flex: '2', justifyContent: 'center' } },
+            h('span', { style: { fontSize: '25px', fontWeight: 700, color: C.text } }, 'Hoch')
+          ),
+          h('div', { style: { display: 'flex', flex: '2', justifyContent: 'center' } },
+            h('span', { style: { fontSize: '25px', fontWeight: 700, color: C.text } }, 'Hoch')
+          )
+        ),
+        h('div', { style: { display: 'flex', gap: '10px', backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '14px', padding: '16px 18px', alignItems: 'center', border: '1px solid rgba(16,185,129,0.25)' } },
+          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textSoft, flex: '3' } }, 'Rendite-Praemie'),
+          h('div', { style: { display: 'flex', flex: '2', justifyContent: 'center' } },
+            h('span', { style: { fontSize: '25px', fontWeight: 700, color: C.textMuted } }, 'Markt')
+          ),
+          h('div', { style: { display: 'flex', flex: '2', justifyContent: 'center' } },
+            h('span', { style: { fontSize: '25px', fontWeight: 700, color: C.green } }, 'Markt + X')
+          )
+        ),
+        h('div', { style: { display: 'flex', gap: '10px', backgroundColor: C.cardBg, borderRadius: '14px', padding: '16px 18px', alignItems: 'center' } },
+          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textSoft, flex: '3' } }, 'Volatilitaet'),
+          h('div', { style: { display: 'flex', flex: '2', justifyContent: 'center' } },
+            h('span', { style: { fontSize: '25px', fontWeight: 700, color: C.text } }, 'Mittel')
+          ),
+          h('div', { style: { display: 'flex', flex: '2', justifyContent: 'center' } },
+            h('span', { style: { fontSize: '25px', fontWeight: 700, color: C.yellow } }, 'Hoeher')
+          )
+        ),
+        h('div', { style: { display: 'flex', gap: '10px', backgroundColor: C.cardBg, borderRadius: '14px', padding: '16px 18px', alignItems: 'center' } },
+          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textSoft, flex: '3' } }, 'Zeithorizont'),
+          h('div', { style: { display: 'flex', flex: '2', justifyContent: 'center' } },
+            h('span', { style: { fontSize: '25px', fontWeight: 700, color: C.text } }, '5+ Jahre')
+          ),
+          h('div', { style: { display: 'flex', flex: '2', justifyContent: 'center' } },
+            h('span', { style: { fontSize: '25px', fontWeight: 700, color: C.yellow } }, '10+ Jahre')
+          )
+        )
+      ),
+      h('div', { style: { display: 'flex', backgroundColor: 'rgba(245,158,11,0.10)', borderRadius: '12px', padding: '14px 20px' } },
+        h('span', { style: { fontSize: '23px', fontWeight: 600, color: C.yellow } }, 'Mehr Potenzial = mehr Schwankungen. Nur fuer langfristige Anleger geeignet.')
+      )
+    ),
+    keyLearning('Factor-ETFs sind kein Freifahrtschein — aber historisch den Geduldigeren ueberlegen.', C.yellow),
+    igHandle()
+  ]);
+
+  // =====================
+  // SLIDE 7 — 4 LEARNINGS
+  // =====================
   const learnings = [
-    { num: '01', text: 'Notgroschen zuerst — 3 Monatsgehaelter auf Tagesgeld parken', pct: 25 },
-    { num: '02', text: 'Schulden tilgen wenn Zinssatz ueber 5% — vor dem Investieren', pct: 50 },
-    { num: '03', text: 'BU + RLV + PHV sind Pflicht — kein ETF ohne Absicherung', pct: 75 },
-    { num: '04', text: 'Sofort anfangen — Zeit ist dein wertvollster Vermoegenswert', pct: 100 },
+    { num: '01', text: 'Factor-ETFs nutzen bewiesene Rendite-Praemien mit 100 Jahren Datenbasis.', pct: 25 },
+    { num: '02', text: '2026: Small Cap Value schlug Large Growth um 9 Prozentpunkte YTD.', pct: 50 },
+    { num: '03', text: 'Etwas hoehere Kosten (0,25% TER) — dafuer hoehere Rendite-Chance.', pct: 75 },
+    { num: '04', text: 'Strategie: Erst MSCI World sichern, dann Faktoren als Ergaenzung beimischen.', pct: 100 },
   ];
 
-  const slide7 = slideWrap([
-    h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' } },
-      badge('DEINE LEARNINGS'),
-      logoImg(120)
-    ),
-    headline('Das nimmst du\njetzt mit.', 64),
+  const slide7 = slideRoot(C.bg, [
+    headerRow('DEINE LEARNINGS'),
+    headline('Was du jetzt\nweisst', 68),
     h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '14px' } },
       ...learnings.map(l =>
-        h('div', {
-          style: {
-            display: 'flex', flexDirection: 'column', gap: '10px',
-            padding: '18px 22px', backgroundColor: C.cardBg, borderRadius: '16px'
-          }
-        },
-          h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
-            h('span', { style: { fontSize: '34px', fontWeight: 800, color: l.pct === 100 ? C.green : C.text, minWidth: '52px' } }, l.num),
-            h('span', { style: { fontSize: '25px', fontWeight: 600, color: C.text, lineHeight: '1.3' } }, l.text)
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px', padding: '20px 24px', backgroundColor: C.cardBg, borderRadius: '18px' } },
+          h('div', { style: { display: 'flex', alignItems: 'center', gap: '18px' } },
+            h('span', { style: { fontSize: '38px', fontWeight: 800, color: l.pct === 100 ? C.green : C.text, minWidth: '58px', flexShrink: '0' } }, l.num),
+            h('span', { style: { fontSize: '25px', fontWeight: 600, color: C.text, lineHeight: '1.35' } }, l.text)
           ),
-          h('div', { style: { display: 'flex', height: '6px', backgroundColor: C.border, borderRadius: '3px', overflow: 'hidden' } },
-            h('div', { style: { display: 'flex', width: l.pct + '%', height: '6px', backgroundColor: l.pct === 100 ? C.green : C.text, borderRadius: '3px' } })
+          h('div', { style: { display: 'flex', height: '5px', backgroundColor: C.border, borderRadius: '3px', overflow: 'hidden' } },
+            h('div', { style: { display: 'flex', width: `${l.pct}%`, height: '5px', backgroundColor: l.pct === 100 ? C.green : C.text, borderRadius: '3px' } })
           )
         )
       )
     ),
-    keyLearning('Die Reihenfolge ist entscheidend — nicht die Hoehe des Betrags.', C.green),
-    footer()
+    keyLearning('Factor-Investing lohnt sich nur mit langem Zeithorizont — mindestens 10 Jahre.', C.green),
+    igHandle()
   ]);
 
-  // =========================================================
+  // =====================
   // SLIDE 8 — CTA
-  // =========================================================
-  const slide8 = slideWrap([
-    h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' } },
-      badge('JETZT STARTEN'),
-      logoImg(120)
-    ),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '28px' } },
-      logoImg(140),
-      h('span', { style: { fontSize: '50px', fontWeight: 800, color: C.text, textAlign: 'center', lineHeight: '1.1', letterSpacing: '-1px' } },
-        'Wo stehst du in\ndeinem Finanz-\nFahrplan?'
+  // =====================
+  const slide8 = slideRoot(C.bgDark, [
+    headerRow('DEIN NAECHSTER SCHRITT'),
+    headline('Nutzt du schon\nFactor-ETFs in\ndeinem Depot?', 64),
+    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '18px', alignItems: 'center' } },
+      h('span', { style: { fontSize: '27px', fontWeight: 500, color: C.textMuted, textAlign: 'center' } }, 'Schreib es in die Kommentare:'),
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '12px', width: '100%' } },
+        h('div', { style: { display: 'flex', backgroundColor: C.cardBg, borderRadius: '16px', padding: '20px 28px', justifyContent: 'center' } },
+          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.text } }, 'Noch kein Factor-ETF')
+        ),
+        h('div', { style: { display: 'flex', backgroundColor: C.cardBg, borderRadius: '16px', padding: '20px 28px', justifyContent: 'center' } },
+          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.text } }, 'Value ETF im Depot')
+        ),
+        h('div', { style: { display: 'flex', backgroundColor: 'rgba(16,185,129,0.15)', borderRadius: '16px', padding: '20px 28px', justifyContent: 'center', border: '1px solid rgba(16,185,129,0.35)' } },
+          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.green } }, 'Small Cap Value Investor')
+        )
       ),
-      h('span', { style: { fontSize: '28px', fontWeight: 500, color: C.textMuted, textAlign: 'center', lineHeight: '1.5' } },
-        'Schreib uns in die Kommentare.\nWir helfen dir beim naechsten Schritt.'
-      ),
-      h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' } },
-        h('span', { style: { fontSize: '30px', fontWeight: 700, color: C.green } }, 'Speichern nicht vergessen'),
-        h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted } }, 'damit du den Fahrplan immer griffbereit hast')
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center', marginTop: '10px' } },
+        h('span', { style: { fontSize: '27px', fontWeight: 600, color: C.textSoft, textAlign: 'center', lineHeight: '1.4' } },
+          'Speichern nicht vergessen — du wirst diesen Post nochmal brauchen.'),
+        h('span', { style: { fontSize: '27px', fontWeight: 600, color: C.textSoft, textAlign: 'center' } },
+          'Folge @benarofinanzen fuer mehr Finanzwissen.')
       )
     ),
-    footer()
+    h('div', { style: { display: 'flex', justifyContent: 'center', marginBottom: '10px' } },
+      h('img', { src: logoB64, width: 110, height: 110, style: { borderRadius: '16px', objectFit: 'cover' } })
+    ),
+    igHandle()
   ]);
 
-  // =========================================================
+  // =====================
   // GENERATE ALL SLIDES
-  // =========================================================
+  // =====================
   const slides = [slide1, slide2, slide3, slide4, slide5, slide6, slide7, slide8];
-  const outDir = path.join(__dirname, 'output', 'carousel_2026-07-18', 'slides');
-  if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+  const outDir = path.join(__dirname, 'output', 'carousel_2026-07-19', 'slides');
 
   for (let i = 0; i < slides.length; i++) {
     const svg = await satori(slides[i], { width: W, height: H, fonts });
