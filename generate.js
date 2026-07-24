@@ -1,362 +1,532 @@
-// Carousel: Steuerklassen 2026 — Welche kostet dich am meisten?
-// Inspiration: @finanzcopilot — Steuer-Content, hohe Engagement-Rate
 const fs = require('fs');
 const path = require('path');
 
 async function main() {
-  const satori = (await import('satori')).default;
+  const satori = (await import('satori')).default || require('satori');
   const { Resvg } = require('@resvg/resvg-js');
 
   const fontDir = path.join(__dirname, 'node_modules/@fontsource/outfit/files');
-  const fonts = [400, 500, 600, 700, 800].flatMap(w => [
-    { name: 'Outfit', weight: w, style: 'normal', data: fs.readFileSync(path.join(fontDir, `outfit-latin-${w}-normal.woff`)) },
-    { name: 'Outfit', weight: w, style: 'normal', data: fs.readFileSync(path.join(fontDir, `outfit-latin-ext-${w}-normal.woff`)) },
+  const fonts = [400,500,600,700,800].flatMap(w => [
+    { name:'Outfit', weight:w, style:'normal', data: fs.readFileSync(path.join(fontDir, `outfit-latin-${w}-normal.woff`)) },
+    { name:'Outfit', weight:w, style:'normal', data: fs.readFileSync(path.join(fontDir, `outfit-latin-ext-${w}-normal.woff`)) },
   ]);
 
   const C = {
-    bg: '#001F60',
+    bg: '#001F61',
     text: '#FFFFFF',
     textSoft: '#E5E7EB',
     textMuted: '#9CA3AF',
     cardBg: 'rgba(255,255,255,0.10)',
-    border: 'rgba(255,255,255,0.18)',
+    border: 'rgba(255,255,255,0.20)',
     green: '#10B981',
     red: '#EF4444',
   };
 
   const W = 1080, H = 1350;
-  const PAD = 70;
 
   const logoB64 = 'data:image/jpeg;base64,' + fs.readFileSync(
-    '/tmp/workspace/skills/instagram-carousel-skill/templates/benaro-logo.jpg'
+    path.join(__dirname, 'skills/instagram-carousel-skill/templates/benaro-logo.jpg')
   ).toString('base64');
 
+  const outDir = path.join(__dirname, 'output/carousel_2026-07-24/slides');
+
   const h = (type, props, ...ch) => ({
-    type,
-    props: { ...props, children: ch.length === 1 ? ch[0] : ch.length === 0 ? undefined : ch }
+    type, props: { ...props, children: ch.length === 1 ? ch[0] : ch.length === 0 ? undefined : ch }
   });
 
-  function logo() {
-    return h('img', { src: logoB64, width: 120, height: 120, style: { borderRadius: '12px', objectFit: 'cover', flexShrink: '0' } });
+  function slideRoot(children) {
+    return h('div', {
+      style: {
+        display: 'flex', flexDirection: 'column',
+        width: W, height: H, padding: '70px',
+        backgroundColor: C.bg, fontFamily: 'Outfit',
+      }
+    }, ...children);
   }
 
-  function badge(text) {
-    return h('div', { style: { display: 'flex', marginBottom: '14px' } },
-      h('span', { style: { display: 'flex', fontSize: '20px', fontWeight: 700, letterSpacing: '3px', color: C.text, backgroundColor: C.cardBg, padding: '10px 22px', borderRadius: '12px' } }, text)
+  function topRow(badgeText) {
+    return h('div', {
+      style: {
+        display: 'flex', flexDirection: 'row', justifyContent: 'space-between',
+        alignItems: 'flex-start', marginBottom: '24px',
+      }
+    },
+      h('span', {
+        style: {
+          display: 'flex', fontSize: '22px', fontWeight: 700, letterSpacing: '3px',
+          color: C.text, backgroundColor: C.cardBg, padding: '10px 22px', borderRadius: '12px',
+        }
+      }, badgeText),
+      h('img', { src: logoB64, width: 80, height: 80, style: { borderRadius: '12px', objectFit: 'cover' } })
     );
   }
 
   function headline(text, size) {
-    return h('span', { style: { fontSize: `${size || 64}px`, fontWeight: 800, color: C.text, lineHeight: '1.08', letterSpacing: '-1.5px', marginBottom: '8px' } }, text);
+    return h('span', {
+      style: {
+        fontSize: `${size || 64}px`, fontWeight: 800, color: C.text,
+        lineHeight: '1.08', letterSpacing: '-1.5px', marginBottom: '6px',
+      }
+    }, text);
   }
 
   function subline(text) {
-    return h('span', { style: { fontSize: '28px', fontWeight: 500, color: C.textMuted, lineHeight: '1.5', marginTop: '8px' } }, text);
+    return h('span', {
+      style: { fontSize: '28px', fontWeight: 500, color: C.textMuted, lineHeight: '1.5', marginTop: '8px' }
+    }, text);
   }
 
   function keyLearning(text, accent) {
-    return h('div', { style: { display: 'flex', alignItems: 'center', gap: '14px', backgroundColor: C.cardBg, borderRadius: '16px', padding: '22px 28px', marginTop: '16px' } },
-      h('div', { style: { display: 'flex', width: '6px', minHeight: '44px', backgroundColor: accent || C.green, borderRadius: '3px', flexShrink: '0' } }),
+    return h('div', {
+      style: {
+        display: 'flex', alignItems: 'center', gap: '14px', backgroundColor: C.cardBg,
+        borderRadius: '16px', padding: '22px 28px', marginTop: 'auto',
+      }
+    },
+      h('div', {
+        style: {
+          display: 'flex', width: '6px', minHeight: '40px',
+          backgroundColor: accent || C.text, borderRadius: '3px', flexShrink: 0,
+        }
+      }),
       h('span', { style: { fontSize: '27px', fontWeight: 600, color: C.text, lineHeight: '1.4' } }, text)
     );
   }
 
   function igHandle() {
-    return h('div', { style: { display: 'flex', alignItems: 'center', marginTop: '12px' } },
-      h('span', { style: { fontSize: '23px', fontWeight: 500, color: C.textMuted } }, '@benarofinanzen')
+    return h('div', { style: { display: 'flex', alignItems: 'center', marginTop: '14px' } },
+      h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted } }, '@benarofinanzen')
     );
   }
 
-  function headerRow(badgeText) {
-    return h('div', { style: { display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4px' } },
-      badge(badgeText),
-      logo()
-    );
+  function visual(children) {
+    return h('div', {
+      style: {
+        display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center',
+        marginTop: '20px', marginBottom: '20px',
+      }
+    }, ...children);
   }
 
-  function slideRoot(children) {
-    return h('div', { style: { display: 'flex', flexDirection: 'column', width: W, height: H, padding: `${PAD}px`, backgroundColor: C.bg, fontFamily: 'Outfit' } },
-      ...children
-    );
-  }
-
-  // =====================================================================
-  // SLIDE 1 — HOOK: Steuerklassen-Falle
-  // =====================================================================
-  const klasseCards = [
-    { kl: 'I', label: 'Single', abzug: '42%', color: C.textSoft, isRed: false },
-    { kl: 'II', label: 'Alleinerz.', abzug: '35%', color: C.textSoft, isRed: false },
-    { kl: 'III', label: 'Hauptverd.', abzug: '22%', color: C.green, isRed: false },
-    { kl: 'IV', label: 'Gleichverd.', abzug: '42%', color: C.textSoft, isRed: false },
-    { kl: 'V', label: 'Minderverd.', abzug: '68%', color: C.red, isRed: true },
-    { kl: 'VI', label: 'Zweitjob', abzug: '85%', color: C.red, isRed: true },
-  ];
-
+  // ─── SLIDE 1: HOOK ───
   const slide1 = slideRoot([
-    headerRow('DAS MUSST DU WISSEN'),
-    headline('Deine Steuerklasse kostet dich jeden Monat bis zu 500 EUR', 55),
-    subline('Millionen Deutsche zahlen mehr als noetig'),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '18px' } },
-      h('div', { style: { display: 'flex', gap: '10px' } },
-        ...klasseCards.map(k =>
-          h('div', { style: {
-            display: 'flex', flex: '1', flexDirection: 'column', alignItems: 'center', gap: '8px',
-            backgroundColor: k.isRed ? 'rgba(239,68,68,0.18)' : C.cardBg,
-            border: k.isRed ? '2px solid rgba(239,68,68,0.5)' : `1px solid ${C.border}`,
-            borderRadius: '16px', padding: '20px 6px',
-          } },
-          h('span', { style: { fontSize: '36px', fontWeight: 800, color: k.isRed ? C.red : C.text } }, k.kl),
-          h('span', { style: { fontSize: '22px', fontWeight: 700, color: k.color } }, k.abzug),
-          h('span', { style: { fontSize: '16px', fontWeight: 600, color: C.textMuted, textAlign: 'center' } }, k.label)
-        ))
+    topRow('DAS UEBERRASCHT DICH'),
+    headline('Gruene ETFs: Besser als ihr Ruf?', 62),
+    subline('Die Wahrheit ueber nachhaltige Geldanlage 2026'),
+    visual([
+      h('div', { style: { display: 'flex', gap: '20px', width: '100%' } },
+        h('div', {
+          style: {
+            display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: C.cardBg,
+            borderRadius: '20px', padding: '32px', gap: '16px', alignItems: 'center', justifyContent: 'center',
+          }
+        },
+          h('div', {
+            style: {
+              display: 'flex', width: '80px', height: '80px', borderRadius: '40px',
+              backgroundColor: 'rgba(255,255,255,0.08)', alignItems: 'center', justifyContent: 'center',
+            }
+          },
+            h('div', { style: { display: 'flex', width: '50px', height: '50px', borderRadius: '25px', backgroundColor: 'rgba(255,255,255,0.15)' } })
+          ),
+          h('span', { style: { fontSize: '32px', fontWeight: 700, color: C.textMuted, textAlign: 'center' } }, 'ESG-ETF'),
+          h('span', { style: { fontSize: '24px', fontWeight: 500, color: 'rgba(255,255,255,0.30)', textAlign: 'center', lineHeight: '1.4' } }, 'Nachhaltig investieren'),
+        ),
+        h('div', {
+          style: {
+            display: 'flex', flex: '1', flexDirection: 'column',
+            backgroundColor: 'rgba(16,185,129,0.15)', borderRadius: '20px',
+            padding: '32px', gap: '16px', alignItems: 'center', justifyContent: 'center',
+            border: '2px solid rgba(16,185,129,0.25)',
+          }
+        },
+          h('div', {
+            style: {
+              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px',
+            }
+          },
+            h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
+              h('div', { style: { display: 'flex', flexDirection: 'row', gap: '10px', alignItems: 'flex-end' } },
+                h('div', { style: { display: 'flex', width: '28px', height: '60px', backgroundColor: 'rgba(16,185,129,0.3)', borderRadius: '6px' } }),
+                h('div', { style: { display: 'flex', width: '28px', height: '80px', backgroundColor: 'rgba(16,185,129,0.5)', borderRadius: '6px' } }),
+                h('div', { style: { display: 'flex', width: '28px', height: '100px', backgroundColor: 'rgba(16,185,129,0.7)', borderRadius: '6px' } }),
+                h('div', { style: { display: 'flex', width: '28px', height: '130px', backgroundColor: C.green, borderRadius: '6px' } }),
+              )
+            )
+          ),
+          h('span', { style: { fontSize: '32px', fontWeight: 800, color: C.green, textAlign: 'center' } }, 'Rendite'),
+          h('span', { style: { fontSize: '22px', fontWeight: 500, color: 'rgba(16,185,129,0.75)', textAlign: 'center' } }, 'Kein Widerspruch'),
+        )
       ),
-      h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px', backgroundColor: 'rgba(239,68,68,0.1)', borderRadius: '18px', padding: '26px 28px', border: '1px solid rgba(239,68,68,0.28)' } },
-        h('div', { style: { display: 'flex', width: '12px', height: '12px', borderRadius: '6px', backgroundColor: C.red, flexShrink: '0' } }),
-        h('span', { style: { fontSize: '27px', fontWeight: 700, color: C.textSoft, lineHeight: '1.38' } }, 'Klasse V zieht bis zu 650 EUR/Monat mehr ab als Klasse IV -- unnoetig viel')
-      )
-    ),
-    keyLearning('Die meisten Paare waehlen falsch -- und merken es erst beim Jahresausgleich', C.red),
+      h('div', {
+        style: {
+          display: 'flex', marginTop: '20px', padding: '20px 28px',
+          backgroundColor: 'rgba(16,185,129,0.08)', borderRadius: '16px',
+          alignItems: 'center', gap: '14px',
+          border: '1px solid rgba(16,185,129,0.2)',
+        }
+      },
+        h('div', { style: { display: 'flex', width: '10px', height: '10px', borderRadius: '5px', backgroundColor: C.green, flexShrink: 0 } }),
+        h('span', { style: { fontSize: '27px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4' } },
+          'Gruen investieren und trotzdem Rendite machen - kein Widerspruch'
+        )
+      ),
+    ]),
+    keyLearning('ESG-ETFs wachsen 2026 auf ueber 2 Billionen EUR Volumen in Europa', C.green),
     igHandle(),
   ]);
 
-  // =====================================================================
-  // SLIDE 2 — ABZUG PRO KLASSE (Bar Chart)
-  // =====================================================================
-  const klasseDaten = [
-    { label: 'KL. II  Alleinerziehende', pct: 35, color: C.green },
-    { label: 'KL. III Hauptverdiener', pct: 22, color: C.green },
-    { label: 'KL. I   Single / Ledig', pct: 42, color: 'rgba(255,255,255,0.45)' },
-    { label: 'KL. IV  Gleichverdiener', pct: 42, color: 'rgba(255,255,255,0.45)' },
-    { label: 'KL. V   Minderverdiener', pct: 68, color: C.red },
-    { label: 'KL. VI  Zweitjob', pct: 85, color: C.red },
-  ];
-
+  // ─── SLIDE 2: STATISTIK ───
   const slide2 = slideRoot([
-    headerRow('STEUERKLASSEN'),
-    headline('6 Klassen -- 6 verschiedene Abzuege', 56),
-    subline('Steuerabzug relativ zum Bruttolohn'),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '16px' } },
-      ...klasseDaten.map(d =>
-        h('div', { style: { display: 'flex', alignItems: 'center', gap: '14px' } },
-          h('span', { style: { fontSize: '22px', fontWeight: 700, color: d.pct <= 42 ? C.green : C.red, minWidth: '240px' } }, d.label),
-          h('div', { style: { display: 'flex', flex: '1', height: '36px', backgroundColor: 'rgba(255,255,255,0.07)', borderRadius: '8px', overflow: 'hidden' } },
-            h('div', { style: { display: 'flex', width: `${d.pct}%`, height: '36px', backgroundColor: d.color, borderRadius: '8px' } })
+    topRow('DIE ZAHLEN'),
+    headline('46% wollen - nur 14% tun es', 62),
+    subline('Deutsche ETF-Anleger und Nachhaltigkeit 2026'),
+    visual([
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '24px', width: '100%' } },
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
+          h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
+            h('span', { style: { fontSize: '28px', fontWeight: 600, color: C.textSoft } }, 'Wollen nachhaltig investieren'),
+            h('span', { style: { fontSize: '44px', fontWeight: 800, color: C.text } }, '46%'),
           ),
-          h('span', { style: { fontSize: '26px', fontWeight: 800, color: d.color, minWidth: '56px', textAlign: 'right' } }, `${d.pct}%`)
-        )
-      ),
-      h('div', { style: { display: 'flex', gap: '24px', marginTop: '10px' } },
-        h('div', { style: { display: 'flex', alignItems: 'center', gap: '8px' } },
-          h('div', { style: { display: 'flex', width: '14px', height: '14px', borderRadius: '3px', backgroundColor: C.green } }),
-          h('span', { style: { fontSize: '20px', color: C.textMuted } }, 'niedrig / guenstig')
-        ),
-        h('div', { style: { display: 'flex', alignItems: 'center', gap: '8px' } },
-          h('div', { style: { display: 'flex', width: '14px', height: '14px', borderRadius: '3px', backgroundColor: C.red } }),
-          h('span', { style: { fontSize: '20px', color: C.textMuted } }, 'hoch / teuer')
-        )
-      )
-    ),
-    keyLearning('Klasse VI ist NUR fuer Zweitjobs -- immer pauschal, kein Wahlrecht'),
-    igHandle(),
-  ]);
-
-  // =====================================================================
-  // SLIDE 3 — DAS PROBLEM: III+V Falle
-  // =====================================================================
-  const slide3 = slideRoot([
-    headerRow('DAS PROBLEM'),
-    headline('Die III + V Falle kostet Paare bares Geld', 54),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '18px' } },
-      h('div', { style: { display: 'flex', gap: '16px' } },
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', gap: '12px', backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '20px', padding: '26px', border: '1px solid rgba(16,185,129,0.3)' } },
-          h('span', { style: { fontSize: '18px', fontWeight: 700, letterSpacing: '2px', color: C.green } }, 'PARTNER A - KL. III'),
-          h('span', { style: { fontSize: '42px', fontWeight: 800, color: C.green } }, '4.000'),
-          h('span', { style: { fontSize: '20px', color: C.textMuted } }, 'EUR Brutto'),
-          h('div', { style: { display: 'flex', width: '100%', height: '2px', backgroundColor: 'rgba(255,255,255,0.08)' } }),
-          h('span', { style: { fontSize: '34px', fontWeight: 700, color: C.green } }, '3.100 EUR'),
-          h('span', { style: { fontSize: '20px', color: C.textSoft } }, 'Netto (stark beguenstigt)')
-        ),
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', gap: '12px', backgroundColor: 'rgba(239,68,68,0.1)', borderRadius: '20px', padding: '26px', border: '1px solid rgba(239,68,68,0.3)' } },
-          h('span', { style: { fontSize: '18px', fontWeight: 700, letterSpacing: '2px', color: C.red } }, 'PARTNER B - KL. V'),
-          h('span', { style: { fontSize: '42px', fontWeight: 800, color: C.red } }, '3.000'),
-          h('span', { style: { fontSize: '20px', color: C.textMuted } }, 'EUR Brutto'),
-          h('div', { style: { display: 'flex', width: '100%', height: '2px', backgroundColor: 'rgba(255,255,255,0.08)' } }),
-          h('span', { style: { fontSize: '34px', fontWeight: 700, color: C.red } }, '1.950 EUR'),
-          h('span', { style: { fontSize: '20px', color: C.textSoft } }, 'Netto (hoher Abzug)')
-        )
-      ),
-      h('div', { style: { display: 'flex', alignItems: 'center', gap: '14px', backgroundColor: C.cardBg, borderRadius: '16px', padding: '22px 26px' } },
-        h('div', { style: { display: 'flex', width: '6px', minHeight: '36px', backgroundColor: C.red, borderRadius: '3px', flexShrink: '0' } }),
-        h('span', { style: { fontSize: '25px', fontWeight: 600, color: C.textSoft, lineHeight: '1.38' } }, 'Partner B zahlt 650 EUR/Monat zu viel -- das fehlt das gesamte Jahr lang im Budget. Jahresausgleich kommt erst im Fruehling.')
-      )
-    ),
-    keyLearning('III+V lohnt sich NUR wenn ein Partner mehr als 60% des Einkommens verdient', C.red),
-    igHandle(),
-  ]);
-
-  // =====================================================================
-  // SLIDE 4 — MYTHOS vs. FAKT
-  // =====================================================================
-  const mythen = [
-    { mythos: '"Der Jahresausgleich macht alles wieder gut"', fakt: 'Du gibst dem Staat 12 Monate zinslos Kredit -- Liquiditaet fehlt das ganze Jahr' },
-    { mythos: '"Steuerklassen sind nur fuer Verheiratete"', fakt: 'Singles (KL. I) und Alleinerziehende (KL. II) zahlen oft deutlich zu viel' },
-    { mythos: '"Wechseln ist kompliziert und dauert ewig"', fakt: 'Online ueber ELSTER in 10 Minuten -- wirkt bereits im naechsten Monat' },
-  ];
-
-  const slide4 = slideRoot([
-    headerRow('MYTHOS vs. FAKT'),
-    headline('3 Irrtuemer die dich Geld kosten', 56),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '14px' } },
-      ...mythen.map(item =>
-        h('div', { style: { display: 'flex', gap: '10px' } },
-          h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '16px', padding: '20px 20px', gap: '8px', border: '1px solid rgba(255,255,255,0.08)' } },
-            h('span', { style: { fontSize: '18px', fontWeight: 700, letterSpacing: '2px', color: C.textMuted } }, 'MYTHOS'),
-            h('div', { style: { display: 'flex', width: '100%', height: '2px', backgroundColor: 'rgba(255,255,255,0.07)', borderRadius: '1px' } }),
-            h('span', { style: { fontSize: '21px', fontWeight: 600, color: 'rgba(255,255,255,0.38)', lineHeight: '1.4', textDecoration: 'line-through' } }, item.mythos)
+          h('div', { style: { display: 'flex', height: '56px', backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '14px', overflow: 'hidden' } },
+            h('div', { style: { display: 'flex', width: '46%', height: '56px', backgroundColor: 'rgba(255,255,255,0.28)', borderRadius: '14px' } }),
           ),
-          h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '16px', padding: '20px 20px', gap: '8px', border: '1px solid rgba(16,185,129,0.22)' } },
-            h('span', { style: { fontSize: '18px', fontWeight: 700, letterSpacing: '2px', color: C.green } }, 'FAKT'),
-            h('div', { style: { display: 'flex', width: '100%', height: '2px', backgroundColor: 'rgba(16,185,129,0.18)', borderRadius: '1px' } }),
-            h('span', { style: { fontSize: '21px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4' } }, item.fakt)
+        ),
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
+          h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
+            h('span', { style: { fontSize: '28px', fontWeight: 600, color: C.green } }, 'Haben bereits ESG-ETFs'),
+            h('span', { style: { fontSize: '44px', fontWeight: 800, color: C.green } }, '14%'),
+          ),
+          h('div', { style: { display: 'flex', height: '56px', backgroundColor: 'rgba(16,185,129,0.06)', borderRadius: '14px', overflow: 'hidden' } },
+            h('div', { style: { display: 'flex', width: '14%', height: '56px', backgroundColor: C.green, borderRadius: '14px' } }),
+          ),
+        ),
+        h('div', {
+          style: {
+            display: 'flex', padding: '22px 28px',
+            backgroundColor: 'rgba(239,68,68,0.06)', borderRadius: '16px',
+            alignItems: 'center', gap: '14px', marginTop: '8px',
+          }
+        },
+          h('div', { style: { display: 'flex', width: '10px', height: '10px', borderRadius: '5px', backgroundColor: C.red, flexShrink: 0 } }),
+          h('span', { style: { fontSize: '27px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4' } },
+            'Hauptgrund: Angst vor schlechterer Rendite - unbegrundet'
           )
         )
       )
-    ),
-    keyLearning('Ein Wechsel der Steuerklasse kann hunderte Euro mehr Netto pro Monat bedeuten'),
+    ]),
+    keyLearning('32% der Wollenden scheuen die Auswahl - zu viele ESG-Produkte, zu wenig Orientierung'),
     igHandle(),
   ]);
 
-  // =====================================================================
-  // SLIDE 5 — DIE RICHTIGE KOMBI
-  // =====================================================================
-  const situationen = [
-    { tag: 'ALLEINVERDIENEND', kombi: 'III + V', note: 'Sinnvoll wenn 1 Partner 60%+ verdient', good: false },
-    { tag: 'GLEICHVERDIENEND', kombi: 'IV + IV', note: 'Faire Aufteilung, monatlich ausgewogen', good: true },
-    { tag: 'FAST GLEICH', kombi: 'IV/IV Faktor', note: 'Optimal -- kein Nachzahlen, keine Erstattung', good: true },
-    { tag: 'ALLEINERZIEHEND', kombi: 'Klasse II', note: 'Entlastungsbetrag: 4.260 EUR/Jahr', good: true },
-    { tag: 'SINGLE / LEDIG', kombi: 'Klasse I', note: 'Standard -- kein Wahlrecht vorhanden', good: false },
-    { tag: 'ZWEITJOB', kombi: 'Klasse VI', note: 'Pauschalabzug -- immer Pflicht', good: false },
+  // ─── SLIDE 3: MYTHEN ───
+  const slide3 = slideRoot([
+    topRow('DIE MYTHEN'),
+    headline('3 Irrtuemer die dich aufhalten', 62),
+    subline('Was falsch ist - und was wirklich stimmt'),
+    visual([
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '18px', width: '100%' } },
+        ...[
+          { num: '01', myth: 'ESG-ETFs bringen weniger Rendite' },
+          { num: '02', myth: 'Nachhaltige ETFs sind viel teurer' },
+          { num: '03', myth: 'Gruen investieren aendert sowieso nichts' },
+        ].map(m =>
+          h('div', {
+            style: {
+              display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '20px',
+              backgroundColor: 'rgba(239,68,68,0.06)', borderRadius: '18px',
+              padding: '26px 28px', border: '1px solid rgba(239,68,68,0.15)',
+            }
+          },
+            h('span', { style: { fontSize: '36px', fontWeight: 800, color: 'rgba(239,68,68,0.35)', minWidth: '58px' } }, m.num),
+            h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
+              h('span', {
+                style: {
+                  fontSize: '28px', fontWeight: 600, color: 'rgba(255,255,255,0.50)',
+                  textDecoration: 'line-through', lineHeight: '1.3',
+                }
+              }, m.myth),
+              h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.green } }, 'Widerlegt - naechste Seite'),
+            )
+          )
+        )
+      )
+    ]),
+    keyLearning('Alle 3 Mythen basieren auf veralteten Daten aus der Fruehphase von ESG'),
+    igHandle(),
+  ]);
+
+  // ─── SLIDE 4: ERWARTUNG VS. REALITAET ───
+  const slide4 = slideRoot([
+    topRow('ERWARTUNG VS. REALITAET'),
+    headline('ESG kostet Rendite?', 66),
+    subline('Daten aus 10 Jahren sprechen eine andere Sprache'),
+    visual([
+      h('div', { style: { display: 'flex', gap: '16px', width: '100%' } },
+        h('div', {
+          style: {
+            display: 'flex', flex: '1', flexDirection: 'column',
+            backgroundColor: C.cardBg, borderRadius: '20px', padding: '28px', gap: '14px',
+          }
+        },
+          h('span', { style: { fontSize: '19px', fontWeight: 700, letterSpacing: '2px', color: C.textMuted } }, 'ERWARTUNG'),
+          h('div', { style: { display: 'flex', width: '100%', height: '4px', backgroundColor: C.border, borderRadius: '2px' } }),
+          h('span', { style: { fontSize: '54px', fontWeight: 800, color: C.red, lineHeight: '1.1' } }, '-2%'),
+          h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textSoft, lineHeight: '1.4' } },
+            'ESG verliert jaehrlich gegenueber Standard-ETFs'
+          ),
+          h('div', {
+            style: {
+              display: 'flex', marginTop: '12px', padding: '12px 16px',
+              backgroundColor: 'rgba(239,68,68,0.08)', borderRadius: '10px',
+            }
+          },
+            h('span', { style: { fontSize: '21px', fontWeight: 600, color: C.red } }, 'Was viele denken')
+          )
+        ),
+        h('div', {
+          style: {
+            display: 'flex', flex: '1', flexDirection: 'column',
+            backgroundColor: 'rgba(16,185,129,0.15)', borderRadius: '20px',
+            padding: '28px', gap: '14px', border: '2px solid rgba(16,185,129,0.3)',
+          }
+        },
+          h('span', { style: { fontSize: '19px', fontWeight: 700, letterSpacing: '2px', color: C.green } }, 'REALITAET'),
+          h('div', { style: { display: 'flex', width: '100%', height: '4px', backgroundColor: 'rgba(16,185,129,0.3)', borderRadius: '2px' } }),
+          h('span', { style: { fontSize: '54px', fontWeight: 800, color: C.green, lineHeight: '1.1' } }, '~gleich'),
+          h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textSoft, lineHeight: '1.4' } },
+            'ESG performt aehnlich bis leicht besser (Morningstar)'
+          ),
+          h('div', {
+            style: {
+              display: 'flex', marginTop: '12px', padding: '12px 16px',
+              backgroundColor: 'rgba(16,185,129,0.10)', borderRadius: '10px',
+            }
+          },
+            h('span', { style: { fontSize: '21px', fontWeight: 600, color: C.green } }, 'Was die Daten zeigen')
+          )
+        )
+      ),
+      h('div', {
+        style: {
+          display: 'flex', marginTop: '24px', padding: '20px 28px',
+          backgroundColor: C.cardBg, borderRadius: '16px', gap: '14px', alignItems: 'center',
+        }
+      },
+        h('div', { style: { display: 'flex', width: '10px', height: '10px', borderRadius: '5px', backgroundColor: C.green, flexShrink: 0 } }),
+        h('span', { style: { fontSize: '27px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4' } },
+          'Morningstar: ESG-Fonds schnitten in 6 von 10 Jahren nicht schlechter ab'
+        )
+      )
+    ]),
+    keyLearning('EU-Taxonomie 2026 sorgt fuer mehr Transparenz - kein Greenwashing mehr', C.green),
+    igHandle(),
+  ]);
+
+  // ─── SLIDE 5: 3 ESG-STRATEGIEN ───
+  const strategies = [
+    {
+      num: '01', label: 'BEST-IN-CLASS',
+      title: 'Beste der Klasse',
+      desc: 'Jede Branche bleibt vertreten - nur die nachhaltigsten Unternehmen je Sektor werden aufgenommen.',
+      color: C.green,
+    },
+    {
+      num: '02', label: 'AUSSCHLUESSE',
+      title: 'Exclusion-Prinzip',
+      desc: 'Waffen, Tabak, Kohle und Gluecksspiel werden komplett aus dem Index ausgeschlossen.',
+      color: C.text,
+    },
+    {
+      num: '03', label: 'IMPACT',
+      title: 'Wirkungsinvestment',
+      desc: 'Kapital fliesst gezielt in erneuerbare Energien, Bildung und saubere Wasserversorgung.',
+      color: 'rgba(255,200,60,1)',
+    },
   ];
 
   const slide5 = slideRoot([
-    headerRow('DIE LOESUNG'),
-    headline('Die richtige Steuerklasse fuer jede Situation', 50),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '10px' } },
-      ...situationen.map(s =>
-        h('div', { style: { display: 'flex', alignItems: 'center', gap: '14px', backgroundColor: s.good ? 'rgba(16,185,129,0.1)' : C.cardBg, borderRadius: '14px', padding: '16px 20px', border: s.good ? '1px solid rgba(16,185,129,0.2)' : '1px solid rgba(255,255,255,0.08)' } },
-          h('div', { style: { display: 'flex', flexDirection: 'column', flex: '1', gap: '2px' } },
-            h('span', { style: { fontSize: '17px', fontWeight: 700, letterSpacing: '2px', color: s.good ? C.green : C.textMuted } }, s.tag),
-            h('span', { style: { fontSize: '19px', fontWeight: 500, color: C.textMuted } }, s.note)
-          ),
-          h('span', { style: { fontSize: '22px', fontWeight: 800, color: s.kombi.includes('Faktor') ? C.green : s.good ? C.green : C.textSoft, textAlign: 'right', minWidth: '130px' } }, s.kombi)
+    topRow('SO FUNKTIONIERT ESG'),
+    headline('3 Strategien im Ueberblick', 64),
+    subline('Unterschiedliche Ansaetze - eine Richtung'),
+    visual([
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '18px', width: '100%' } },
+        ...strategies.map(s =>
+          h('div', {
+            style: {
+              display: 'flex', flexDirection: 'row', alignItems: 'flex-start', gap: '20px',
+              backgroundColor: C.cardBg, borderRadius: '20px', padding: '24px 28px',
+            }
+          },
+            h('div', {
+              style: {
+                display: 'flex', minWidth: '52px', height: '52px', borderRadius: '14px',
+                backgroundColor: 'rgba(255,255,255,0.06)', alignItems: 'center', justifyContent: 'center',
+              }
+            },
+              h('span', { style: { fontSize: '26px', fontWeight: 800, color: s.color } }, s.num)
+            ),
+            h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
+              h('span', { style: { fontSize: '19px', fontWeight: 700, letterSpacing: '2px', color: s.color } }, s.label),
+              h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.text, lineHeight: '1.2' } }, s.title),
+              h('span', { style: { fontSize: '23px', fontWeight: 500, color: C.textMuted, lineHeight: '1.45' } }, s.desc),
+            )
+          )
         )
       )
-    ),
-    keyLearning('Das Faktor-Verfahren (IV/IV mit Faktor) ist fast immer die beste Wahl fuer Paare', C.green),
+    ]),
+    keyLearning('Die meisten ESG-ETFs kombinieren mehrere Strategien gleichzeitig'),
     igHandle(),
   ]);
 
-  // =====================================================================
-  // SLIDE 6 — DAS FAKTOR-VERFAHREN
-  // =====================================================================
-  const steps = [
-    { num: '01', title: 'Beide Partner waehlen Steuerklasse IV', detail: 'Gleiche Basis -- kein struktureller Nachteil fuer einen der beiden' },
-    { num: '02', title: 'Finanzamt berechnet euren individuellen Faktor', detail: 'Abhaengig vom genauen Einkommens-Verhaeltnis' },
-    { num: '03', title: 'Lohnsteuer wird monatlich korrekt aufgeteilt', detail: 'Kein Partner zahlt mehr als seinen gerechten Anteil' },
-    { num: '04', title: 'Jahresabschluss: kaum Nachzahlung oder Erstattung', detail: 'Monatlicher Nettolohn stimmt bereits mit dem Jahresergebnis ueberein' },
+  // ─── SLIDE 6: KONKRETE ETFs ───
+  const etfs = [
+    {
+      name: 'iShares MSCI World ESG Screened',
+      focus: 'Klassiker - 1.300 Unternehmen, Ausschluesse',
+      ter: '0,20%', sfdr: 'Art. 8', color: C.green,
+    },
+    {
+      name: 'iShares MSCI World SRI',
+      focus: 'Strenger - nur Top 25% je Branche aufgenommen',
+      ter: '0,20%', sfdr: 'Art. 8', color: C.text,
+    },
+    {
+      name: 'Xtrackers MSCI World ESG Leaders',
+      focus: 'Ausgewogen - beste ESG-Wertung je Sektor',
+      ter: '0,19%', sfdr: 'Art. 8', color: 'rgba(255,200,60,1)',
+    },
   ];
 
   const slide6 = slideRoot([
-    headerRow('DER GEHEIMTIPP'),
-    headline('Das Faktor-Verfahren erklaert', 60),
-    subline('IV + IV mit Faktor = monatlich fair und korrekt'),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '14px' } },
-      ...steps.map((s, i) =>
-        h('div', { style: { display: 'flex', alignItems: 'flex-start', gap: '18px' } },
-          h('div', { style: { display: 'flex', width: '56px', height: '56px', borderRadius: '14px', backgroundColor: i === 3 ? 'rgba(16,185,129,0.2)' : C.cardBg, alignItems: 'center', justifyContent: 'center', flexShrink: '0' } },
-            h('span', { style: { fontSize: '24px', fontWeight: 800, color: i === 3 ? C.green : C.text } }, s.num)
-          ),
-          h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', gap: '3px', paddingTop: '6px' } },
-            h('span', { style: { fontSize: '24px', fontWeight: 700, color: C.text, lineHeight: '1.25' } }, s.title),
-            h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted } }, s.detail)
+    topRow('DEIN EINSTIEG'),
+    headline('3 ESG-ETFs fuer dein Depot', 62),
+    subline('Alle unter 0,20% TER - so guenstig wie Standard-ETFs'),
+    visual([
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '18px', width: '100%' } },
+        ...etfs.map(e =>
+          h('div', {
+            style: {
+              display: 'flex', flexDirection: 'column', gap: '10px',
+              backgroundColor: C.cardBg, borderRadius: '20px', padding: '24px 28px',
+            }
+          },
+            h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
+              h('span', { style: { fontSize: '23px', fontWeight: 700, color: e.color, lineHeight: '1.3' } }, e.name),
+              h('div', { style: { display: 'flex', gap: '10px', flexShrink: 0 } },
+                h('span', {
+                  style: {
+                    fontSize: '20px', fontWeight: 700, color: C.bg,
+                    backgroundColor: C.green, padding: '6px 14px', borderRadius: '8px',
+                  }
+                }, e.ter),
+                h('span', {
+                  style: {
+                    fontSize: '20px', fontWeight: 700, color: C.textMuted,
+                    backgroundColor: 'rgba(255,255,255,0.08)', padding: '6px 14px', borderRadius: '8px',
+                  }
+                }, e.sfdr),
+              )
+            ),
+            h('div', { style: { display: 'flex', height: '2px', backgroundColor: C.border, borderRadius: '2px' } }),
+            h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textSoft, lineHeight: '1.4' } }, e.focus),
           )
         )
-      ),
-      h('div', { style: { display: 'flex', alignItems: 'center', gap: '14px', backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '14px', padding: '18px 22px', border: '1px solid rgba(16,185,129,0.22)', marginTop: '6px' } },
-        h('div', { style: { display: 'flex', width: '10px', height: '10px', borderRadius: '5px', backgroundColor: C.green, flexShrink: '0' } }),
-        h('span', { style: { fontSize: '23px', fontWeight: 600, color: C.textSoft, lineHeight: '1.35' } }, 'Beantragung: kostenlos online ueber ELSTER -- dauert nur 10 Minuten, gilt ab dem Folgemonat')
       )
-    ),
-    keyLearning('Das Faktor-Verfahren kann einmal jaehrlich geaendert werden -- ideal bei Gehaltswechseln', C.green),
+    ]),
+    keyLearning('SFDR Art. 8 = hellgruen reguliert. Alle drei sind bei Trade Republic & Scalable besparbar.', C.green),
     igHandle(),
   ]);
 
-  // =====================================================================
-  // SLIDE 7 — 4 TAKEAWAYS
-  // =====================================================================
+  // ─── SLIDE 7: TAKEAWAYS ───
   const learnings = [
-    { num: '01', text: 'Pruefe JETZT deine Steuerklasse auf der Gehaltsabrechnung', pct: 25 },
-    { num: '02', text: 'Beantrage das Faktor-Verfahren via ELSTER in 10 Minuten', pct: 50 },
-    { num: '03', text: 'Alleinerziehende: sicherstellen, dass du Klasse II statt I nutzt', pct: 75 },
-    { num: '04', text: 'Bei Heirat, Trennung oder Jobwechsel sofort Steuerklasse anpassen', pct: 100 },
+    { num: '01', text: 'ESG-ETFs erzielen aehnliche Renditen wie Standard-ETFs - der Renditeverlust-Mythos ist widerlegt', pct: 25 },
+    { num: '02', text: 'Die Kosten (TER) sind mit 0,19-0,20% p.a. auf gleichem Niveau wie klassische ETFs', pct: 50 },
+    { num: '03', text: 'EU-Taxonomie 2026 macht ESG-Produkte transparenter - Greenwashing wird regulatorisch unterbunden', pct: 75 },
+    { num: '04', text: 'Einfacher Einstieg: ESG-ETF als 1:1-Ersatz fuer deinen MSCI World ist moeglich', pct: 100 },
   ];
 
   const slide7 = slideRoot([
-    headerRow('DEIN FAHRPLAN'),
-    headline('4 Schritte die du heute noch tun kannst', 52),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '16px' } },
-      ...learnings.map(l =>
-        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px', padding: '20px 24px', backgroundColor: C.cardBg, borderRadius: '16px' } },
-          h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
-            h('span', { style: { fontSize: '36px', fontWeight: 800, color: l.pct === 100 ? C.green : C.text, minWidth: '56px', flexShrink: '0' } }, l.num),
-            h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.text, lineHeight: '1.3' } }, l.text)
-          ),
-          h('div', { style: { display: 'flex', height: '6px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' } },
-            h('div', { style: { display: 'flex', width: `${l.pct}%`, height: '6px', backgroundColor: l.pct === 100 ? C.green : C.text, borderRadius: '3px' } })
+    topRow('DEINE LEARNINGS'),
+    headline('Was du jetzt weisst', 66),
+    subline('4 Erkenntnisse ueber nachhaltige Geldanlage'),
+    visual([
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px', width: '100%' } },
+        ...learnings.map(l =>
+          h('div', {
+            style: {
+              display: 'flex', flexDirection: 'column', gap: '8px',
+              padding: '18px 24px', backgroundColor: C.cardBg, borderRadius: '18px',
+            }
+          },
+            h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
+              h('span', { style: { fontSize: '34px', fontWeight: 800, color: l.pct === 100 ? C.green : C.textMuted, minWidth: '54px' } }, l.num),
+              h('span', { style: { fontSize: '23px', fontWeight: 600, color: C.text, lineHeight: '1.35' } }, l.text),
+            ),
+            h('div', { style: { display: 'flex', height: '5px', backgroundColor: C.border, borderRadius: '3px', overflow: 'hidden' } },
+              h('div', { style: { display: 'flex', width: `${l.pct}%`, height: '5px', backgroundColor: l.pct === 100 ? C.green : C.text, borderRadius: '3px' } }),
+            )
           )
         )
       )
-    ),
-    keyLearning('Aenderung wirkt ab dem naechsten Monat -- starte heute und hol dir dein Geld zurueck', C.green),
+    ]),
+    keyLearning('Nachhaltigkeit und Rendite schliessen sich nicht aus - dein Depot kann beides'),
     igHandle(),
   ]);
 
-  // =====================================================================
-  // SLIDE 8 — CTA
-  // =====================================================================
+  // ─── SLIDE 8: CTA ───
   const slide8 = slideRoot([
-    headerRow('DEIN GELD'),
-    headline('In welcher Steuerklasse bist du gerade?', 56),
-    subline('Schreib es in die Kommentare -- wir schauen ob du optimieren kannst'),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'row', alignItems: 'center', gap: '16px', marginTop: '20px' } },
-      ...['I', 'II', 'III', 'IV', 'V', 'VI'].map((kl, i) =>
-        h('div', { style: {
-          display: 'flex', flex: '1', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          backgroundColor: kl === 'IV' ? 'rgba(16,185,129,0.15)' : kl === 'V' ? 'rgba(239,68,68,0.15)' : C.cardBg,
-          borderRadius: '20px', padding: '36px 8px', gap: '10px',
-          border: kl === 'IV' ? '2px solid rgba(16,185,129,0.4)' : kl === 'V' ? '2px solid rgba(239,68,68,0.4)' : `1px solid ${C.border}`
-        } },
-          h('span', { style: { fontSize: '52px', fontWeight: 800, color: kl === 'IV' ? C.green : kl === 'V' ? C.red : C.text } }, kl),
-          h('span', { style: { fontSize: '18px', fontWeight: 600, color: kl === 'IV' ? C.green : kl === 'V' ? C.red : C.textMuted, textAlign: 'center' } },
-            ['Single', 'Alleinerz.', 'Hauptverd.', 'Gleichverd.', 'Minderverd.', 'Zweitjob'][i]
-          )
-        )
+    topRow('DEINE MEINUNG'),
+    headline('Hast du schon einen ESG-ETF im Depot?', 54),
+    subline('Schreib es in die Kommentare'),
+    visual([
+      h('div', {
+        style: {
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          gap: '32px', flex: '1',
+        }
+      },
+        h('img', { src: logoB64, width: 130, height: 130, style: { borderRadius: '22px', objectFit: 'cover' } }),
+        h('div', { style: { display: 'flex', flexDirection: 'row', gap: '16px' } },
+          h('div', {
+            style: {
+              display: 'flex', padding: '18px 28px', backgroundColor: 'rgba(16,185,129,0.15)',
+              borderRadius: '16px', border: '2px solid rgba(16,185,129,0.3)',
+            }
+          },
+            h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.green } }, 'Ja')
+          ),
+          h('div', {
+            style: {
+              display: 'flex', padding: '18px 28px', backgroundColor: C.cardBg,
+              borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)',
+            }
+          },
+            h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.textSoft } }, 'Noch nicht')
+          ),
+          h('div', {
+            style: {
+              display: 'flex', padding: '18px 28px', backgroundColor: C.cardBg,
+              borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)',
+            }
+          },
+            h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.textSoft } }, 'Nie')
+          ),
+        ),
+        h('span', {
+          style: {
+            fontSize: '26px', fontWeight: 600, color: C.textMuted,
+            textAlign: 'center', lineHeight: '1.5', maxWidth: '680px',
+          }
+        }, 'Speichern nicht vergessen wenn das Carousel hilfreich war'),
       )
-    ),
-    h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', marginTop: '22px' } },
-      h('span', { style: { fontSize: '27px', fontWeight: 700, color: C.text, textAlign: 'center', lineHeight: '1.4' } },
-        'Folge @benarofinanzen fuer mehr Finanztipps'),
-      h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted, textAlign: 'center' } },
-        'Speichern nicht vergessen')
-    ),
+    ]),
+    keyLearning('Folge @benarofinanzen fuer taegliches Finanzwissen', C.green),
     igHandle(),
   ]);
 
-  // =====================================================================
-  // ALLE SLIDES GENERIEREN
-  // =====================================================================
+  // ─── GENERATE ALL SLIDES ───
   const slides = [slide1, slide2, slide3, slide4, slide5, slide6, slide7, slide8];
-  const outDir = path.join(__dirname, 'output', 'carousel_2026-07-22', 'slides');
 
   for (let i = 0; i < slides.length; i++) {
     const svg = await satori(slides[i], { width: W, height: H, fonts });
@@ -364,9 +534,9 @@ async function main() {
     const pngData = resvg.render();
     const pngPath = path.join(outDir, `slide-${String(i + 1).padStart(2, '0')}.png`);
     fs.writeFileSync(pngPath, pngData.asPng());
-    console.log(`Slide ${i + 1}/${slides.length} done -> ${pngPath}`);
+    console.log(`Slide ${i + 1}/${slides.length} gespeichert: ${pngPath}`);
   }
-  console.log('All slides generated!');
+  console.log('Alle Slides fertig!');
 }
 
 main().catch(e => { console.error(e); process.exit(1); });
