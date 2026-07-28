@@ -197,8 +197,8 @@
       "topic": "3-ETF-Weltportfolio 2026 — Dein einfaches Starter-Depot",
       "date_used": "2026-07-20",
       "inspiration_summary": "Natalie & Denis (@finanzcopilot, 13K Follower) sind bekannt fuer ETF-Content und Grundlagen des Vermögensaufbaus. Das 3-ETF-Weltportfolio ist ein perenniell hochengagiertes Thema, das noch nicht abgedeckt war (MSCI World vs. S&P 500 Vergleich war abgedeckt, aber nicht konkrete Portfolio-Konstruktion). Kernbotschaft: Du brauchst maximal 3 ETFs fuer ein vollständig diversifiziertes Weltportfolio — MSCI World (70%), MSCI EM IMI (20%), Tagesgeld/Geldmarkt-ETF (10%), Gesamtkosten ca. 0,19% TER. 8-Slide Carousel: Hook (3 ETF-Karten), Stat-Balken (nur 21% optimal aufgestellt), 2x2 Problem-Karten, Erwartung vs. Realitaet (10+ ETFs vs. 3 ETFs), Pie-Chart Portfolio-Aufteilung, Rechenbeispiel 100 EUR/Monat 20 Jahre (52.093 vs. 27.980 EUR), 4 Takeaways mit Progress Bars, CTA A/B-Frage."
-    }
-    ,{
+    },
+    {
       "profile": "@finanzcopilot",
       "topic": "REIT-ETFs 2026 — Immobilien-Einkommen ohne 300.000 Euro Eigenkapital",
       "date_used": "2026-07-21",
@@ -233,6 +233,12 @@
       "topic": "Anleihen-ETF 2026 — Sicheres Zins-Investment oder Zinsfalle?",
       "date_used": "2026-07-26",
       "inspiration_summary": "Natalie & Denis (@finanzcopilot, 13K Follower) veröffentlichen regelmäßig viralen ETF- und Finanzbildungs-Content. Hochaktuelles Thema Juli 2026: Anleihen-ETFs als übersehene Renditequelle — 73% der deutschen ETF-Anleger halten keine einzige Anleihe, obwohl Anleihen-ETFs aktuell 3–5% p.a. bieten. Kernbotschaft: Das 70/30-Portfolio (70% Aktien-ETF + 30% Anleihen-ETF) ist die Standardformel für langfristigen Vermögensaufbau — Anleihen-ETFs sind täglich handelbar, kosteneffizient (ab TER 0,07%) und zahlen automatisch Zinsen. 8-Slide Carousel: Hook (Typisches vs. Optimiertes Depot), Stat-Hero (73% ohne Anleihen), Flow-Diagramm (Wie Anleihen-ETFs funktionieren), 3 Mythen vs. Realität, Top 3 ETF-Vergleich, 70/30-Tortendiagramm, 4 Takeaways mit Progress Bars, CTA."
+    },
+    {
+      "profile": "@finanzcopilot",
+      "topic": "Tagesgeld 2026 — Dein Geld verliert trotz Zinsen an Wert",
+      "date_used": "2026-07-28",
+      "inspiration_summary": "Natalie & Denis (@finanzcopilot, 13K Follower) posten regelmäßig über Spar- und Investment-Strategien. Hochengagement-Thema Juli 2026: Inflation überstieg erstmals seit Monaten wieder die besten Tagesgeld-Zinsen (3,2% vs. 3,0% bei Raisin). Kernbotschaft: Tagesgeld-Sparer verlieren real Kaufkraft — Realrendite-Formel (Nominalzins minus Inflation) als Lösung, ETF-Sparplan als bessere Alternative."
     }
   ]
 }
