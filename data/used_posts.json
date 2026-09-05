@@ -1,1 +1,10 @@
-/tmp/workspace/data/used_posts.json
+{
+  "used_posts": [
+    {
+      "profile": "@finanzcopilot",
+      "topic": "Berufsunfähigkeitsversicherung — Das große Missverständnis",
+      "date_used": "2026-09-05",
+      "inspiration_summary": "Finanzcopilot (Natalie & Denis, 13 K Follower) postet regelmäßig zu Absicherungsthemen. Der hochwertigste Post zum Thema BU zeigt das Missverständnis zwischen staatlicher Erwerbsminderungsrente und dem tatsächlichen Bedarf — Kernbotschaft: Die staatliche Rente reicht kaum für Grundausgaben, eine BU-Versicherung ist unverzichtbar."
+    }
+  ]
+}
