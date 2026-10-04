@@ -1,0 +1,37 @@
+name: Generate Carousel 2026-10-04
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create output directory
+        run: mkdir -p output/carousel_2026-10-04/slides
+
+      - name: Generate carousel slides
+        run: node generate.js
+
+      - name: Create ZIP archive
+        run: cd output && zip -r carousel_2026-10-04.zip carousel_2026-10-04/
+
+      - name: Commit and push slides
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add output/carousel_2026-10-04/
+          git diff --staged --quiet || git commit -m "Add bAV carousel slides (2026-10-04)"
+          git push
