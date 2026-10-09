@@ -12,631 +12,363 @@ async function main() {
   ]);
 
   const C = {
-    bg: '#001f60',
-    text: '#FFFFFF',
-    textSoft: '#E5E7EB',
-    textMuted: '#9CA3AF',
-    cardBg: 'rgba(255,255,255,0.10)',
-    cardBgLight: 'rgba(255,255,255,0.06)',
-    border: 'rgba(255,255,255,0.20)',
-    green: '#10B981',
-    red: '#EF4444',
-    gold: '#F59E0B',
+    bg:'#001f60',
+    bgDark:'#001542',
+    text:'#FFFFFF',
+    textSoft:'#E5E7EB',
+    textMuted:'#9CA3AF',
+    cardBg:'rgba(255,255,255,0.1)',
+    border:'rgba(255,255,255,0.2)',
+    green:'#10B981',
+    red:'#EF4444',
   };
 
   const W = 1080, H = 1350;
 
-  const logoB64 = 'data:image/jpeg;base64,' + fs.readFileSync(
-    path.join(__dirname, 'skills/instagram-carousel-skill/templates/benaro-logo.jpg')
-  ).toString('base64');
-
-  const TODAY = new Date().toISOString().slice(0, 10);
-  const outDir = path.join(__dirname, 'output', `carousel_${TODAY}`, 'slides');
-
   const h = (type, props, ...ch) => ({
-    type,
-    props: { ...props, children: ch.length === 1 ? ch[0] : ch.length === 0 ? undefined : ch }
+    type, props: { ...props, children: ch.length === 1 ? ch[0] : ch.length === 0 ? undefined : ch }
   });
 
-  function logo() {
-    return h('img', {
-      src: logoB64,
-      width: 120, height: 120,
-      style: { borderRadius: '12px', objectFit: 'cover' }
-    });
-  }
+  const logoB64 = 'data:image/jpeg;base64,' + fs.readFileSync(path.join(__dirname, 'skills/instagram-carousel-skill/templates/benaro-logo.jpg')).toString('base64');
 
   function badge(text) {
-    return h('div', { style: { display: 'flex', marginBottom: '14px' } },
-      h('span', {
-        style: {
-          display: 'flex', fontSize: '22px', fontWeight: 700,
-          letterSpacing: '3px', color: C.text,
-          backgroundColor: C.cardBg, padding: '10px 22px', borderRadius: '12px'
-        }
-      }, text)
+    return h('div', { style: { display:'flex', marginBottom:'16px' } },
+      h('span', { style: { display:'flex', fontSize:'22px', fontWeight:700, letterSpacing:'3px',
+        color: C.text, backgroundColor: C.cardBg, padding:'10px 22px', borderRadius:'12px' } }, text)
     );
   }
 
-  function headline(text, size = 64) {
-    return h('span', {
-      style: {
-        fontSize: `${size}px`, fontWeight: 800, color: C.text,
-        lineHeight: '1.08', letterSpacing: '-1.5px', marginBottom: '6px'
-      }
-    }, text);
+  function headline(text, size=64) {
+    return h('span', { style: { fontSize:`${size}px`, fontWeight:800,
+      color: C.text, lineHeight:'1.08', letterSpacing:'-1.5px', marginBottom:'6px' } }, text);
   }
 
   function subline(text) {
-    return h('span', {
-      style: {
-        fontSize: '28px', fontWeight: 500, color: C.textMuted,
-        lineHeight: '1.5', marginTop: '8px'
-      }
-    }, text);
+    return h('span', { style: { fontSize:'28px', fontWeight:500,
+      color: C.textMuted, lineHeight:'1.5', marginTop:'8px' } }, text);
   }
 
-  function keyLearning(text, accent = C.text) {
-    return h('div', {
-      style: {
-        display: 'flex', alignItems: 'center', gap: '14px',
-        backgroundColor: C.cardBg, borderRadius: '16px',
-        padding: '22px 28px', marginTop: 'auto'
-      }
-    },
-      h('div', {
-        style: {
-          display: 'flex', width: '6px', minHeight: '40px',
-          backgroundColor: accent, borderRadius: '3px'
-        }
-      }),
-      h('span', {
-        style: {
-          fontSize: '27px', fontWeight: 600, color: C.text, lineHeight: '1.4'
-        }
-      }, text)
+  function keyLearning(text, accent) {
+    return h('div', { style: { display:'flex', alignItems:'center', gap:'14px',
+      backgroundColor: C.cardBg, borderRadius:'16px', padding:'22px 28px', marginTop:'16px' } },
+      h('div', { style: { display:'flex', width:'6px', minHeight:'40px',
+        backgroundColor: accent || C.text, borderRadius:'3px' } }),
+      h('span', { style: { fontSize:'28px', fontWeight:600, color: C.text, lineHeight:'1.4' } }, text)
     );
+  }
+
+  function logo() {
+    return h('img', { src: logoB64, width:100, height:100,
+      style: { borderRadius:'12px', objectFit:'cover', position:'absolute', top:'60px', right:'60px' } });
   }
 
   function igHandle() {
-    return h('div', {
-      style: { display: 'flex', alignItems: 'center', marginTop: '12px' }
-    },
-      h('span', {
-        style: { fontSize: '24px', fontWeight: 500, color: C.textMuted }
-      }, '@benarofinanzen')
+    return h('span', { style: { fontSize:'24px', fontWeight:500, color: C.textMuted, marginTop:'10px' } }, '@benarofinanzen');
+  }
+
+  function slideWrapper(bg, children) {
+    return h('div', { style: { display:'flex', flexDirection:'column', width:W, height:H,
+      padding:'70px', backgroundColor: bg || C.bg, fontFamily:'Outfit', position:'relative' } },
+      logo(),
+      ...children
     );
   }
 
-  function slideRoot(children) {
-    return h('div', {
-      style: {
-        display: 'flex', flexDirection: 'column',
-        width: W, height: H, padding: '70px',
-        backgroundColor: C.bg, fontFamily: 'Outfit'
-      }
-    }, ...children);
-  }
-
-  function topRow(badgeEl) {
-    return h('div', {
-      style: {
-        display: 'flex', flexDirection: 'row',
-        justifyContent: 'space-between', alignItems: 'flex-start',
-        marginBottom: '8px'
-      }
-    },
-      badgeEl,
-      logo()
-    );
-  }
-
-  // ─── SLIDE 1: HOOK ────────────────────────────────────────────────
-  // "Du verschenkst jedes Jahr über 1.000 € ans Finanzamt"
-  // Visual: large stat hero with money graphic (SVG bars + coins)
-  const slide1 = (() => {
-    const svgMoney = `<svg width="900" height="280" viewBox="0 0 900 280" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="gRed" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#EF4444" stop-opacity="0.9"/>
-          <stop offset="100%" stop-color="#EF4444" stop-opacity="0.2"/>
-        </linearGradient>
-        <linearGradient id="gGreen" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#10B981" stop-opacity="0.9"/>
-          <stop offset="100%" stop-color="#10B981" stop-opacity="0.2"/>
-        </linearGradient>
-      </defs>
-      <rect x="60" y="80" width="120" height="180" rx="12" fill="url(#gRed)" opacity="0.7"/>
-      <rect x="220" y="50" width="120" height="210" rx="12" fill="url(#gRed)" opacity="0.85"/>
-      <rect x="380" y="20" width="120" height="240" rx="12" fill="url(#gRed)" opacity="1"/>
-      <rect x="540" y="100" width="120" height="160" rx="12" fill="url(#gGreen)" opacity="0.6"/>
-      <rect x="700" y="60" width="120" height="200" rx="12" fill="url(#gGreen)" opacity="0.9"/>
-      <line x1="40" y1="265" x2="860" y2="265" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
-      <circle cx="440" cy="20" r="8" fill="#EF4444"/>
-      <circle cx="440" cy="140" r="5" fill="rgba(255,255,255,0.4)"/>
-    </svg>`;
-    const svgSrc = `data:image/svg+xml;base64,${Buffer.from(svgMoney).toString('base64')}`;
-
-    return slideRoot([
-      topRow(badge('ACHTUNG')),
-      headline('Du verschenkst jedes Jahr über', 58),
-      h('div', { style: { display: 'flex', alignItems: 'baseline', gap: '12px', marginBottom: '4px' } },
-        h('span', { style: { fontSize: '96px', fontWeight: 800, color: C.red, lineHeight: '1', letterSpacing: '-3px' } }, '1.095 €'),
-        h('span', { style: { fontSize: '36px', fontWeight: 700, color: C.textSoft } }, 'ans Finanzamt')
-      ),
-      h('div', {
-        style: {
-          display: 'flex', flex: '1', flexDirection: 'column',
-          justifyContent: 'center', alignItems: 'center', gap: '12px'
-        }
-      },
-        h('img', { src: svgSrc, width: 900, height: 280, style: { objectFit: 'contain' } }),
-        h('div', { style: { display: 'flex', gap: '32px', marginTop: '8px' } },
-          h('div', { style: { display: 'flex', alignItems: 'center', gap: '10px' } },
-            h('div', { style: { display: 'flex', width: '16px', height: '16px', borderRadius: '4px', backgroundColor: C.red } }),
-            h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted } }, 'Ohne Steuererklärung')
+  // ===== SLIDE 1: HOOK =====
+  const slide1 = slideWrapper(C.bg, [
+    badge('DAS MUSST DU WISSEN'),
+    headline('90 % budgetieren falsch—\ndieser Fehler kostet dich\nTausende', 58),
+    subline('Das einfachste Haushaltsbuch der Welt'),
+    h('div', { style: { display:'flex', flex:'1', flexDirection:'column', justifyContent:'center', gap:'20px' } },
+      // Visual: 3 simple budget blocks
+      h('div', { style: { display:'flex', flexDirection:'column', gap:'16px', marginTop:'16px' } },
+        h('div', { style: { display:'flex', alignItems:'center', gap:'16px' } },
+          h('div', { style: { display:'flex', width:'220px', height:'56px', backgroundColor:'rgba(255,255,255,0.15)', borderRadius:'12px', alignItems:'center', justifyContent:'center' } },
+            h('span', { style: { fontSize:'28px', fontWeight:800, color: C.text } }, '50 %')
           ),
-          h('div', { style: { display: 'flex', alignItems: 'center', gap: '10px' } },
-            h('div', { style: { display: 'flex', width: '16px', height: '16px', borderRadius: '4px', backgroundColor: C.green } }),
-            h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted } }, 'Mit Steuererklärung')
-          )
-        )
-      ),
-      keyLearning('Ø 1.095 € Steuererstattung — aber nur wer handelt, bekommt sie'),
-      igHandle()
-    ]);
-  })();
-
-  // ─── SLIDE 2: PROBLEM — Statistik ────────────────────────────────
-  // "Nur 52 % der Deutschen geben eine Steuererklärung ab"
-  const slide2 = (() => {
-    const svgFunnel = `<svg width="860" height="340" viewBox="0 0 860 340" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="gBar1" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.25"/>
-          <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.08"/>
-        </linearGradient>
-        <linearGradient id="gBar2" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#10B981" stop-opacity="0.9"/>
-          <stop offset="100%" stop-color="#10B981" stop-opacity="0.4"/>
-        </linearGradient>
-        <linearGradient id="gBar3" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#EF4444" stop-opacity="0.9"/>
-          <stop offset="100%" stop-color="#EF4444" stop-opacity="0.4"/>
-        </linearGradient>
-      </defs>
-      <rect x="20" y="20" width="820" height="72" rx="14" fill="url(#gBar1)"/>
-      <rect x="20" y="20" width="820" height="72" rx="14" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-      <rect x="20" y="134" width="426" height="72" rx="14" fill="url(#gBar2)"/>
-      <rect x="20" y="248" width="394" height="72" rx="14" fill="url(#gBar3)"/>
-      <line x1="20" y1="320" x2="840" y2="320" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-    </svg>`;
-    const svgSrc = `data:image/svg+xml;base64,${Buffer.from(svgFunnel).toString('base64')}`;
-
-    return slideRoot([
-      topRow(badge('DAS PROBLEM')),
-      headline('Millionen Deutsche', 60),
-      h('span', { style: { fontSize: '60px', fontWeight: 800, color: C.red, lineHeight: '1.08', letterSpacing: '-1.5px', marginBottom: '6px' } }, 'verschenken Geld'),
-      h('div', {
-        style: {
-          display: 'flex', flex: '1', flexDirection: 'column',
-          justifyContent: 'center', position: 'relative'
-        }
-      },
-        h('img', { src: svgSrc, width: 860, height: 340, style: { objectFit: 'contain', position: 'absolute', top: '0', left: '0' } }),
-        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '62px', paddingTop: '0px' } },
-          h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '72px', padding: '0 24px' } },
-            h('span', { style: { fontSize: '27px', fontWeight: 700, color: C.textSoft } }, 'Alle Arbeitnehmer in Deutschland'),
-            h('span', { style: { fontSize: '30px', fontWeight: 800, color: C.text } }, '100 %')
-          ),
-          h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '72px', padding: '0 24px' } },
-            h('span', { style: { fontSize: '27px', fontWeight: 700, color: C.text } }, 'Geben Steuererklärung ab'),
-            h('span', { style: { fontSize: '30px', fontWeight: 800, color: C.green } }, '52 %')
-          ),
-          h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '72px', padding: '0 24px' } },
-            h('span', { style: { fontSize: '27px', fontWeight: 700, color: C.textSoft } }, 'Verschenken ihr Geld'),
-            h('span', { style: { fontSize: '30px', fontWeight: 800, color: C.red } }, '48 %')
-          )
-        )
-      ),
-      keyLearning('Fast jeder zweite Arbeitnehmer bekommt kein Geld zurück — unnötig', C.red),
-      igHandle()
-    ]);
-  })();
-
-  // ─── SLIDE 3: COUNTDOWN ─────────────────────────────────────────
-  // "Nur noch 3 Monate bis 31.12.2026 — das sind deine Optionen"
-  const slide3 = (() => {
-    const months = [
-      { name: 'Okt', active: false, pct: 0 },
-      { name: 'Nov', active: false, pct: 0 },
-      { name: 'Dez', active: false, pct: 0 },
-    ];
-
-    return slideRoot([
-      topRow(badge('DER COUNTDOWN')),
-      headline('Nur noch 3 Monate', 66),
-      h('span', {
-        style: {
-          fontSize: '34px', fontWeight: 700, color: C.green,
-          lineHeight: '1.1', letterSpacing: '-0.5px', marginBottom: '6px'
-        }
-      }, 'bis 31. Dezember 2026'),
-      h('div', {
-        style: {
-          display: 'flex', flex: '1', flexDirection: 'column',
-          justifyContent: 'center', gap: '20px'
-        }
-      },
-        h('div', { style: { display: 'flex', gap: '18px' } },
-          ...months.map((m, i) =>
-            h('div', {
-              style: {
-                display: 'flex', flex: '1', flexDirection: 'column',
-                alignItems: 'center', gap: '14px',
-                backgroundColor: C.cardBg, borderRadius: '20px', padding: '28px 20px',
-                border: `2px solid ${i === 2 ? C.red : C.border}`
-              }
-            },
-              h('span', {
-                style: {
-                  fontSize: '44px', fontWeight: 800,
-                  color: i === 2 ? C.red : C.textSoft
-                }
-              }, m.name),
-              h('div', {
-                style: {
-                  display: 'flex', flexDirection: 'column', gap: '8px',
-                  alignItems: 'center', width: '100%'
-                }
-              },
-                h('div', {
-                  style: {
-                    display: 'flex', width: '100%', height: '8px',
-                    backgroundColor: C.border, borderRadius: '4px', overflow: 'hidden'
-                  }
-                },
-                  h('div', {
-                    style: {
-                      display: 'flex', height: '8px', borderRadius: '4px',
-                      backgroundColor: i === 2 ? C.red : C.green,
-                      width: i === 0 ? '33%' : i === 1 ? '66%' : '100%'
-                    }
-                  })
-                ),
-                h('span', {
-                  style: {
-                    fontSize: '22px', fontWeight: 600,
-                    color: i === 2 ? C.red : C.textMuted
-                  }
-                }, i === 2 ? 'DEADLINE' : `Monat ${i + 1}`)
-              )
-            )
-          )
+          h('span', { style: { fontSize:'28px', fontWeight:600, color: C.textSoft } }, 'Notwendiges')
         ),
-        h('div', {
-          style: {
-            display: 'flex', flexDirection: 'column', gap: '12px',
-            backgroundColor: 'rgba(239,68,68,0.08)', borderRadius: '18px',
-            padding: '22px 28px', border: `1px solid rgba(239,68,68,0.25)`
-          }
-        },
-          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.red } }, 'Wichtige Fristen 2026'),
-          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textSoft, lineHeight: '1.5' } },
-            '31. Oktober: Verlustbescheinigung bei der Bank beantragen'
+        h('div', { style: { display:'flex', alignItems:'center', gap:'16px' } },
+          h('div', { style: { display:'flex', width:'140px', height:'56px', backgroundColor:'rgba(255,255,255,0.15)', borderRadius:'12px', alignItems:'center', justifyContent:'center' } },
+            h('span', { style: { fontSize:'28px', fontWeight:800, color: C.text } }, '30 %')
           ),
-          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textSoft, lineHeight: '1.5' } },
-            '31. Dezember: Spenden, Vorsorge & Werbungskosten buchen'
-          )
-        )
-      ),
-      keyLearning('Was du jetzt nicht tust, kostet dich bares Geld'),
-      igHandle()
-    ]);
-  })();
-
-  // ─── SLIDE 4: TIPP 1 — WERBUNGSKOSTEN ───────────────────────────
-  const slide4 = (() => {
-    const items = [
-      { icon: '🏠', title: 'Home Office', sub: '6 € pro Tag, max. 1.260 € p.a.' },
-      { icon: '🚗', title: 'Fahrten', sub: '0,30 € pro km (Entfernungspauschale)' },
-      { icon: '📚', title: 'Fortbildung', sub: 'Kurse, Bücher, Online-Tools' },
-      { icon: '💻', title: 'Arbeitsmittel', sub: 'PC, Schreibtisch, Drucker' },
-    ];
-
-    return slideRoot([
-      topRow(badge('TIPP 1 VON 3')),
-      headline('Werbungskosten —', 60),
-      headline('oft unterschätzt', 60),
-      subline('Diese Kosten kannst du von der Steuer absetzen'),
-      h('div', {
-        style: {
-          display: 'flex', flex: '1', flexDirection: 'column',
-          justifyContent: 'center', gap: '14px'
-        }
-      },
-        h('div', { style: { display: 'flex', gap: '14px' } },
-          ...items.slice(0, 2).map(item =>
-            h('div', {
-              style: {
-                display: 'flex', flex: '1', flexDirection: 'column',
-                backgroundColor: C.cardBg, borderRadius: '20px',
-                padding: '28px', gap: '10px'
-              }
-            },
-              h('span', { style: { fontSize: '40px', lineHeight: '1' } }, item.icon),
-              h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.text, lineHeight: '1.3' } }, item.title),
-              h('span', { style: { fontSize: '23px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4' } }, item.sub)
-            )
-          )
+          h('span', { style: { fontSize:'28px', fontWeight:600, color: C.textSoft } }, 'Wünsche')
         ),
-        h('div', { style: { display: 'flex', gap: '14px' } },
-          ...items.slice(2).map(item =>
-            h('div', {
-              style: {
-                display: 'flex', flex: '1', flexDirection: 'column',
-                backgroundColor: C.cardBg, borderRadius: '20px',
-                padding: '28px', gap: '10px'
-              }
-            },
-              h('span', { style: { fontSize: '40px', lineHeight: '1' } }, item.icon),
-              h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.text, lineHeight: '1.3' } }, item.title),
-              h('span', { style: { fontSize: '23px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4' } }, item.sub)
-            )
-          )
+        h('div', { style: { display:'flex', alignItems:'center', gap:'16px' } },
+          h('div', { style: { display:'flex', width:'90px', height:'56px', backgroundColor: C.green, borderRadius:'12px', alignItems:'center', justifyContent:'center' } },
+            h('span', { style: { fontSize:'28px', fontWeight:800, color: '#FFFFFF' } }, '20 %')
+          ),
+          h('span', { style: { fontSize:'28px', fontWeight:600, color: C.green } }, 'Sparen & Investieren')
         ),
-        h('div', {
-          style: {
-            display: 'flex', alignItems: 'center', gap: '16px',
-            backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '14px',
-            padding: '16px 24px', border: '1px solid rgba(16,185,129,0.3)'
-          }
-        },
-          h('div', { style: { display: 'flex', width: '12px', height: '12px', borderRadius: '6px', backgroundColor: C.green } }),
-          h('span', { style: { fontSize: '25px', fontWeight: 600, color: C.green } },
-            'Arbeitnehmer-Pauschbetrag: 1.230 € automatisch'
-          )
+        h('div', { style: { display:'flex', marginTop:'8px' } },
+          h('span', { style: { fontSize:'26px', fontWeight:500, color:'rgba(255,255,255,0.4)', letterSpacing:'1px' } }, 'DIE 50/30/20-REGEL')
         )
+      )
+    ),
+    keyLearning('Wer diese Formel kennt, braucht kein kompliziertes Haushaltsbuch mehr.')
+  ]);
+
+  // ===== SLIDE 2: PROBLEM =====
+  const slide2 = slideWrapper(C.bgDark, [
+    badge('DAS PROBLEM'),
+    headline('Millionen Deutsche\nwissen nicht, wohin\nihr Geld fließt', 62),
+    h('div', { style: { display:'flex', flex:'1', flexDirection:'column', justifyContent:'center', gap:'24px' } },
+      // Stat Hero
+      h('div', { style: { display:'flex', flexDirection:'column', alignItems:'center', gap:'12px',
+        backgroundColor: C.cardBg, borderRadius:'24px', padding:'40px 32px' } },
+        h('span', { style: { fontSize:'120px', fontWeight:800, color: C.red, lineHeight:'1', letterSpacing:'-4px' } }, '68 %'),
+        h('span', { style: { fontSize:'30px', fontWeight:600, color: C.textSoft, textAlign:'center', lineHeight:'1.4' } }, 'der Deutschen haben\nkein monatliches Budget')
       ),
-      keyLearning('Übersteigen deine Werbungskosten 1.230 €, lohnt sich die Angabe definitiv'),
-      igHandle()
-    ]);
-  })();
-
-  // ─── SLIDE 5: TIPP 2 — VORSORGEAUFWENDUNGEN ─────────────────────
-  const slide5 = (() => {
-    const cards = [
-      { label: 'Krankenversicherung', value: 'Bis zu 1.900 € absetzbar', color: C.green },
-      { label: 'Altersvorsorge-Depot', value: 'Ab 2027: bis zu 540 € Förderung', color: C.gold },
-      { label: 'Spenden', value: 'Bis 20 % des Gesamtbetrags', color: C.text },
-      { label: 'Riester-Rente', value: 'Bis zu 2.100 € Sonderausgabe', color: C.green },
-    ];
-
-    return slideRoot([
-      topRow(badge('TIPP 2 VON 3')),
-      headline('Vorsorgeaufwendungen —', 56),
-      headline('kaum jemand nutzt sie', 56),
-      subline('Diese Beträge reduzieren dein steuerpflichtiges Einkommen'),
-      h('div', {
-        style: {
-          display: 'flex', flex: '1', flexDirection: 'column',
-          justifyContent: 'center', gap: '14px'
-        }
-      },
-        ...cards.map(card =>
-          h('div', {
-            style: {
-              display: 'flex', flexDirection: 'row', alignItems: 'center',
-              justifyContent: 'space-between',
-              backgroundColor: C.cardBg, borderRadius: '18px',
-              padding: '22px 28px',
-              borderLeft: `4px solid ${card.color}`
-            }
-          },
-            h('span', { style: { fontSize: '27px', fontWeight: 700, color: C.text } }, card.label),
-            h('span', { style: { fontSize: '24px', fontWeight: 600, color: card.color } }, card.value)
-          )
+      h('div', { style: { display:'flex', gap:'14px' } },
+        h('div', { style: { display:'flex', flex:'1', backgroundColor:'rgba(239,68,68,0.1)', borderRadius:'16px', padding:'20px', alignItems:'center', gap:'12px' } },
+          h('div', { style: { display:'flex', width:'12px', height:'12px', borderRadius:'6px', backgroundColor: C.red } }),
+          h('span', { style: { fontSize:'24px', fontWeight:600, color: C.textSoft, lineHeight:'1.35' } }, 'Kein Überblick über Ausgaben')
+        ),
+        h('div', { style: { display:'flex', flex:'1', backgroundColor:'rgba(239,68,68,0.1)', borderRadius:'16px', padding:'20px', alignItems:'center', gap:'12px' } },
+          h('div', { style: { display:'flex', width:'12px', height:'12px', borderRadius:'6px', backgroundColor: C.red } }),
+          h('span', { style: { fontSize:'24px', fontWeight:600, color: C.textSoft, lineHeight:'1.35' } }, 'Geld wird immer knapp')
         )
-      ),
-      keyLearning('Vorsorgekosten senken dein zu versteuerndes Einkommen — direkte Steuerersparnis'),
-      igHandle()
-    ]);
-  })();
+      )
+    ),
+    keyLearning('Ohne Struktur läuft das Geld einfach durch die Finger.', C.red),
+    igHandle()
+  ]);
 
-  // ─── SLIDE 6: TIPP 3 — KAPITALVERLUSTE VERRECHNEN ───────────────
-  const slide6 = (() => {
-    const svgChart = `<svg width="860" height="280" viewBox="0 0 860 280" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="gChartGreen" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#10B981" stop-opacity="0.3"/>
-          <stop offset="100%" stop-color="#10B981" stop-opacity="0.0"/>
-        </linearGradient>
-        <linearGradient id="gChartRed" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#EF4444" stop-opacity="0.3"/>
-          <stop offset="100%" stop-color="#EF4444" stop-opacity="0.0"/>
-        </linearGradient>
-      </defs>
-      <path d="M 60 220 C 150 180 200 100 300 80 C 380 64 430 160 500 180 C 570 200 620 120 760 40" stroke="#10B981" stroke-width="3" fill="none"/>
-      <path d="M 60 220 C 150 180 200 100 300 80 C 380 64 430 160 500 180 C 570 200 620 120 760 40 L 760 280 L 60 280 Z" fill="url(#gChartGreen)"/>
-      <line x1="500" y1="40" x2="500" y2="260" stroke="rgba(239,68,68,0.5)" stroke-width="2" stroke-dasharray="8,6"/>
-      <path d="M 500 180 C 560 210 620 240 760 240" stroke="#EF4444" stroke-width="3" fill="none" stroke-dasharray="12,6"/>
-      <path d="M 500 180 C 560 210 620 240 760 240 L 760 280 L 500 280 Z" fill="url(#gChartRed)"/>
-      <circle cx="300" cy="80" r="7" fill="#10B981"/>
-      <circle cx="500" cy="180" r="7" fill="#F59E0B"/>
-      <circle cx="760" cy="40" r="7" fill="#10B981"/>
-      <line x1="40" y1="260" x2="820" y2="260" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
-    </svg>`;
-    const svgSrc = `data:image/svg+xml;base64,${Buffer.from(svgChart).toString('base64')}`;
-
-    return slideRoot([
-      topRow(badge('TIPP 3 VON 3')),
-      headline('Kapitalverluste', 64),
-      headline('jetzt noch verrechnen', 64),
-      subline('Verluste aus ETFs oder Aktien senken deine Steuer'),
-      h('div', {
-        style: {
-          display: 'flex', flex: '1', flexDirection: 'column',
-          justifyContent: 'center', gap: '16px'
-        }
-      },
-        h('img', { src: svgSrc, width: 860, height: 280, style: { objectFit: 'contain' } }),
-        h('div', { style: { display: 'flex', gap: '16px' } },
-          h('div', {
-            style: {
-              display: 'flex', flex: '1', flexDirection: 'column', gap: '8px',
-              backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '16px',
-              padding: '20px 24px', border: '1px solid rgba(16,185,129,0.3)'
-            }
-          },
-            h('span', { style: { fontSize: '24px', fontWeight: 700, color: C.green } }, 'Gewinne'),
-            h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft } }, 'Werden besteuert mit 25 % + Soli')
+  // ===== SLIDE 3: DIE METHODE =====
+  const slide3 = slideWrapper(C.bg, [
+    badge('DIE LÖSUNG'),
+    headline('Die 50/30/20-Regel\nin 10 Sekunden', 66),
+    subline('Ein Einkommen — drei klare Töpfe'),
+    h('div', { style: { display:'flex', flex:'1', flexDirection:'column', justifyContent:'center', gap:'16px' } },
+      // Horizontal bar chart
+      h('div', { style: { display:'flex', flexDirection:'column', gap:'18px' } },
+        // 50% bar
+        h('div', { style: { display:'flex', flexDirection:'column', gap:'8px' } },
+          h('div', { style: { display:'flex', justifyContent:'space-between', alignItems:'center' } },
+            h('span', { style: { fontSize:'28px', fontWeight:700, color: C.text } }, 'NOTWENDIGES'),
+            h('span', { style: { fontSize:'36px', fontWeight:800, color: C.text } }, '50 %')
           ),
-          h('div', {
-            style: {
-              display: 'flex', flex: '1', flexDirection: 'column', gap: '8px',
-              backgroundColor: 'rgba(239,68,68,0.1)', borderRadius: '16px',
-              padding: '20px 24px', border: '1px solid rgba(239,68,68,0.3)'
-            }
-          },
-            h('span', { style: { fontSize: '24px', fontWeight: 700, color: C.red } }, 'Verluste'),
-            h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft } }, 'Verrechnen mit Gewinnen')
+          h('div', { style: { display:'flex', height:'28px', backgroundColor:'rgba(255,255,255,0.1)', borderRadius:'8px', overflow:'hidden' } },
+            h('div', { style: { display:'flex', width:'50%', height:'28px', backgroundColor:'rgba(255,255,255,0.7)', borderRadius:'8px' } })
           ),
-          h('div', {
-            style: {
-              display: 'flex', flex: '1', flexDirection: 'column', gap: '8px',
-              backgroundColor: 'rgba(245,158,11,0.1)', borderRadius: '16px',
-              padding: '20px 24px', border: '1px solid rgba(245,158,11,0.3)'
-            }
-          },
-            h('span', { style: { fontSize: '24px', fontWeight: 700, color: C.gold } }, 'Deadline'),
-            h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft } }, '31. Oktober: Bescheinigung beantragen')
+          h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted } }, 'Miete, Lebensmittel, Versicherungen, Transport')
+        ),
+        // 30% bar
+        h('div', { style: { display:'flex', flexDirection:'column', gap:'8px' } },
+          h('div', { style: { display:'flex', justifyContent:'space-between', alignItems:'center' } },
+            h('span', { style: { fontSize:'28px', fontWeight:700, color: C.text } }, 'WÜNSCHE'),
+            h('span', { style: { fontSize:'36px', fontWeight:800, color: C.text } }, '30 %')
+          ),
+          h('div', { style: { display:'flex', height:'28px', backgroundColor:'rgba(255,255,255,0.1)', borderRadius:'8px', overflow:'hidden' } },
+            h('div', { style: { display:'flex', width:'30%', height:'28px', backgroundColor:'rgba(255,255,255,0.5)', borderRadius:'8px' } })
+          ),
+          h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted } }, 'Freizeit, Urlaub, Restaurants, Shopping')
+        ),
+        // 20% bar
+        h('div', { style: { display:'flex', flexDirection:'column', gap:'8px' } },
+          h('div', { style: { display:'flex', justifyContent:'space-between', alignItems:'center' } },
+            h('span', { style: { fontSize:'28px', fontWeight:700, color: C.green } }, 'SPAREN & INVESTIEREN'),
+            h('span', { style: { fontSize:'36px', fontWeight:800, color: C.green } }, '20 %')
+          ),
+          h('div', { style: { display:'flex', height:'28px', backgroundColor:'rgba(16,185,129,0.2)', borderRadius:'8px', overflow:'hidden' } },
+            h('div', { style: { display:'flex', width:'20%', height:'28px', backgroundColor: C.green, borderRadius:'8px' } })
+          ),
+          h('span', { style: { fontSize:'22px', fontWeight:500, color:'rgba(16,185,129,0.7)' } }, 'ETF-Sparplan, Notgroschen, Rücklage')
+        )
+      )
+    ),
+    keyLearning('Drei Kategorien reichen — mehr braucht kein Mensch.')
+  ]);
+
+  // ===== SLIDE 4: 50% ERKLÄRT =====
+  const slide4 = slideWrapper(C.bgDark, [
+    badge('SCHRITT 1 — 50 %'),
+    headline('Notwendiges:\nWas du wirklich\nBRAUCHST', 64),
+    h('div', { style: { display:'flex', flex:'1', flexDirection:'column', justifyContent:'center', gap:'14px' } },
+      h('div', { style: { display:'flex', gap:'14px' } },
+        h('div', { style: { display:'flex', flex:'1', flexDirection:'column', backgroundColor: C.cardBg, borderRadius:'20px', padding:'28px', gap:'10px' } },
+          h('span', { style: { fontSize:'40px', fontWeight:800, color: C.text } }, '🏠'),
+          h('span', { style: { fontSize:'26px', fontWeight:700, color: C.text } }, 'Miete & Nebenkosten'),
+          h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted } }, 'Grösster Fixkosten-Posten')
+        ),
+        h('div', { style: { display:'flex', flex:'1', flexDirection:'column', backgroundColor: C.cardBg, borderRadius:'20px', padding:'28px', gap:'10px' } },
+          h('span', { style: { fontSize:'40px', fontWeight:800, color: C.text } }, '🛒'),
+          h('span', { style: { fontSize:'26px', fontWeight:700, color: C.text } }, 'Lebensmittel'),
+          h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted } }, 'Grundbedarf täglich')
+        )
+      ),
+      h('div', { style: { display:'flex', gap:'14px' } },
+        h('div', { style: { display:'flex', flex:'1', flexDirection:'column', backgroundColor: C.cardBg, borderRadius:'20px', padding:'28px', gap:'10px' } },
+          h('span', { style: { fontSize:'40px', fontWeight:800, color: C.text } }, '🚗'),
+          h('span', { style: { fontSize:'26px', fontWeight:700, color: C.text } }, 'Transport'),
+          h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted } }, 'Auto, ÖPNV, Benzin')
+        ),
+        h('div', { style: { display:'flex', flex:'1', flexDirection:'column', backgroundColor: C.cardBg, borderRadius:'20px', padding:'28px', gap:'10px' } },
+          h('span', { style: { fontSize:'40px', fontWeight:800, color: C.text } }, '🛡'),
+          h('span', { style: { fontSize:'26px', fontWeight:700, color: C.text } }, 'Versicherungen'),
+          h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted } }, 'KFZ, Haftpflicht, BU')
+        )
+      ),
+      h('div', { style: { display:'flex', alignItems:'center', gap:'12px', backgroundColor:'rgba(239,68,68,0.08)', borderRadius:'14px', padding:'16px 22px' } },
+        h('div', { style: { display:'flex', width:'10px', height:'10px', borderRadius:'5px', backgroundColor: C.red } }),
+        h('span', { style: { fontSize:'24px', fontWeight:600, color: C.red } }, 'Fixkosten über 50 %? Dann ist deine Miete zu hoch oder du hast Schulden.')
+      )
+    ),
+    keyLearning('50 % ist die Obergrenze — wer darunter bleibt, hat mehr Spielraum.'),
+    igHandle()
+  ]);
+
+  // ===== SLIDE 5: 30% + 20% ERKLÄRT =====
+  const slide5 = slideWrapper(C.bg, [
+    badge('SCHRITT 2 & 3'),
+    headline('Wünsche + Sparen:\nDas lebst du\nbewusst', 62),
+    h('div', { style: { display:'flex', flex:'1', flexDirection:'column', justifyContent:'center', gap:'16px' } },
+      h('div', { style: { display:'flex', gap:'14px' } },
+        // 30%: Wünsche
+        h('div', { style: { display:'flex', flex:'1', flexDirection:'column', backgroundColor: C.cardBg, borderRadius:'20px', padding:'28px', gap:'12px' } },
+          h('div', { style: { display:'flex', alignItems:'center', gap:'10px', marginBottom:'4px' } },
+            h('span', { style: { fontSize:'44px', fontWeight:800, color: C.text, lineHeight:'1' } }, '30 %'),
+          ),
+          h('span', { style: { fontSize:'22px', fontWeight:700, letterSpacing:'2px', color: C.textMuted } }, 'WÜNSCHE'),
+          h('div', { style: { display:'flex', width:'100%', height:'3px', backgroundColor: C.border, borderRadius:'2px' } }),
+          h('span', { style: { fontSize:'24px', fontWeight:500, color: C.textSoft, lineHeight:'1.5' } }, 'Restaurants, Kino, Urlaub, Mode, Abos'),
+          h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted, lineHeight:'1.4' } }, 'Alles was das Leben\nschöner macht — aber kein Muss')
+        ),
+        // 20%: Sparen
+        h('div', { style: { display:'flex', flex:'1', flexDirection:'column', backgroundColor:'rgba(16,185,129,0.12)', borderRadius:'20px', padding:'28px', gap:'12px', border:'2px solid rgba(16,185,129,0.3)' } },
+          h('div', { style: { display:'flex', alignItems:'center', gap:'10px', marginBottom:'4px' } },
+            h('span', { style: { fontSize:'44px', fontWeight:800, color: C.green, lineHeight:'1' } }, '20 %'),
+          ),
+          h('span', { style: { fontSize:'22px', fontWeight:700, letterSpacing:'2px', color:'rgba(16,185,129,0.7)' } }, 'SPAREN'),
+          h('div', { style: { display:'flex', width:'100%', height:'3px', backgroundColor:'rgba(16,185,129,0.3)', borderRadius:'2px' } }),
+          h('span', { style: { fontSize:'24px', fontWeight:500, color: C.textSoft, lineHeight:'1.5' } }, 'ETF-Sparplan, Notgroschen, Tilgung'),
+          h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted, lineHeight:'1.4' } }, 'Dein zukünftiges Ich\ndankt es dir')
+        )
+      ),
+      h('div', { style: { display:'flex', backgroundColor: C.cardBg, borderRadius:'16px', padding:'22px 28px', gap:'16px', alignItems:'center' } },
+        h('span', { style: { fontSize:'26px', fontWeight:600, color: C.text, lineHeight:'1.4' } }, 'Tipp: Den 20-%-Betrag per Dauerauftrag am 1. des Monats automatisch abbuchen lassen.')
+      )
+    ),
+    keyLearning('Erst sparen, dann ausgeben — nicht andersrum.')
+  ]);
+
+  // ===== SLIDE 6: BEISPIELRECHNUNG =====
+  const slide6 = slideWrapper(C.bgDark, [
+    badge('BEISPIELRECHNUNG'),
+    headline('Was 3.000 € Netto\nin der Praxis\nbedeutet', 62),
+    h('div', { style: { display:'flex', flex:'1', flexDirection:'column', justifyContent:'center', gap:'14px' } },
+      h('div', { style: { display:'flex', flexDirection:'column', gap:'12px' } },
+        // 50%
+        h('div', { style: { display:'flex', alignItems:'center', gap:'16px', backgroundColor: C.cardBg, borderRadius:'16px', padding:'20px 28px' } },
+          h('div', { style: { display:'flex', width:'80px', alignItems:'center', justifyContent:'center' } },
+            h('span', { style: { fontSize:'32px', fontWeight:800, color: C.text } }, '50 %')
+          ),
+          h('div', { style: { display:'flex', flex:'1', flexDirection:'column', gap:'4px' } },
+            h('span', { style: { fontSize:'26px', fontWeight:700, color: C.text } }, 'Notwendiges'),
+            h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted } }, 'Miete, Essen, Versicherungen, Transport')
+          ),
+          h('span', { style: { fontSize:'36px', fontWeight:800, color: C.text } }, '1.500 €')
+        ),
+        // 30%
+        h('div', { style: { display:'flex', alignItems:'center', gap:'16px', backgroundColor: C.cardBg, borderRadius:'16px', padding:'20px 28px' } },
+          h('div', { style: { display:'flex', width:'80px', alignItems:'center', justifyContent:'center' } },
+            h('span', { style: { fontSize:'32px', fontWeight:800, color: C.text } }, '30 %')
+          ),
+          h('div', { style: { display:'flex', flex:'1', flexDirection:'column', gap:'4px' } },
+            h('span', { style: { fontSize:'26px', fontWeight:700, color: C.text } }, 'Wünsche'),
+            h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted } }, 'Freizeit, Urlaub, Restaurants, Mode')
+          ),
+          h('span', { style: { fontSize:'36px', fontWeight:800, color: C.text } }, '900 €')
+        ),
+        // 20% green
+        h('div', { style: { display:'flex', alignItems:'center', gap:'16px', backgroundColor:'rgba(16,185,129,0.12)', borderRadius:'16px', padding:'20px 28px', border:'1px solid rgba(16,185,129,0.3)' } },
+          h('div', { style: { display:'flex', width:'80px', alignItems:'center', justifyContent:'center' } },
+            h('span', { style: { fontSize:'32px', fontWeight:800, color: C.green } }, '20 %')
+          ),
+          h('div', { style: { display:'flex', flex:'1', flexDirection:'column', gap:'4px' } },
+            h('span', { style: { fontSize:'26px', fontWeight:700, color: C.green } }, 'Sparen & Investieren'),
+            h('span', { style: { fontSize:'22px', fontWeight:500, color:'rgba(16,185,129,0.7)' } }, 'ETF-Sparplan, Notgroschen, Rücklage')
+          ),
+          h('span', { style: { fontSize:'36px', fontWeight:800, color: C.green } }, '600 €')
+        ),
+        // Total
+        h('div', { style: { display:'flex', justifyContent:'flex-end', alignItems:'center', gap:'16px', paddingRight:'4px' } },
+          h('div', { style: { display:'flex', height:'2px', flex:'1', backgroundColor: C.border, borderRadius:'1px' } }),
+          h('span', { style: { fontSize:'26px', fontWeight:700, color: C.textMuted } }, 'Gesamt:'),
+          h('span', { style: { fontSize:'36px', fontWeight:800, color: C.text } }, '3.000 €')
+        )
+      )
+    ),
+    keyLearning('600 € pro Monat angelegt = über 100.000 € in 10 Jahren bei 7 % p.a.'),
+    igHandle()
+  ]);
+
+  // ===== SLIDE 7: LEARNINGS =====
+  const learnings = [
+    { num:'01', text:'Kein Haushaltsbuch nötig — nur 3 Töpfe', pct:25 },
+    { num:'02', text:'Fixkosten über 50 % = erstes Warnsignal', pct:50 },
+    { num:'03', text:'20 % Sparen per Dauerauftrag automatisieren', pct:75 },
+    { num:'04', text:'Weniger über Geld nachdenken, mehr aufbauen', pct:100 },
+  ];
+
+  const slide7 = slideWrapper(C.bg, [
+    badge('DEINE 4 LEARNINGS'),
+    headline('Was du jetzt\nweißt — und wie du\nstartest', 60),
+    h('div', { style: { display:'flex', flex:'1', flexDirection:'column', justifyContent:'center', gap:'12px' } },
+      ...learnings.map(l =>
+        h('div', { style: { display:'flex', flexDirection:'column', gap:'10px', padding:'20px 24px', backgroundColor: C.cardBg, borderRadius:'18px' } },
+          h('div', { style: { display:'flex', alignItems:'center', gap:'18px' } },
+            h('span', { style: { fontSize:'36px', fontWeight:800, color: l.pct === 100 ? C.green : C.text, minWidth:'56px' } }, l.num),
+            h('span', { style: { fontSize:'26px', fontWeight:600, color: C.text, lineHeight:'1.3', flex:'1' } }, l.text)
+          ),
+          h('div', { style: { display:'flex', height:'5px', backgroundColor: C.border, borderRadius:'3px', overflow:'hidden' } },
+            h('div', { style: { display:'flex', width:`${l.pct}%`, height:'5px', backgroundColor: l.pct === 100 ? C.green : C.text, borderRadius:'3px' } })
           )
         )
-      ),
-      keyLearning('Wer jetzt nicht handelt, kann Verluste von 2026 nicht mehr nutzen', C.red),
-      igHandle()
-    ]);
-  })();
+      )
+    ),
+    keyLearning('Fang heute an — wer wartet, verliert jeden Monat bares Geld.')
+  ]);
 
-  // ─── SLIDE 7: 4-SCHRITTE-FAHRPLAN ────────────────────────────────
-  const slide7 = (() => {
-    const steps = [
-      { num: '01', text: 'Belege & Werbungskosten sammeln', pct: 25 },
-      { num: '02', text: 'Vorsorgeaufwendungen prüfen', pct: 50 },
-      { num: '03', text: 'Verlustbescheinigung bis 31. Okt.', pct: 75 },
-      { num: '04', text: 'Steuererklärung bis 31. Dez.', pct: 100 },
-    ];
-
-    return slideRoot([
-      topRow(badge('DEIN FAHRPLAN')),
-      headline('4 Schritte bis zum', 60),
-      headline('31. Dezember 2026', 60),
-      h('div', {
-        style: {
-          display: 'flex', flex: '1', flexDirection: 'column',
-          justifyContent: 'center', gap: '14px'
-        }
-      },
-        ...steps.map(s =>
-          h('div', {
-            style: {
-              display: 'flex', flexDirection: 'column', gap: '10px',
-              padding: '22px 28px',
-              backgroundColor: C.cardBg, borderRadius: '18px'
-            }
-          },
-            h('div', { style: { display: 'flex', alignItems: 'center', gap: '18px' } },
-              h('span', {
-                style: {
-                  fontSize: '38px', fontWeight: 800, minWidth: '56px',
-                  color: s.pct === 100 ? C.green : C.text
-                }
-              }, s.num),
-              h('span', {
-                style: { fontSize: '27px', fontWeight: 600, color: C.text, lineHeight: '1.3' }
-              }, s.text)
-            ),
-            h('div', {
-              style: {
-                display: 'flex', height: '6px',
-                backgroundColor: C.border, borderRadius: '3px', overflow: 'hidden'
-              }
-            },
-              h('div', {
-                style: {
-                  display: 'flex', height: '6px', borderRadius: '3px',
-                  backgroundColor: s.pct === 100 ? C.green : C.text,
-                  width: `${s.pct}%`
-                }
-              })
-            )
-          )
+  // ===== SLIDE 8: CTA =====
+  const slide8 = slideWrapper(C.bgDark, [
+    badge('JETZT DU'),
+    headline('Welche Kategorie\nsprengt bei dir\nden Rahmen?', 64),
+    h('div', { style: { display:'flex', flex:'1', flexDirection:'column', justifyContent:'center', gap:'24px' } },
+      h('div', { style: { display:'flex', flexDirection:'column', gap:'14px' } },
+        h('div', { style: { display:'flex', alignItems:'center', gap:'14px', backgroundColor: C.cardBg, borderRadius:'16px', padding:'22px 28px' } },
+          h('span', { style: { fontSize:'32px', fontWeight:800, color: C.text, minWidth:'48px' } }, 'A'),
+          h('span', { style: { fontSize:'26px', fontWeight:600, color: C.textSoft } }, 'Notwendiges (Miete zu hoch?)')
+        ),
+        h('div', { style: { display:'flex', alignItems:'center', gap:'14px', backgroundColor: C.cardBg, borderRadius:'16px', padding:'22px 28px' } },
+          h('span', { style: { fontSize:'32px', fontWeight:800, color: C.text, minWidth:'48px' } }, 'B'),
+          h('span', { style: { fontSize:'26px', fontWeight:600, color: C.textSoft } }, 'Wünsche (zu viel Freizeit?)')
+        ),
+        h('div', { style: { display:'flex', alignItems:'center', gap:'14px', backgroundColor: C.cardBg, borderRadius:'16px', padding:'22px 28px' } },
+          h('span', { style: { fontSize:'32px', fontWeight:800, color: C.text, minWidth:'48px' } }, 'C'),
+          h('span', { style: { fontSize:'26px', fontWeight:600, color: C.textSoft } }, 'Ich spare gar nichts')
         )
       ),
-      keyLearning('Wer jetzt startet, bekommt früher Geld zurück'),
-      igHandle()
-    ]);
-  })();
+      h('div', { style: { display:'flex', flexDirection:'column', alignItems:'center', gap:'8px', padding:'24px', backgroundColor:'rgba(16,185,129,0.1)', borderRadius:'20px', border:'1px solid rgba(16,185,129,0.25)' } },
+        h('span', { style: { fontSize:'28px', fontWeight:700, color: C.text, textAlign:'center', lineHeight:'1.4' } }, 'Folge @benarofinanzen für mehr Finanztipps'),
+        h('span', { style: { fontSize:'24px', fontWeight:500, color: C.textMuted, textAlign:'center' } }, 'Täglich klüger mit deinem Geld')
+      )
+    ),
+    keyLearning('Speichern nicht vergessen — du wirst diesen Post nochmal brauchen.'),
+    igHandle()
+  ]);
 
-  // ─── SLIDE 8: CTA ─────────────────────────────────────────────────
-  const slide8 = (() => {
-    return slideRoot([
-      topRow(badge('DEIN NÄCHSTER SCHRITT')),
-      h('div', {
-        style: {
-          display: 'flex', flex: '1', flexDirection: 'column',
-          justifyContent: 'center', alignItems: 'center', gap: '32px'
-        }
-      },
-        h('img', { src: logoB64, width: 160, height: 160, style: { borderRadius: '20px', objectFit: 'cover' } }),
-        h('span', {
-          style: {
-            fontSize: '50px', fontWeight: 800, color: C.text,
-            textAlign: 'center', lineHeight: '1.15', letterSpacing: '-1px'
-          }
-        }, 'Hast du dieses Jahr schon Steuern gespart?'),
-        h('span', {
-          style: {
-            fontSize: '30px', fontWeight: 500, color: C.textMuted,
-            textAlign: 'center', lineHeight: '1.5'
-          }
-        }, 'Schreib es uns in die Kommentare! Wir helfen dir gerne weiter.'),
-        h('div', {
-          style: {
-            display: 'flex', flexDirection: 'column', gap: '14px',
-            alignItems: 'center', width: '100%'
-          }
-        },
-          h('div', {
-            style: {
-              display: 'flex', alignItems: 'center', gap: '12px',
-              backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '16px',
-              padding: '16px 28px', border: '1px solid rgba(16,185,129,0.3)'
-            }
-          },
-            h('span', { style: { fontSize: '27px', fontWeight: 700, color: C.green } },
-              'Speichern nicht vergessen'
-            )
-          ),
-          h('span', {
-            style: { fontSize: '26px', fontWeight: 500, color: C.textMuted }
-          }, 'Folge @benarofinanzen für mehr Finanztipps')
-        )
-      ),
-      igHandle()
-    ]);
-  })();
-
-  // ─── GENERATE ALL SLIDES ─────────────────────────────────────────
+  // ===== GENERATE ALL SLIDES =====
   const slides = [slide1, slide2, slide3, slide4, slide5, slide6, slide7, slide8];
+  const outDir = path.join(__dirname, 'output', 'carousel_2026-10-09', 'slides');
 
   for (let i = 0; i < slides.length; i++) {
-    const svg = await satori(slides[i], { width: W, height: H, fonts });
-    const resvg = new Resvg(svg, { fitTo: { mode: 'width', value: W } });
+    const svg = await satori(slides[i], { width:W, height:H, fonts });
+    const resvg = new Resvg(svg, { fitTo: { mode:'width', value:W } });
     const pngData = resvg.render();
-    const pngPath = path.join(outDir, `slide-${String(i + 1).padStart(2, '0')}.png`);
+    const pngPath = path.join(outDir, `slide-${String(i+1).padStart(2,'0')}.png`);
     fs.writeFileSync(pngPath, pngData.asPng());
-    console.log(`Slide ${i + 1}/${slides.length} gespeichert: ${pngPath}`);
+    console.log(`Slide ${i+1}/${slides.length} gespeichert: ${pngPath}`);
   }
   console.log('Alle Slides erfolgreich generiert!');
 }
