@@ -1,5 +1,5 @@
-// generate.js — Carousel: Verlustverrechnung 2026
-// Thema: Der Steuertrick den 70 % der ETF-Anleger nicht nutzen
+// generate.js — Carousel: MSCI World vs. FTSE All-World 2026
+// Thema: Welcher ETF gehört wirklich ins Depot?
 const fs = require('fs');
 const path = require('path');
 
@@ -29,7 +29,7 @@ async function main() {
   const logoPath = path.join(__dirname, 'skills/instagram-carousel-skill/templates/benaro-logo.jpg');
   const logoB64 = 'data:image/jpeg;base64,' + fs.readFileSync(logoPath).toString('base64');
 
-  const outputDir = path.join(__dirname, 'output/carousel_2026-10-10/slides');
+  const outputDir = path.join(__dirname, 'output/carousel_2026-10-22/slides');
 
   const h = (type, props, ...ch) => ({
     type, props: { ...props, children: ch.length === 1 ? ch[0] : ch.length === 0 ? undefined : ch }
@@ -122,14 +122,10 @@ async function main() {
 
   function igFooter() {
     return h('div', {
-      style: {
-        display: 'flex', alignItems: 'center', marginTop: '12px'
-      }
+      style: { display: 'flex', alignItems: 'center', marginTop: '12px' }
     },
       h('span', {
-        style: {
-          fontSize: '24px', fontWeight: 500, color: C.textMuted
-        }
+        style: { fontSize: '24px', fontWeight: 500, color: C.textMuted }
       }, '@benarofinanzen')
     );
   }
@@ -146,305 +142,455 @@ async function main() {
   // ========== SLIDE 1 — HOOK ==========
   const slide1 = slideRoot([
     logoCorner(),
-    badge('STEUERTIPP 2026', 'green'),
-    headline('Du verlierst jedes Jahr Steuergeld —', 62),
-    headline('weil du diesen Trick nicht kennst', 62),
-    subline('Was clevere ETF-Anleger vor dem 31. Dezember tun'),
+    badge('WICHTIGE FRAGE'),
+    headline('MSCI World oder FTSE All-World?', 62),
+    subline('Fast niemand kennt den echten Unterschied — dabei ist er für dein Depot entscheidend.'),
     visualBlock([
-      (() => {
-        // SVG: Two piles of coins with an arrow connecting them
-        const svg = `<svg width="860" height="380" viewBox="0 0 860 380" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="gr1" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#EF4444" stop-opacity="0.8"/>
-      <stop offset="100%" stop-color="#EF4444" stop-opacity="0.3"/>
-    </linearGradient>
-    <linearGradient id="gr2" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#10B981" stop-opacity="0.9"/>
-      <stop offset="100%" stop-color="#10B981" stop-opacity="0.4"/>
-    </linearGradient>
-  </defs>
-  <!-- Left: Tax burden (red) -->
-  <rect x="60" y="80" width="280" height="220" rx="20" fill="url(#gr1)" stroke="rgba(239,68,68,0.6)" stroke-width="2"/>
-  <rect x="90" y="160" width="220" height="8" rx="4" fill="rgba(255,255,255,0.3)"/>
-  <rect x="90" y="185" width="180" height="8" rx="4" fill="rgba(255,255,255,0.2)"/>
-  <rect x="90" y="210" width="200" height="8" rx="4" fill="rgba(255,255,255,0.2)"/>
-  <circle cx="200" cy="125" r="30" fill="rgba(239,68,68,0.4)" stroke="rgba(239,68,68,0.6)" stroke-width="2"/>
-  <line x1="186" y1="125" x2="214" y2="125" stroke="white" stroke-width="4" stroke-linecap="round"/>
-  <!-- Arrow in center -->
-  <line x1="380" y1="190" x2="490" y2="190" stroke="rgba(255,255,255,0.6)" stroke-width="4" stroke-dasharray="12,8"/>
-  <polygon points="490,180 510,190 490,200" fill="rgba(255,255,255,0.6)"/>
-  <!-- Right: Savings (green) -->
-  <rect x="520" y="80" width="280" height="220" rx="20" fill="url(#gr2)" stroke="rgba(16,185,129,0.6)" stroke-width="2"/>
-  <rect x="550" y="160" width="220" height="8" rx="4" fill="rgba(255,255,255,0.3)"/>
-  <rect x="550" y="185" width="180" height="8" rx="4" fill="rgba(255,255,255,0.2)"/>
-  <rect x="550" y="210" width="200" height="8" rx="4" fill="rgba(255,255,255,0.2)"/>
-  <circle cx="660" cy="125" r="30" fill="rgba(16,185,129,0.4)" stroke="rgba(16,185,129,0.6)" stroke-width="2"/>
-  <line x1="646" y1="125" x2="674" y2="125" stroke="white" stroke-width="4" stroke-linecap="round"/>
-  <line x1="660" y1="111" x2="660" y2="139" stroke="white" stroke-width="4" stroke-linecap="round"/>
-</svg>`;
-        const src = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
-        return h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
-          h('img', { src, width: 860, height: 380, style: { objectFit: 'contain' } }),
-          h('div', { style: { display: 'flex', justifyContent: 'space-around', paddingLeft: '60px', paddingRight: '60px' } },
-            h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.red, textAlign: 'center' } }, 'Ohne Trick'),
-            h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.green, textAlign: 'center' } }, 'Mit Trick')
-          )
-        );
-      })()
-    ]),
-    keyLearning('Verlustverrechnung ist legal, einfach — und kaum jemand nutzt sie.'),
-    igFooter(),
-  ]);
-
-  // ========== SLIDE 2 — STAT HERO ==========
-  const slide2 = slideRoot([
-    logoCorner(),
-    badge('ÜBERRASCHENDE ZAHL'),
-    headline('Kaum ein Anleger nutzt diesen Vorteil'),
-    subline('Obwohl er bei jeder deutschen Direktbank kostenlos verfügbar ist'),
-    visualBlock([
-      h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px', flex: '1' } },
-        h('span', { style: { fontSize: '160px', fontWeight: 800, color: C.green, letterSpacing: '-6px', lineHeight: '1' } }, '70 %'),
-        h('span', { style: { fontSize: '30px', fontWeight: 600, color: C.textSoft, textAlign: 'center', lineHeight: '1.4', maxWidth: '720px' } },
-          'der deutschen ETF-Anleger nutzen ihren Verlustverrechnungstopf nicht aktiv vor Jahresende'),
-        h('div', { style: { display: 'flex', marginTop: '20px', gap: '40px' } },
-          h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', backgroundColor: C.cardBg, borderRadius: '16px', padding: '22px 36px', gap: '6px' } },
-            h('span', { style: { fontSize: '40px', fontWeight: 800, color: C.text } }, '263 €'),
-            h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, textAlign: 'center' } }, 'Steuerersparnis pro 1.000 €')
-          ),
-          h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', backgroundColor: C.cardBg, borderRadius: '16px', padding: '22px 36px', gap: '6px' } },
-            h('span', { style: { fontSize: '40px', fontWeight: 800, color: C.text } }, 'Okt.'),
-            h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, textAlign: 'center' } }, 'Bester Monat dafür')
-          )
-        )
-      )
-    ]),
-    keyLearning('26,375 % Abgeltungsteuer sparen — durch Verlustverrechnung vor dem 31.12.'),
-    igFooter(),
-  ]);
-
-  // ========== SLIDE 3 — ERWARTUNG VS. REALITÄT ==========
-  const slide3 = slideRoot([
-    logoCorner(),
-    badge('DAS PROBLEM'),
-    headline('Was die meisten tun — und was möglich wäre', 54),
-    visualBlock([
-      h('div', { style: { display: 'flex', gap: '14px', flex: '1' } },
-        // Left: Was die meisten tun
+      h('div', { style: { display: 'flex', gap: '16px' } },
         h('div', {
           style: {
             display: 'flex', flex: '1', flexDirection: 'column',
-            backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '20px',
+            backgroundColor: C.cardBg, borderRadius: '20px',
             padding: '28px', gap: '14px',
-            border: '1px solid rgba(239,68,68,0.3)'
+            border: '2px solid rgba(255,255,255,0.2)'
           }
         },
-          h('span', { style: { fontSize: '21px', fontWeight: 700, letterSpacing: '2px', color: C.red } }, 'WAS 70 % TUN'),
-          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(239,68,68,0.4)', borderRadius: '2px' } }),
-          h('span', { style: { fontSize: '28px', fontWeight: 600, color: C.textSoft, lineHeight: '1.45' } },
-            'Depot laufen lassen'),
-          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, lineHeight: '1.45' } },
-            'Verluste im Depot ignorieren'),
-          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, lineHeight: '1.45' } },
-            'Auf Gewinne volle Steuer zahlen'),
-          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, lineHeight: '1.45' } },
-            'Verlusttopf verfällt ungenutzt')
-        ),
-        // Right: Was möglich wäre
-        h('div', {
-          style: {
-            display: 'flex', flex: '1', flexDirection: 'column',
-            backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '20px',
-            padding: '28px', gap: '14px',
-            border: '1px solid rgba(16,185,129,0.3)'
-          }
-        },
-          h('span', { style: { fontSize: '21px', fontWeight: 700, letterSpacing: '2px', color: C.green } }, 'WAS MÖGLICH WÄRE'),
-          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(16,185,129,0.4)', borderRadius: '2px' } }),
-          h('span', { style: { fontSize: '28px', fontWeight: 600, color: C.textSoft, lineHeight: '1.45' } },
-            'Verlusttopf aktiv prüfen'),
-          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, lineHeight: '1.45' } },
-            'Verluste strategisch realisieren'),
-          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, lineHeight: '1.45' } },
-            'Steuerlast deutlich senken'),
-          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, lineHeight: '1.45' } },
-            'Bis zu 263 € pro 1.000 € sparen')
-        )
-      )
-    ]),
-    keyLearning('Der Verlustverrechnungstopf läuft automatisch — aber du musst aktiv handeln.'),
-    igFooter(),
-  ]);
-
-  // ========== SLIDE 4 — DIE METHODE ==========
-  const slide4 = slideRoot([
-    logoCorner(),
-    badge('DIE METHODE'),
-    headline('Verlustverrechnung in 4 Schritten', 58),
-    subline('So funktioniert es bei jeder deutschen Direktbank'),
-    visualBlock([
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px' } },
-        ...[
-          { num: '01', title: 'Verlusttopf prüfen', desc: 'Online-Banking öffnen, Depot-Steuerübersicht aufrufen' },
-          { num: '02', title: 'Verlustpositionen finden', desc: 'Welche ETF oder Aktien haben aktuell Buchverluste?' },
-          { num: '03', title: 'Verluste realisieren', desc: 'Position mit Buchverlust vor dem 31. Dezember verkaufen' },
-          { num: '04', title: 'Bank verrechnet automatisch', desc: 'Gewinnsteuern werden sofort mit deinen Verlusten saldiert' },
-        ].map((step, i) =>
+          h('span', { style: { fontSize: '22px', fontWeight: 700, letterSpacing: '2px', color: C.textMuted } }, 'MSCI WORLD'),
+          h('div', { style: { display: 'flex', height: '2px', backgroundColor: C.border, borderRadius: '1px' } }),
+          h('span', { style: { fontSize: '52px', fontWeight: 800, color: C.text, lineHeight: '1' } }, '23'),
+          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft } }, 'Industrieländer'),
+          h('span', { style: { fontSize: '40px', fontWeight: 800, color: C.text } }, '~1.500'),
+          h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted } }, 'Aktien im ETF'),
           h('div', {
             style: {
-              display: 'flex', flexDirection: 'row', alignItems: 'center',
-              backgroundColor: C.cardBg, borderRadius: '16px',
-              padding: '20px 24px', gap: '20px'
+              display: 'flex', padding: '10px 16px',
+              backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '10px'
+            }
+          },
+            h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.red } }, 'Keine Schwellenländer')
+          )
+        ),
+        h('div', {
+          style: {
+            display: 'flex', flex: '1', flexDirection: 'column',
+            backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '20px',
+            padding: '28px', gap: '14px',
+            border: '2px solid rgba(16,185,129,0.5)'
+          }
+        },
+          h('span', { style: { fontSize: '22px', fontWeight: 700, letterSpacing: '2px', color: C.green } }, 'FTSE ALL-WORLD'),
+          h('div', { style: { display: 'flex', height: '2px', backgroundColor: 'rgba(16,185,129,0.4)', borderRadius: '1px' } }),
+          h('span', { style: { fontSize: '52px', fontWeight: 800, color: C.text, lineHeight: '1' } }, '49'),
+          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft } }, 'Länder weltweit'),
+          h('span', { style: { fontSize: '40px', fontWeight: 800, color: C.text } }, '~3.700'),
+          h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted } }, 'Aktien im ETF'),
+          h('div', {
+            style: {
+              display: 'flex', padding: '10px 16px',
+              backgroundColor: 'rgba(16,185,129,0.15)', borderRadius: '10px'
+            }
+          },
+            h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.green } }, 'Inkl. Schwellenländer')
+          )
+        )
+      )
+    ]),
+    keyLearning('Welcher ETF passt wirklich zu dir? Die Antwort überrascht viele.'),
+    igFooter(),
+  ]);
+
+  // ========== SLIDE 2 — DIE 3 KERNUNTERSCHIEDE ==========
+  const differences = [
+    { label: 'Abgedeckte Länder', msci: '23', ftse: '49', unit: 'Industrieländer vs. global' },
+    { label: 'Aktien im Fonds', msci: '~1.500', ftse: '~3.700', unit: 'Positionen im Portfolio' },
+    { label: 'Schwellenländer-Anteil', msci: '0 %', ftse: '~10 %', unit: 'Anteil am Fondsvermögen' },
+  ];
+
+  const slide2 = slideRoot([
+    logoCorner(),
+    badge('DIE FAKTEN'),
+    headline('3 Unterschiede die wirklich zählen', 58),
+    visualBlock([
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '18px' } },
+        ...differences.map(d =>
+          h('div', {
+            style: {
+              display: 'flex', flexDirection: 'column',
+              backgroundColor: C.cardBg, borderRadius: '18px',
+              padding: '24px 28px', gap: '12px'
             }
           },
             h('span', {
-              style: {
-                fontSize: '38px', fontWeight: 800,
-                color: i === 3 ? C.green : C.text,
-                minWidth: '58px'
-              }
-            }, step.num),
-            h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px' } },
-              h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.text } }, step.title),
-              h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted, lineHeight: '1.3' } }, step.desc)
-            )
+              style: { fontSize: '21px', fontWeight: 700, letterSpacing: '2px', color: C.textMuted }
+            }, d.label.toUpperCase()),
+            h('div', { style: { display: 'flex', gap: '16px', alignItems: 'center' } },
+              h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', gap: '4px' } },
+                h('span', { style: { fontSize: '19px', fontWeight: 600, color: C.textMuted } }, 'MSCI WORLD'),
+                h('span', { style: { fontSize: '40px', fontWeight: 800, color: C.text } }, d.msci)
+              ),
+              h('div', { style: { display: 'flex', width: '2px', height: '50px', backgroundColor: C.border } }),
+              h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', gap: '4px' } },
+                h('span', { style: { fontSize: '19px', fontWeight: 600, color: C.green } }, 'FTSE ALL-WORLD'),
+                h('span', { style: { fontSize: '40px', fontWeight: 800, color: C.text } }, d.ftse)
+              )
+            ),
+            h('span', { style: { fontSize: '21px', fontWeight: 500, color: C.textMuted } }, d.unit)
           )
         )
       )
     ]),
-    keyLearning('Die Bank führt deinen Verlustverrechnungstopf automatisch — du musst nur schauen.'),
+    keyLearning('Der FTSE All-World ist breiter diversifiziert — bei nahezu gleicher Performance.'),
     igFooter(),
   ]);
 
-  // ========== SLIDE 5 — RECHENBEISPIEL ==========
-  const slide5 = slideRoot([
-    logoCorner(),
-    badge('RECHENBEISPIEL'),
-    headline('So sieht es konkret aus', 60),
-    subline('Ein ETF-Anleger mit gemischtem Depot im Oktober 2026'),
-    visualBlock([
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '16px' } },
-        // ETF Positions
-        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
-          h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '14px', padding: '18px 24px', border: '1px solid rgba(16,185,129,0.3)' } },
-            h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft } }, 'MSCI World ETF — Gewinn'),
-            h('span', { style: { fontSize: '28px', fontWeight: 800, color: C.green } }, '+1.200 €')
-          ),
-          h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '14px', padding: '18px 24px', border: '1px solid rgba(239,68,68,0.3)' } },
-            h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft } }, 'Tech-ETF — Buchverlust'),
-            h('span', { style: { fontSize: '28px', fontWeight: 800, color: C.red } }, '-800 €')
-          ),
-        ),
-        // Arrow
-        h('div', { style: { display: 'flex', justifyContent: 'center' } },
-          h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center' } },
-            h('div', { style: { display: 'flex', width: '4px', height: '24px', backgroundColor: C.border } }),
-            h('div', { style: { display: 'flex', width: '0px', height: '0px', borderLeft: '10px solid transparent', borderRight: '10px solid transparent', borderTop: `12px solid ${C.border}` } })
-          )
-        ),
-        // Result comparison
-        h('div', { style: { display: 'flex', gap: '12px' } },
-          h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', alignItems: 'center', backgroundColor: C.cardBg, borderRadius: '14px', padding: '20px', gap: '8px' } },
-            h('span', { style: { fontSize: '20px', fontWeight: 600, color: C.textMuted, letterSpacing: '1px' } }, 'OHNE TRICK'),
-            h('span', { style: { fontSize: '36px', fontWeight: 800, color: C.red } }, '316 €'),
-            h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted } }, 'Steuern auf 1.200 €')
-          ),
-          h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', alignItems: 'center', backgroundColor: 'rgba(16,185,129,0.15)', borderRadius: '14px', padding: '20px', gap: '8px', border: '2px solid rgba(16,185,129,0.4)' } },
-            h('span', { style: { fontSize: '20px', fontWeight: 600, color: C.green, letterSpacing: '1px' } }, 'MIT TRICK'),
-            h('span', { style: { fontSize: '36px', fontWeight: 800, color: C.green } }, '105 €'),
-            h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted } }, 'Steuern nur auf 400 €')
-          )
-        ),
-        h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '12px', padding: '14px 24px' } },
-          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.green } }, 'Ersparnis: 211 € — in 30 Minuten')
-        )
-      )
-    ]),
-    keyLearning('Reale Zahlen, vereinfacht dargestellt. Steuerberechnung ca. 26,375 % Abgeltungsteuer.'),
-    igFooter(),
-  ]);
+  // ========== SLIDE 3 — FONDSGRÖSSE (Beliebt ≠ Besser) ==========
+  const funds = [
+    { name: 'iShares Core MSCI World', size: 60, pct: 100 },
+    { name: 'Vanguard FTSE All-World', size: 22, pct: 37 },
+    { name: 'Xtrackers MSCI World', size: 12, pct: 20 },
+  ];
 
-  // ========== SLIDE 6 — WICHTIGE REGELN ==========
-  const slide6 = slideRoot([
+  const slide3 = slideRoot([
     logoCorner(),
-    badge('WICHTIG ZU WISSEN'),
-    headline('Diese Regeln musst du kennen', 60),
-    subline('Verlustverrechnung hat klare gesetzliche Grenzen'),
+    badge('BELIEBT ≠ BESSER'),
+    headline('Warum der MSCI World so dominant ist', 54),
+    subline('Fondsgröße der beliebtesten ETFs in Mrd. EUR (2026)'),
     visualBlock([
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '16px' } },
-        ...[
-          {
-            icon: '§',
-            title: 'Aktien-Verluste gelten nur für Aktien-Gewinne',
-            desc: 'Verluste aus Aktienverkäufen dürfen nur mit Aktiengewinnen verrechnet werden, nicht mit ETF-Gewinnen.',
-            color: C.red,
-          },
-          {
-            icon: '31',
-            title: 'Frist: 31. Dezember 2026',
-            desc: 'Verluste müssen im selben Steuerjahr realisiert werden. Nicht genutzte Verluste werden ins nächste Jahr übertragen.',
-            color: '#F59E0B',
-          },
-          {
-            icon: '?',
-            title: 'Kauf und Verkauf clever kombinieren',
-            desc: 'Du kannst die verkaufte Position sofort wieder kaufen — wenn du das Wertpapier weiter halten willst.',
-            color: C.green,
-          },
-          {
-            icon: 'i',
-            title: 'Keine Steuerberatung',
-            desc: 'Bei größeren Depots: Sprich mit einem Steuerberater oder Finanzberater.',
-            color: C.textMuted,
-          },
-        ].map(rule =>
-          h('div', {
-            style: {
-              display: 'flex', flexDirection: 'row', alignItems: 'flex-start',
-              backgroundColor: C.cardBg, borderRadius: '14px',
-              padding: '18px 22px', gap: '16px'
-            }
-          },
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '22px' } },
+        ...funds.map((f, i) =>
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
+            h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
+              h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft } }, f.name),
+              h('span', { style: { fontSize: '30px', fontWeight: 800, color: i === 1 ? C.green : C.text } }, `${f.size} Mrd.`)
+            ),
             h('div', {
               style: {
-                display: 'flex', width: '44px', height: '44px', borderRadius: '10px',
-                backgroundColor: `${rule.color}20`,
-                border: `1px solid ${rule.color}60`,
-                alignItems: 'center', justifyContent: 'center', flexShrink: 0
+                display: 'flex', height: '22px',
+                backgroundColor: 'rgba(255,255,255,0.08)',
+                borderRadius: '11px', overflow: 'hidden'
               }
             },
-              h('span', { style: { fontSize: '22px', fontWeight: 800, color: rule.color } }, rule.icon)
-            ),
-            h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px' } },
-              h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.text, lineHeight: '1.3' } }, rule.title),
-              h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4' } }, rule.desc)
+              h('div', {
+                style: {
+                  display: 'flex', width: `${f.pct}%`, height: '22px',
+                  backgroundColor: i === 1 ? C.green : C.text,
+                  borderRadius: '11px'
+                }
+              })
             )
+          )
+        ),
+        h('div', {
+          style: {
+            display: 'flex', marginTop: '10px', padding: '22px 26px',
+            backgroundColor: 'rgba(239,68,68,0.08)', borderRadius: '14px',
+            gap: '14px', alignItems: 'flex-start'
+          }
+        },
+          h('div', {
+            style: {
+              display: 'flex', width: '12px', height: '12px',
+              borderRadius: '6px', backgroundColor: C.red,
+              flexShrink: 0, marginTop: '6px'
+            }
+          }),
+          h('span', {
+            style: { fontSize: '25px', fontWeight: 600, color: C.textSoft, lineHeight: '1.45' }
+          }, 'Mehr Fondsvermögen bedeutet mehr Anlegervertrauen — aber keine höhere Rendite')
+        )
+      )
+    ]),
+    keyLearning('Fondsgröße ist Vertrauen — aber kein Qualitätsmerkmal für zukünftige Renditen.', C.red),
+    igFooter(),
+  ]);
+
+  // ========== SLIDE 4 — REALITÄTSCHECK ==========
+  const slide4 = slideRoot([
+    logoCorner(),
+    badge('REALITÄTSCHECK'),
+    headline('Was du denkst — und was stimmt', 58),
+    visualBlock([
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '16px' } },
+        h('div', { style: { display: 'flex', gap: '14px' } },
+          h('div', {
+            style: {
+              display: 'flex', flex: '1', flexDirection: 'column',
+              backgroundColor: 'rgba(239,68,68,0.1)', borderRadius: '20px',
+              padding: '28px', gap: '14px',
+              border: '1px solid rgba(239,68,68,0.3)'
+            }
+          },
+            h('span', { style: { fontSize: '21px', fontWeight: 700, letterSpacing: '2px', color: C.red } }, 'DEIN GEDANKE'),
+            h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(239,68,68,0.35)', borderRadius: '2px' } }),
+            h('span', { style: { fontSize: '27px', fontWeight: 600, color: C.textSoft, lineHeight: '1.45' } },
+              '"FTSE All-World ist deutlich riskanter wegen der Schwellenländer"')
+          ),
+          h('div', {
+            style: {
+              display: 'flex', flex: '1', flexDirection: 'column',
+              backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '20px',
+              padding: '28px', gap: '14px',
+              border: '1px solid rgba(16,185,129,0.35)'
+            }
+          },
+            h('span', { style: { fontSize: '21px', fontWeight: 700, letterSpacing: '2px', color: C.green } }, 'DIE WAHRHEIT'),
+            h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(16,185,129,0.4)', borderRadius: '2px' } }),
+            h('span', { style: { fontSize: '27px', fontWeight: 600, color: C.text, lineHeight: '1.45' } },
+              'Schwellenländer = nur ~10 % des FTSE All-World. Der Unterschied ist minimal.')
+          )
+        ),
+        h('div', { style: { display: 'flex', gap: '14px' } },
+          h('div', {
+            style: {
+              display: 'flex', flex: '1', flexDirection: 'column',
+              backgroundColor: 'rgba(239,68,68,0.1)', borderRadius: '20px',
+              padding: '26px 28px', gap: '12px',
+              border: '1px solid rgba(239,68,68,0.3)'
+            }
+          },
+            h('span', { style: { fontSize: '21px', fontWeight: 700, letterSpacing: '2px', color: C.red } }, 'NOCH EIN MYTHOS'),
+            h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(239,68,68,0.35)', borderRadius: '2px' } }),
+            h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4', textDecoration: 'line-through' } },
+              '"MSCI World ist sicherer"')
+          ),
+          h('div', {
+            style: {
+              display: 'flex', flex: '1', flexDirection: 'column',
+              backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '20px',
+              padding: '26px 28px', gap: '12px',
+              border: '1px solid rgba(16,185,129,0.35)'
+            }
+          },
+            h('span', { style: { fontSize: '21px', fontWeight: 700, letterSpacing: '2px', color: C.green } }, 'BEIDES IST GUT'),
+            h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(16,185,129,0.4)', borderRadius: '2px' } }),
+            h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.4' } },
+              'Beide ETFs gelten als erstklassige Kern-ETFs')
           )
         )
       )
     ]),
-    keyLearning('ETF-Verluste aus thesaurierenden ETFs können gegen alle Kapitalerträge verrechnet werden.', C.red),
+    keyLearning('10 % Schwellenländer ändern das Risikoprofil kaum — erhöhen aber die Diversifikation.'),
     igFooter(),
   ]);
 
-  // ========== SLIDE 7 — KEY TAKEAWAYS ==========
-  const slide7 = slideRoot([
+  // ========== SLIDE 5 — PERFORMANCE-VERGLEICH (Line Chart) ==========
+  // SVG Line Chart: 2010–2026, beide Linien nahezu identisch (~+290%)
+  const msciPts = [
+    [0,271],[54,273],[108,256],[161,231],[215,219],
+    [269,207],[323,197],[376,166],[430,181],[484,134],
+    [538,129],[591,73],[645,114],[699,83],[753,46],[806,22],[860,9]
+  ];
+  const ftsePts = [
+    [0,273],[54,275],[108,259],[161,234],[215,222],
+    [269,210],[323,200],[376,169],[430,184],[484,137],
+    [538,132],[591,76],[645,117],[699,86],[753,49],[806,25],[860,4]
+  ];
+  const msciPath = 'M ' + msciPts.map(p => p.join(',')).join(' L ');
+  const ftsePath = 'M ' + ftsePts.map(p => p.join(',')).join(' L ');
+
+  const chartSvg = `<svg width="860" height="290" viewBox="0 0 860 290" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.03"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#10B981" stop-opacity="0.03"/>
+    </linearGradient>
+  </defs>
+  <line x1="0" y1="265" x2="860" y2="265" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-dasharray="8,6"/>
+  <line x1="0" y1="185" x2="860" y2="185" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="8,6"/>
+  <line x1="0" y1="105" x2="860" y2="105" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="8,6"/>
+  <path d="${msciPath} L 860,290 L 0,290 Z" fill="url(#g1)"/>
+  <path d="${ftsePath} L 860,290 L 0,290 Z" fill="url(#g2)"/>
+  <path d="${msciPath}" stroke="#FFFFFF" stroke-width="3.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="${ftsePath}" stroke="#10B981" stroke-width="3.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="860" cy="9" r="7" fill="#FFFFFF"/>
+  <circle cx="860" cy="4" r="7" fill="#10B981"/>
+</svg>`;
+  const chartSrc = `data:image/svg+xml;base64,${Buffer.from(chartSvg).toString('base64')}`;
+
+  const slide5 = slideRoot([
     logoCorner(),
-    badge('DEINE CHECKLISTE'),
-    headline('4 Schritte bis zum 31. Dezember', 60),
+    badge('PERFORMANCE 2010–2026'),
+    headline('16 Jahre im Vergleich', 62),
+    subline('1.000 EUR angelegt — wer wäre reicher geworden?'),
+    visualBlock([
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '12px' } },
+        h('div', { style: { display: 'flex', gap: '28px', marginBottom: '4px' } },
+          h('div', { style: { display: 'flex', alignItems: 'center', gap: '10px' } },
+            h('div', { style: { display: 'flex', width: '28px', height: '4px', backgroundColor: C.text, borderRadius: '2px' } }),
+            h('span', { style: { fontSize: '23px', fontWeight: 600, color: C.textSoft } }, 'MSCI World')
+          ),
+          h('div', { style: { display: 'flex', alignItems: 'center', gap: '10px' } },
+            h('div', { style: { display: 'flex', width: '28px', height: '4px', backgroundColor: C.green, borderRadius: '2px' } }),
+            h('span', { style: { fontSize: '23px', fontWeight: 600, color: C.textSoft } }, 'FTSE All-World')
+          )
+        ),
+        h('img', { src: chartSrc, width: 860, height: 290, style: { objectFit: 'contain' } }),
+        h('div', { style: { display: 'flex', justifyContent: 'space-between', marginTop: '4px' } },
+          h('span', { style: { fontSize: '21px', fontWeight: 600, color: C.textMuted } }, '2010'),
+          h('span', { style: { fontSize: '21px', fontWeight: 600, color: C.textMuted } }, '2015'),
+          h('span', { style: { fontSize: '21px', fontWeight: 600, color: C.textMuted } }, '2020'),
+          h('span', { style: { fontSize: '21px', fontWeight: 600, color: C.textMuted } }, '2026')
+        ),
+        h('div', { style: { display: 'flex', gap: '14px', marginTop: '8px' } },
+          h('div', {
+            style: {
+              display: 'flex', flex: '1', flexDirection: 'column',
+              backgroundColor: C.cardBg, borderRadius: '16px',
+              padding: '20px 22px', gap: '4px'
+            }
+          },
+            h('span', { style: { fontSize: '21px', fontWeight: 600, color: C.textMuted } }, 'MSCI World'),
+            h('span', { style: { fontSize: '36px', fontWeight: 800, color: C.text } }, '+290 %'),
+            h('span', { style: { fontSize: '19px', fontWeight: 500, color: C.textMuted } }, '~7,1 % p.a.')
+          ),
+          h('div', {
+            style: {
+              display: 'flex', flex: '1', flexDirection: 'column',
+              backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '16px',
+              padding: '20px 22px', gap: '4px',
+              border: '1px solid rgba(16,185,129,0.3)'
+            }
+          },
+            h('span', { style: { fontSize: '21px', fontWeight: 600, color: C.green } }, 'FTSE All-World'),
+            h('span', { style: { fontSize: '36px', fontWeight: 800, color: C.text } }, '+295 %'),
+            h('span', { style: { fontSize: '19px', fontWeight: 500, color: C.textMuted } }, '~7,2 % p.a.')
+          )
+        )
+      )
+    ]),
+    keyLearning('Beide ETFs liefern langfristig ~7 % p.a. — der Performance-Unterschied ist vernachlässigbar.'),
+    igFooter(),
+  ]);
+
+  // ========== SLIDE 6 — SO ENTSCHEIDEST DU ==========
+  const criteria = [
+    {
+      num: '01',
+      title: 'Gesamtkostenquote (TER)',
+      msci: '0,20 % p.a.',
+      ftse: '0,22 % p.a.',
+      winner: 'msci',
+      note: 'iShares Core MSCI World minimal günstiger'
+    },
+    {
+      num: '02',
+      title: 'Tracking-Differenz',
+      msci: '~0,10 %',
+      ftse: '~0,08 %',
+      winner: 'ftse',
+      note: 'FTSE All-World bildet seinen Index geringfügig präziser ab'
+    },
+    {
+      num: '03',
+      title: 'Fondsgröße (Liquidität)',
+      msci: '60+ Mrd.',
+      ftse: '22 Mrd.',
+      winner: 'msci',
+      note: 'Mehr Kapital bedeutet niedrigere Spreads beim Handeln'
+    },
+  ];
+
+  const slide6 = slideRoot([
+    logoCorner(),
+    badge('SO ENTSCHEIDEST DU'),
+    headline('3 Kriterien für deine Wahl', 60),
     visualBlock([
       h('div', { style: { display: 'flex', flexDirection: 'column', gap: '16px' } },
-        ...[
-          { num: '01', text: 'Depot-Steuerübersicht bei deiner Bank öffnen', pct: 25 },
-          { num: '02', text: 'Positionen mit Buchverlust identifizieren', pct: 50 },
-          { num: '03', text: 'Verluste vor dem 31.12. realisieren (verkaufen)', pct: 75 },
-          { num: '04', text: 'Steuervorteil gesichert — Bank verrechnet automatisch', pct: 100 },
-        ].map(l =>
+        ...criteria.map(c =>
+          h('div', {
+            style: {
+              display: 'flex', flexDirection: 'column',
+              backgroundColor: C.cardBg, borderRadius: '18px',
+              padding: '22px 26px', gap: '12px'
+            }
+          },
+            h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
+              h('span', { style: { fontSize: '24px', fontWeight: 700, color: C.textSoft } }, `${c.num}. ${c.title}`),
+              h('span', {
+                style: {
+                  fontSize: '20px', fontWeight: 700,
+                  color: c.winner === 'msci' ? C.text : C.green,
+                  backgroundColor: c.winner === 'msci' ? 'rgba(255,255,255,0.12)' : 'rgba(16,185,129,0.15)',
+                  padding: '5px 14px', borderRadius: '8px'
+                }
+              }, c.winner === 'msci' ? 'MSCI besser' : 'FTSE besser')
+            ),
+            h('div', { style: { display: 'flex', gap: '12px' } },
+              h('div', {
+                style: {
+                  display: 'flex', flex: '1', flexDirection: 'row',
+                  justifyContent: 'space-between', alignItems: 'center',
+                  backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '10px',
+                  padding: '10px 16px'
+                }
+              },
+                h('span', { style: { fontSize: '19px', fontWeight: 600, color: C.textMuted } }, 'MSCI World'),
+                h('span', { style: { fontSize: '24px', fontWeight: 700, color: C.text } }, c.msci)
+              ),
+              h('div', {
+                style: {
+                  display: 'flex', flex: '1', flexDirection: 'row',
+                  justifyContent: 'space-between', alignItems: 'center',
+                  backgroundColor: 'rgba(16,185,129,0.08)', borderRadius: '10px',
+                  padding: '10px 16px'
+                }
+              },
+                h('span', { style: { fontSize: '19px', fontWeight: 600, color: C.green } }, 'FTSE All-World'),
+                h('span', { style: { fontSize: '24px', fontWeight: 700, color: C.text } }, c.ftse)
+              )
+            ),
+            h('span', { style: { fontSize: '21px', fontWeight: 500, color: C.textMuted } }, c.note)
+          )
+        ),
+        h('div', {
+          style: {
+            display: 'flex', padding: '20px 24px',
+            backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '14px',
+            gap: '12px', alignItems: 'flex-start',
+            border: '1px solid rgba(16,185,129,0.3)'
+          }
+        },
+          h('div', {
+            style: {
+              display: 'flex', width: '12px', height: '12px',
+              borderRadius: '6px', backgroundColor: C.green,
+              flexShrink: 0, marginTop: '6px'
+            }
+          }),
+          h('span', {
+            style: { fontSize: '25px', fontWeight: 600, color: C.text, lineHeight: '1.4' }
+          }, 'Fazit: Wähle den ETF mit dem besseren Angebot bei deinem Broker — beide sind exzellent')
+        )
+      )
+    ]),
+    keyLearning('Den einen richtigen ETF gibt es nicht — beide sind solide Kerninvestments.'),
+    igFooter(),
+  ]);
+
+  // ========== SLIDE 7 — KEY LEARNINGS ==========
+  const learnings = [
+    { num: '01', text: 'MSCI World: 23 Industrieländer, ~1.500 Aktien — ohne Schwellenländer', pct: 25 },
+    { num: '02', text: 'FTSE All-World: 49 Länder, ~3.700 Aktien — inkl. ~10 % Schwellenländer', pct: 50 },
+    { num: '03', text: 'Performance nahezu identisch: beide ~7 % p.a. über 16 Jahre (2010–2026)', pct: 75 },
+    { num: '04', text: 'Entscheide nach TER + Broker-Angebot — nicht nach Beliebtheit oder Name', pct: 100 },
+  ];
+
+  const slide7 = slideRoot([
+    logoCorner(),
+    badge('DEIN TAKEAWAY'),
+    headline('Das Wichtigste auf einen Blick', 58),
+    visualBlock([
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px' } },
+        ...learnings.map(l =>
           h('div', {
             style: {
               display: 'flex', flexDirection: 'column', gap: '10px',
-              padding: '22px 26px', backgroundColor: C.cardBg, borderRadius: '18px'
+              padding: '22px 26px', backgroundColor: C.cardBg,
+              borderRadius: '18px'
             }
           },
             h('div', { style: { display: 'flex', alignItems: 'center', gap: '18px' } },
@@ -455,9 +601,14 @@ async function main() {
                   minWidth: '58px'
                 }
               }, l.num),
-              h('span', { style: { fontSize: '27px', fontWeight: 600, color: C.text, lineHeight: '1.3' } }, l.text)
+              h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.35' } }, l.text)
             ),
-            h('div', { style: { display: 'flex', height: '6px', backgroundColor: C.border, borderRadius: '3px', overflow: 'hidden' } },
+            h('div', {
+              style: {
+                display: 'flex', height: '6px',
+                backgroundColor: C.border, borderRadius: '3px', overflow: 'hidden'
+              }
+            },
               h('div', {
                 style: {
                   display: 'flex', width: `${l.pct}%`, height: '6px',
@@ -470,46 +621,87 @@ async function main() {
         )
       )
     ]),
-    keyLearning('30 Minuten Aufwand, einmal im Jahr — mit echtem Geld-zurück-Effekt.', C.green),
+    keyLearning('Beide ETFs sind hervorragende Kern-ETFs für jedes langfristige Depot.', C.green),
     igFooter(),
   ]);
 
   // ========== SLIDE 8 — CTA ==========
   const slide8 = slideRoot([
     logoCorner(),
-    badge('JETZT HANDELN'),
-    headline('Hast du deinen Verlusttopf schon geprüft?', 56),
+    badge('DEINE MEINUNG'),
     visualBlock([
-      h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '28px', flex: '1' } },
-        // Big logo centered
-        h('img', {
-          src: logoB64,
-          width: 160, height: 160,
-          style: { borderRadius: '24px', objectFit: 'cover' }
-        }),
-        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', maxWidth: '860px' } },
-          h('span', { style: { fontSize: '32px', fontWeight: 600, color: C.textSoft, textAlign: 'center', lineHeight: '1.45' } },
-            'Schreib in die Kommentare, welche Depot-Summe bei dir möglicherweise steuerlich optimierbar wäre.'),
-          h('div', { style: { display: 'flex', gap: '14px', flexWrap: 'wrap', justifyContent: 'center' } },
-            h('div', { style: { display: 'flex', backgroundColor: C.cardBg, borderRadius: '12px', padding: '14px 22px' } },
-              h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.green } }, 'Speichern nicht vergessen')
-            ),
-            h('div', { style: { display: 'flex', backgroundColor: C.cardBg, borderRadius: '12px', padding: '14px 22px' } },
-              h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text } }, 'Teile es mit Freunden')
-            )
+      h('div', {
+        style: {
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          gap: '26px', flex: '1'
+        }
+      },
+        h('span', {
+          style: {
+            fontSize: '64px', fontWeight: 800, color: C.text,
+            lineHeight: '1.1', textAlign: 'center', letterSpacing: '-1.5px'
+          }
+        }, 'Welchen ETF sparst du gerade?'),
+        h('span', {
+          style: {
+            fontSize: '30px', fontWeight: 500, color: C.textMuted,
+            textAlign: 'center', lineHeight: '1.5'
+          }
+        }, 'Schreib es in die Kommentare — wir sind gespannt!'),
+        h('div', { style: { display: 'flex', gap: '14px', marginTop: '8px' } },
+          h('div', {
+            style: {
+              display: 'flex', padding: '18px 28px',
+              backgroundColor: C.cardBg, borderRadius: '16px'
+            }
+          },
+            h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.text } }, 'MSCI World')
+          ),
+          h('div', {
+            style: {
+              display: 'flex', padding: '18px 28px',
+              backgroundColor: 'rgba(16,185,129,0.15)', borderRadius: '16px',
+              border: '1px solid rgba(16,185,129,0.4)'
+            }
+          },
+            h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.green } }, 'FTSE All-World')
+          ),
+          h('div', {
+            style: {
+              display: 'flex', padding: '18px 28px',
+              backgroundColor: C.cardBg, borderRadius: '16px'
+            }
+          },
+            h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.textMuted } }, 'Noch keinen')
           )
         ),
-        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' } },
-          h('span', { style: { fontSize: '30px', fontWeight: 700, color: C.text } }, '@benarofinanzen'),
-          h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted } }, 'Finanzen einfach erklärt')
+        h('div', {
+          style: {
+            display: 'flex', flexDirection: 'column',
+            alignItems: 'center', gap: '10px', marginTop: '10px'
+          }
+        },
+          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft, textAlign: 'center' } },
+            'Mehr Wissen rund um ETFs und Finanzen:'),
+          h('span', { style: { fontSize: '34px', fontWeight: 800, color: C.text } }, '@benarofinanzen'),
+          h('div', {
+            style: {
+              display: 'flex', padding: '12px 24px',
+              backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '12px',
+              border: '1px solid rgba(16,185,129,0.3)'
+            }
+          },
+            h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.green } }, 'Speichern nicht vergessen')
+          )
         )
       )
     ]),
-    keyLearning('Frist läuft ab: 31. Dezember 2026. Jetzt ist der richtige Zeitpunkt.', C.green),
+    keyLearning('Folge @benarofinanzen für wöchentliche Finanzinhalte ohne Fachjargon.', C.green),
     igFooter(),
   ]);
 
-  // ========== GENERATE ALL SLIDES ==========
+  // ========== ALLE SLIDES GENERIEREN ==========
   const slides = [slide1, slide2, slide3, slide4, slide5, slide6, slide7, slide8];
 
   for (let i = 0; i < slides.length; i++) {
