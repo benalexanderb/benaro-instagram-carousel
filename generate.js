@@ -1,5 +1,5 @@
-// generate.js — Carousel: Verlustverrechnung 2026
-// Thema: Der Steuertrick den 70 % der ETF-Anleger nicht nutzen
+// generate.js — Carousel: Jahresend-Finanzcheck 2026
+// Thema: Diese 5 Aktionen verfallen am 31. Dezember
 const fs = require('fs');
 const path = require('path');
 
@@ -29,7 +29,7 @@ async function main() {
   const logoPath = path.join(__dirname, 'skills/instagram-carousel-skill/templates/benaro-logo.jpg');
   const logoB64 = 'data:image/jpeg;base64,' + fs.readFileSync(logoPath).toString('base64');
 
-  const outputDir = path.join(__dirname, 'output/carousel_2026-10-10/slides');
+  const outputDir = path.join(__dirname, 'output/carousel_2026-10-23/slides');
 
   const h = (type, props, ...ch) => ({
     type, props: { ...props, children: ch.length === 1 ? ch[0] : ch.length === 0 ? undefined : ch }
@@ -49,7 +49,7 @@ async function main() {
   }
 
   function badge(text, color) {
-    const bg = color === 'green' ? C.green : color === 'red' ? C.red : C.cardBg;
+    const bg = color === 'green' ? C.green : color === 'red' ? C.red : color === 'orange' ? '#F59E0B' : C.cardBg;
     return h('div', { style: { display: 'flex', marginBottom: '18px' } },
       h('span', {
         style: {
@@ -146,323 +146,493 @@ async function main() {
   // ========== SLIDE 1 — HOOK ==========
   const slide1 = slideRoot([
     logoCorner(),
-    badge('STEUERTIPP 2026', 'green'),
-    headline('Du verlierst jedes Jahr Steuergeld —', 62),
-    headline('weil du diesen Trick nicht kennst', 62),
-    subline('Was clevere ETF-Anleger vor dem 31. Dezember tun'),
+    badge('DRINGEND', 'red'),
+    headline('In 69 Tagen ist es', 72),
+    headline('zu spät', 72),
+    subline('5 Finanzaktionen, die am 31. Dezember verfallen'),
     visualBlock([
       (() => {
-        // SVG: Two piles of coins with an arrow connecting them
+        // SVG: Countdown-Kalender mit Tagen
         const svg = `<svg width="860" height="380" viewBox="0 0 860 380" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="gr1" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#EF4444" stop-opacity="0.8"/>
-      <stop offset="100%" stop-color="#EF4444" stop-opacity="0.3"/>
+    <linearGradient id="gRed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EF4444" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#EF4444" stop-opacity="0.08"/>
     </linearGradient>
-    <linearGradient id="gr2" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#10B981" stop-opacity="0.9"/>
-      <stop offset="100%" stop-color="#10B981" stop-opacity="0.4"/>
+    <linearGradient id="gGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#10B981" stop-opacity="0.08"/>
     </linearGradient>
   </defs>
-  <!-- Left: Tax burden (red) -->
-  <rect x="60" y="80" width="280" height="220" rx="20" fill="url(#gr1)" stroke="rgba(239,68,68,0.6)" stroke-width="2"/>
-  <rect x="90" y="160" width="220" height="8" rx="4" fill="rgba(255,255,255,0.3)"/>
-  <rect x="90" y="185" width="180" height="8" rx="4" fill="rgba(255,255,255,0.2)"/>
-  <rect x="90" y="210" width="200" height="8" rx="4" fill="rgba(255,255,255,0.2)"/>
-  <circle cx="200" cy="125" r="30" fill="rgba(239,68,68,0.4)" stroke="rgba(239,68,68,0.6)" stroke-width="2"/>
-  <line x1="186" y1="125" x2="214" y2="125" stroke="white" stroke-width="4" stroke-linecap="round"/>
-  <!-- Arrow in center -->
-  <line x1="380" y1="190" x2="490" y2="190" stroke="rgba(255,255,255,0.6)" stroke-width="4" stroke-dasharray="12,8"/>
-  <polygon points="490,180 510,190 490,200" fill="rgba(255,255,255,0.6)"/>
-  <!-- Right: Savings (green) -->
-  <rect x="520" y="80" width="280" height="220" rx="20" fill="url(#gr2)" stroke="rgba(16,185,129,0.6)" stroke-width="2"/>
-  <rect x="550" y="160" width="220" height="8" rx="4" fill="rgba(255,255,255,0.3)"/>
-  <rect x="550" y="185" width="180" height="8" rx="4" fill="rgba(255,255,255,0.2)"/>
-  <rect x="550" y="210" width="200" height="8" rx="4" fill="rgba(255,255,255,0.2)"/>
-  <circle cx="660" cy="125" r="30" fill="rgba(16,185,129,0.4)" stroke="rgba(16,185,129,0.6)" stroke-width="2"/>
-  <line x1="646" y1="125" x2="674" y2="125" stroke="white" stroke-width="4" stroke-linecap="round"/>
-  <line x1="660" y1="111" x2="660" y2="139" stroke="white" stroke-width="4" stroke-linecap="round"/>
+  <!-- Kalender-Hintergrund links (Oktober) -->
+  <rect x="20" y="20" width="380" height="340" rx="24" fill="url(#gRed)" stroke="rgba(239,68,68,0.4)" stroke-width="2"/>
+  <!-- Kalender Kopf Oktober -->
+  <rect x="20" y="20" width="380" height="70" rx="24" fill="rgba(239,68,68,0.35)"/>
+  <!-- Kalender-Zeilen Oktober -->
+  <rect x="45" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="103" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="161" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="219" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="277" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="335" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="45" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="103" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="161" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="219" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="277" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="335" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="45" y="238" width="48" height="48" rx="10" fill="rgba(255,255,255,0.12)"/>
+  <rect x="103" y="238" width="48" height="48" rx="10" fill="rgba(239,68,68,0.35)" stroke="rgba(239,68,68,0.6)" stroke-width="2"/>
+  <rect x="45" y="298" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="103" y="298" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="161" y="298" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="219" y="298" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="277" y="298" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="335" y="298" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <!-- Pfeil zwischen Kalaendern -->
+  <line x1="430" y1="190" x2="468" y2="190" stroke="rgba(255,255,255,0.5)" stroke-width="4" stroke-dasharray="10,6"/>
+  <polygon points="468,180 488,190 468,200" fill="rgba(255,255,255,0.5)"/>
+  <!-- Kalender-Hintergrund rechts (Dezember) -->
+  <rect x="460" y="20" width="380" height="340" rx="24" fill="url(#gGreen)" stroke="rgba(16,185,129,0.4)" stroke-width="2"/>
+  <!-- Kalender Kopf Dezember -->
+  <rect x="460" y="20" width="380" height="70" rx="24" fill="rgba(16,185,129,0.3)"/>
+  <!-- Kalender Zeilen Dezember -->
+  <rect x="485" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="543" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="601" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="659" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="717" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="775" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="485" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="543" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="601" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="659" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="717" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="775" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="485" y="238" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="543" y="238" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="601" y="238" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="659" y="238" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="717" y="238" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="775" y="238" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="485" y="298" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="543" y="298" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="601" y="298" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="659" y="298" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="717" y="298" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <!-- 31. rot markiert -->
+  <rect x="775" y="298" width="48" height="48" rx="10" fill="rgba(239,68,68,0.5)" stroke="rgba(239,68,68,0.9)" stroke-width="2.5"/>
+  <!-- X auf dem 31 -->
+  <line x1="786" y1="309" x2="812" y2="335" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-linecap="round"/>
+  <line x1="812" y1="309" x2="786" y2="335" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-linecap="round"/>
 </svg>`;
         const src = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
-        return h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
+        return h('div', { style: { display: 'flex', flexDirection: 'column', gap: '12px' } },
           h('img', { src, width: 860, height: 380, style: { objectFit: 'contain' } }),
-          h('div', { style: { display: 'flex', justifyContent: 'space-around', paddingLeft: '60px', paddingRight: '60px' } },
-            h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.red, textAlign: 'center' } }, 'Ohne Trick'),
-            h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.green, textAlign: 'center' } }, 'Mit Trick')
+          h('div', { style: { display: 'flex', justifyContent: 'space-around', paddingLeft: '40px', paddingRight: '40px' } },
+            h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.red, textAlign: 'center' } }, 'Oktober 2026'),
+            h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.green, textAlign: 'center' } }, 'Deadline: 31. Dez.')
           )
         );
       })()
     ]),
-    keyLearning('Verlustverrechnung ist legal, einfach — und kaum jemand nutzt sie.'),
+    keyLearning('Wer jetzt handelt, sichert sich bis zu 500 € mehr im Jahr.'),
     igFooter(),
   ]);
 
   // ========== SLIDE 2 — STAT HERO ==========
   const slide2 = slideRoot([
     logoCorner(),
-    badge('ÜBERRASCHENDE ZAHL'),
-    headline('Kaum ein Anleger nutzt diesen Vorteil'),
-    subline('Obwohl er bei jeder deutschen Direktbank kostenlos verfügbar ist'),
+    badge('DIE ZAHLEN'),
+    headline('So viel Geld liegt brach'),
+    subline('Weil Jahresendfristen ignoriert werden'),
     visualBlock([
-      h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px', flex: '1' } },
-        h('span', { style: { fontSize: '160px', fontWeight: 800, color: C.green, letterSpacing: '-6px', lineHeight: '1' } }, '70 %'),
-        h('span', { style: { fontSize: '30px', fontWeight: 600, color: C.textSoft, textAlign: 'center', lineHeight: '1.4', maxWidth: '720px' } },
-          'der deutschen ETF-Anleger nutzen ihren Verlustverrechnungstopf nicht aktiv vor Jahresende'),
-        h('div', { style: { display: 'flex', marginTop: '20px', gap: '40px' } },
-          h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', backgroundColor: C.cardBg, borderRadius: '16px', padding: '22px 36px', gap: '6px' } },
-            h('span', { style: { fontSize: '40px', fontWeight: 800, color: C.text } }, '263 €'),
-            h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, textAlign: 'center' } }, 'Steuerersparnis pro 1.000 €')
+      h('div', {
+        style: {
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          justifyContent: 'center', gap: '14px', flex: '1'
+        }
+      },
+        h('span', {
+          style: {
+            fontSize: '148px', fontWeight: 800, color: C.green,
+            letterSpacing: '-6px', lineHeight: '1'
+          }
+        }, '1.000 €'),
+        h('span', {
+          style: {
+            fontSize: '30px', fontWeight: 600, color: C.textSoft,
+            textAlign: 'center', lineHeight: '1.4', maxWidth: '760px'
+          }
+        }, 'Sparerpauschbetrag pro Jahr — steuerfrei für Kapitalerträge'),
+        h('div', {
+          style: { display: 'flex', marginTop: '16px', gap: '24px' }
+        },
+          h('div', {
+            style: {
+              display: 'flex', flexDirection: 'column', alignItems: 'center',
+              backgroundColor: C.cardBg, borderRadius: '16px',
+              padding: '22px 32px', gap: '6px'
+            }
+          },
+            h('span', { style: { fontSize: '38px', fontWeight: 800, color: C.text } }, '263 €'),
+            h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, textAlign: 'center' } }, 'Steuer gespart\nbei 1.000 € Erträgen')
           ),
-          h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', backgroundColor: C.cardBg, borderRadius: '16px', padding: '22px 36px', gap: '6px' } },
-            h('span', { style: { fontSize: '40px', fontWeight: 800, color: C.text } }, 'Okt.'),
-            h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, textAlign: 'center' } }, 'Bester Monat dafür')
+          h('div', {
+            style: {
+              display: 'flex', flexDirection: 'column', alignItems: 'center',
+              backgroundColor: C.cardBg, borderRadius: '16px',
+              padding: '22px 32px', gap: '6px'
+            }
+          },
+            h('span', { style: { fontSize: '38px', fontWeight: 800, color: C.red } }, '40 %'),
+            h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, textAlign: 'center' } }, 'nutzen ihn\nnicht vollständig')
+          ),
+          h('div', {
+            style: {
+              display: 'flex', flexDirection: 'column', alignItems: 'center',
+              backgroundColor: C.cardBg, borderRadius: '16px',
+              padding: '22px 32px', gap: '6px'
+            }
+          },
+            h('span', { style: { fontSize: '38px', fontWeight: 800, color: C.text } }, '31.12.'),
+            h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, textAlign: 'center' } }, 'Frist —\nkein Aufschub')
           )
         )
       )
     ]),
-    keyLearning('26,375 % Abgeltungsteuer sparen — durch Verlustverrechnung vor dem 31.12.'),
+    keyLearning('2.000 € für Ehepaare — wer jetzt nichts tut, verschenkt echtes Geld.'),
     igFooter(),
   ]);
 
   // ========== SLIDE 3 — ERWARTUNG VS. REALITÄT ==========
   const slide3 = slideRoot([
     logoCorner(),
-    badge('DAS PROBLEM'),
-    headline('Was die meisten tun — und was möglich wäre', 54),
+    badge('DER IRRTUM'),
+    headline('Was die meisten denken — und was wirklich gilt', 52),
     visualBlock([
-      h('div', { style: { display: 'flex', gap: '14px', flex: '1' } },
-        // Left: Was die meisten tun
+      h('div', { style: { display: 'flex', gap: '16px', flex: '1' } },
+        // Links: Erwartung
         h('div', {
           style: {
             display: 'flex', flex: '1', flexDirection: 'column',
-            backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '20px',
-            padding: '28px', gap: '14px',
+            backgroundColor: 'rgba(239,68,68,0.1)', borderRadius: '20px',
+            padding: '30px', gap: '16px',
             border: '1px solid rgba(239,68,68,0.3)'
           }
         },
-          h('span', { style: { fontSize: '21px', fontWeight: 700, letterSpacing: '2px', color: C.red } }, 'WAS 70 % TUN'),
+          h('span', { style: { fontSize: '21px', fontWeight: 700, letterSpacing: '2px', color: C.red } }, 'WAS VIELE DENKEN'),
           h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(239,68,68,0.4)', borderRadius: '2px' } }),
-          h('span', { style: { fontSize: '28px', fontWeight: 600, color: C.textSoft, lineHeight: '1.45' } },
-            'Depot laufen lassen'),
+          h('span', { style: { fontSize: '29px', fontWeight: 600, color: C.textSoft, lineHeight: '1.45' } },
+            '"Kümmere ich mich Anfang Januar"'),
+          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, lineHeight: '1.45', marginTop: '8px' } },
+            '"Das Finanzamt erinnert mich schon"'),
           h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, lineHeight: '1.45' } },
-            'Verluste im Depot ignorieren'),
+            '"Der Steuervorteil läuft nicht weg"'),
           h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, lineHeight: '1.45' } },
-            'Auf Gewinne volle Steuer zahlen'),
-          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, lineHeight: '1.45' } },
-            'Verlusttopf verfällt ungenutzt')
+            '"Das ist zu kompliziert für mich"'),
         ),
-        // Right: Was möglich wäre
+        // Rechts: Realität
         h('div', {
           style: {
             display: 'flex', flex: '1', flexDirection: 'column',
-            backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '20px',
-            padding: '28px', gap: '14px',
+            backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '20px',
+            padding: '30px', gap: '16px',
             border: '1px solid rgba(16,185,129,0.3)'
           }
         },
-          h('span', { style: { fontSize: '21px', fontWeight: 700, letterSpacing: '2px', color: C.green } }, 'WAS MÖGLICH WÄRE'),
+          h('span', { style: { fontSize: '21px', fontWeight: 700, letterSpacing: '2px', color: C.green } }, 'DIE REALITÄT'),
           h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(16,185,129,0.4)', borderRadius: '2px' } }),
-          h('span', { style: { fontSize: '28px', fontWeight: 600, color: C.textSoft, lineHeight: '1.45' } },
-            'Verlusttopf aktiv prüfen'),
+          h('span', { style: { fontSize: '29px', fontWeight: 600, color: C.textSoft, lineHeight: '1.45' } },
+            'Fristen laufen am 31.12. ab — ohne Ausnahme'),
+          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, lineHeight: '1.45', marginTop: '8px' } },
+            'Niemand informiert dich'),
           h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, lineHeight: '1.45' } },
-            'Verluste strategisch realisieren'),
+            'Jahresverluste verfallen, Freibeträge auch'),
           h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, lineHeight: '1.45' } },
-            'Steuerlast deutlich senken'),
-          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, lineHeight: '1.45' } },
-            'Bis zu 263 € pro 1.000 € sparen')
+            'Jede Aktion dauert unter 15 Minuten'),
         )
       )
     ]),
-    keyLearning('Der Verlustverrechnungstopf läuft automatisch — aber du musst aktiv handeln.'),
+    keyLearning('5 einfache Schritte — jetzt erklären wir dir alle im Detail.', C.green),
     igFooter(),
   ]);
 
-  // ========== SLIDE 4 — DIE METHODE ==========
+  // ========== SLIDE 4 — AKTIONEN 1 & 2 ==========
   const slide4 = slideRoot([
     logoCorner(),
-    badge('DIE METHODE'),
-    headline('Verlustverrechnung in 4 Schritten', 58),
-    subline('So funktioniert es bei jeder deutschen Direktbank'),
+    badge('SCHRITT 1 & 2'),
+    headline('Steuervorteile sichern — heute noch', 56),
+    subline('Dauer je Schritt: ca. 5 Minuten'),
     visualBlock([
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px' } },
-        ...[
-          { num: '01', title: 'Verlusttopf prüfen', desc: 'Online-Banking öffnen, Depot-Steuerübersicht aufrufen' },
-          { num: '02', title: 'Verlustpositionen finden', desc: 'Welche ETF oder Aktien haben aktuell Buchverluste?' },
-          { num: '03', title: 'Verluste realisieren', desc: 'Position mit Buchverlust vor dem 31. Dezember verkaufen' },
-          { num: '04', title: 'Bank verrechnet automatisch', desc: 'Gewinnsteuern werden sofort mit deinen Verlusten saldiert' },
-        ].map((step, i) =>
-          h('div', {
-            style: {
-              display: 'flex', flexDirection: 'row', alignItems: 'center',
-              backgroundColor: C.cardBg, borderRadius: '16px',
-              padding: '20px 24px', gap: '20px'
-            }
-          },
-            h('span', {
-              style: {
-                fontSize: '38px', fontWeight: 800,
-                color: i === 3 ? C.green : C.text,
-                minWidth: '58px'
-              }
-            }, step.num),
-            h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px' } },
-              h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.text } }, step.title),
-              h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted, lineHeight: '1.3' } }, step.desc)
-            )
-          )
-        )
-      )
-    ]),
-    keyLearning('Die Bank führt deinen Verlustverrechnungstopf automatisch — du musst nur schauen.'),
-    igFooter(),
-  ]);
-
-  // ========== SLIDE 5 — RECHENBEISPIEL ==========
-  const slide5 = slideRoot([
-    logoCorner(),
-    badge('RECHENBEISPIEL'),
-    headline('So sieht es konkret aus', 60),
-    subline('Ein ETF-Anleger mit gemischtem Depot im Oktober 2026'),
-    visualBlock([
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '16px' } },
-        // ETF Positions
-        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
-          h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '14px', padding: '18px 24px', border: '1px solid rgba(16,185,129,0.3)' } },
-            h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft } }, 'MSCI World ETF — Gewinn'),
-            h('span', { style: { fontSize: '28px', fontWeight: 800, color: C.green } }, '+1.200 €')
-          ),
-          h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '14px', padding: '18px 24px', border: '1px solid rgba(239,68,68,0.3)' } },
-            h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft } }, 'Tech-ETF — Buchverlust'),
-            h('span', { style: { fontSize: '28px', fontWeight: 800, color: C.red } }, '-800 €')
-          ),
-        ),
-        // Arrow
-        h('div', { style: { display: 'flex', justifyContent: 'center' } },
-          h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center' } },
-            h('div', { style: { display: 'flex', width: '4px', height: '24px', backgroundColor: C.border } }),
-            h('div', { style: { display: 'flex', width: '0px', height: '0px', borderLeft: '10px solid transparent', borderRight: '10px solid transparent', borderTop: `12px solid ${C.border}` } })
-          )
-        ),
-        // Result comparison
-        h('div', { style: { display: 'flex', gap: '12px' } },
-          h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', alignItems: 'center', backgroundColor: C.cardBg, borderRadius: '14px', padding: '20px', gap: '8px' } },
-            h('span', { style: { fontSize: '20px', fontWeight: 600, color: C.textMuted, letterSpacing: '1px' } }, 'OHNE TRICK'),
-            h('span', { style: { fontSize: '36px', fontWeight: 800, color: C.red } }, '316 €'),
-            h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted } }, 'Steuern auf 1.200 €')
-          ),
-          h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', alignItems: 'center', backgroundColor: 'rgba(16,185,129,0.15)', borderRadius: '14px', padding: '20px', gap: '8px', border: '2px solid rgba(16,185,129,0.4)' } },
-            h('span', { style: { fontSize: '20px', fontWeight: 600, color: C.green, letterSpacing: '1px' } }, 'MIT TRICK'),
-            h('span', { style: { fontSize: '36px', fontWeight: 800, color: C.green } }, '105 €'),
-            h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted } }, 'Steuern nur auf 400 €')
-          )
-        ),
-        h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '12px', padding: '14px 24px' } },
-          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.green } }, 'Ersparnis: 211 € — in 30 Minuten')
-        )
-      )
-    ]),
-    keyLearning('Reale Zahlen, vereinfacht dargestellt. Steuerberechnung ca. 26,375 % Abgeltungsteuer.'),
-    igFooter(),
-  ]);
-
-  // ========== SLIDE 6 — WICHTIGE REGELN ==========
-  const slide6 = slideRoot([
-    logoCorner(),
-    badge('WICHTIG ZU WISSEN'),
-    headline('Diese Regeln musst du kennen', 60),
-    subline('Verlustverrechnung hat klare gesetzliche Grenzen'),
-    visualBlock([
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '16px' } },
-        ...[
-          {
-            icon: '§',
-            title: 'Aktien-Verluste gelten nur für Aktien-Gewinne',
-            desc: 'Verluste aus Aktienverkäufen dürfen nur mit Aktiengewinnen verrechnet werden, nicht mit ETF-Gewinnen.',
-            color: C.red,
-          },
-          {
-            icon: '31',
-            title: 'Frist: 31. Dezember 2026',
-            desc: 'Verluste müssen im selben Steuerjahr realisiert werden. Nicht genutzte Verluste werden ins nächste Jahr übertragen.',
-            color: '#F59E0B',
-          },
-          {
-            icon: '?',
-            title: 'Kauf und Verkauf clever kombinieren',
-            desc: 'Du kannst die verkaufte Position sofort wieder kaufen — wenn du das Wertpapier weiter halten willst.',
-            color: C.green,
-          },
-          {
-            icon: 'i',
-            title: 'Keine Steuerberatung',
-            desc: 'Bei größeren Depots: Sprich mit einem Steuerberater oder Finanzberater.',
-            color: C.textMuted,
-          },
-        ].map(rule =>
-          h('div', {
-            style: {
-              display: 'flex', flexDirection: 'row', alignItems: 'flex-start',
-              backgroundColor: C.cardBg, borderRadius: '14px',
-              padding: '18px 22px', gap: '16px'
-            }
-          },
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '16px', flex: '1', justifyContent: 'center' } },
+        // Aktion 1
+        h('div', {
+          style: {
+            display: 'flex', flexDirection: 'column',
+            backgroundColor: C.cardBg, borderRadius: '20px', padding: '28px', gap: '10px',
+            border: '1px solid rgba(255,255,255,0.15)'
+          }
+        },
+          h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
             h('div', {
               style: {
-                display: 'flex', width: '44px', height: '44px', borderRadius: '10px',
-                backgroundColor: `${rule.color}20`,
-                border: `1px solid ${rule.color}60`,
-                alignItems: 'center', justifyContent: 'center', flexShrink: 0
+                display: 'flex', width: '52px', height: '52px', borderRadius: '14px',
+                backgroundColor: C.green, alignItems: 'center', justifyContent: 'center', flexShrink: 0
               }
             },
-              h('span', { style: { fontSize: '22px', fontWeight: 800, color: rule.color } }, rule.icon)
+              h('span', { style: { fontSize: '28px', fontWeight: 800, color: '#FFFFFF' } }, '01')
             ),
-            h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px' } },
-              h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.text, lineHeight: '1.3' } }, rule.title),
-              h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4' } }, rule.desc)
-            )
+            h('span', { style: { fontSize: '30px', fontWeight: 700, color: C.text } }, 'Freistellungsauftrag prüfen'),
+          ),
+          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textSoft, lineHeight: '1.45', paddingLeft: '68px' } },
+            'Stelle sicher, dass du bei deiner Bank einen Freistellungsauftrag über 1.000 € gestellt hast. Sonst zahlt die Bank automatisch 26,375 % Steuern auf deine Erträge.'),
+          h('div', {
+            style: {
+              display: 'flex', alignItems: 'center', gap: '10px', paddingLeft: '68px', marginTop: '4px',
+              backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '12px', padding: '10px 16px'
+            }
+          },
+            h('div', { style: { width: '10px', height: '10px', borderRadius: '5px', backgroundColor: C.green, flexShrink: 0 } }),
+            h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.green } }, 'Spart bis zu 263 € pro 1.000 € Erträge')
+          )
+        ),
+        // Aktion 2
+        h('div', {
+          style: {
+            display: 'flex', flexDirection: 'column',
+            backgroundColor: C.cardBg, borderRadius: '20px', padding: '28px', gap: '10px',
+            border: '1px solid rgba(255,255,255,0.15)'
+          }
+        },
+          h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
+            h('div', {
+              style: {
+                display: 'flex', width: '52px', height: '52px', borderRadius: '14px',
+                backgroundColor: C.green, alignItems: 'center', justifyContent: 'center', flexShrink: 0
+              }
+            },
+              h('span', { style: { fontSize: '28px', fontWeight: 800, color: '#FFFFFF' } }, '02')
+            ),
+            h('span', { style: { fontSize: '30px', fontWeight: 700, color: C.text } }, 'Verluste gezielt verrechnen'),
+          ),
+          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textSoft, lineHeight: '1.45', paddingLeft: '68px' } },
+            'Wenn du Positionen mit Buchverlusten im Depot hast: Verkaufe und kaufe sie sofort zurück. So realisierst du steuerlich verwertbare Verluste.'),
+          h('div', {
+            style: {
+              display: 'flex', alignItems: 'center', gap: '10px', paddingLeft: '68px', marginTop: '4px',
+              backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '12px', padding: '10px 16px'
+            }
+          },
+            h('div', { style: { width: '10px', height: '10px', borderRadius: '5px', backgroundColor: C.green, flexShrink: 0 } }),
+            h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.green } }, 'Reduziert deine Steuerlast auf Gewinne')
           )
         )
       )
     ]),
-    keyLearning('ETF-Verluste aus thesaurierenden ETFs können gegen alle Kapitalerträge verrechnet werden.', C.red),
+    keyLearning('Beide Maßnahmen sind kostenlos und dauern insgesamt unter 15 Minuten.'),
     igFooter(),
   ]);
 
-  // ========== SLIDE 7 — KEY TAKEAWAYS ==========
+  // ========== SLIDE 5 — AKTIONEN 3 & 4 ==========
+  const slide5 = slideRoot([
+    logoCorner(),
+    badge('SCHRITT 3 & 4'),
+    headline('Mehr aus deinem Geld holen', 58),
+    subline('Zwei Maßnahmen, die langfristig wirken'),
+    visualBlock([
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '16px', flex: '1', justifyContent: 'center' } },
+        // Aktion 3
+        h('div', {
+          style: {
+            display: 'flex', flexDirection: 'column',
+            backgroundColor: C.cardBg, borderRadius: '20px', padding: '28px', gap: '10px',
+            border: '1px solid rgba(255,255,255,0.15)'
+          }
+        },
+          h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
+            h('div', {
+              style: {
+                display: 'flex', width: '52px', height: '52px', borderRadius: '14px',
+                backgroundColor: '#F59E0B', alignItems: 'center', justifyContent: 'center', flexShrink: 0
+              }
+            },
+              h('span', { style: { fontSize: '28px', fontWeight: 800, color: '#FFFFFF' } }, '03')
+            ),
+            h('span', { style: { fontSize: '30px', fontWeight: 700, color: C.text } }, 'bAV-Beitrag für 2026 erhöhen'),
+          ),
+          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textSoft, lineHeight: '1.45', paddingLeft: '68px' } },
+            'Der Jahreswechsel ist der ideale Moment, um deine betriebliche Altersvorsorge anzupassen. Beiträge bis 7.728 € jährlich sind steuer- und sozialabgabenfrei.'),
+          h('div', {
+            style: {
+              display: 'flex', alignItems: 'center', gap: '10px', marginTop: '4px',
+              backgroundColor: 'rgba(245,158,11,0.12)', borderRadius: '12px', padding: '10px 16px'
+            }
+          },
+            h('div', { style: { width: '10px', height: '10px', borderRadius: '5px', backgroundColor: '#F59E0B', flexShrink: 0 } }),
+            h('span', { style: { fontSize: '24px', fontWeight: 600, color: '#F59E0B' } }, 'Plus 15 % Pflicht-Zuschuss vom Arbeitgeber')
+          )
+        ),
+        // Aktion 4
+        h('div', {
+          style: {
+            display: 'flex', flexDirection: 'column',
+            backgroundColor: C.cardBg, borderRadius: '20px', padding: '28px', gap: '10px',
+            border: '1px solid rgba(255,255,255,0.15)'
+          }
+        },
+          h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
+            h('div', {
+              style: {
+                display: 'flex', width: '52px', height: '52px', borderRadius: '14px',
+                backgroundColor: '#F59E0B', alignItems: 'center', justifyContent: 'center', flexShrink: 0
+              }
+            },
+              h('span', { style: { fontSize: '28px', fontWeight: 800, color: '#FFFFFF' } }, '04')
+            ),
+            h('span', { style: { fontSize: '30px', fontWeight: 700, color: C.text } }, 'Depot-Rebalancing durchführen'),
+          ),
+          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textSoft, lineHeight: '1.45', paddingLeft: '68px' } },
+            'Prüfe, ob deine Portfoliogewichtung noch deiner Strategie entspricht. Nach einem starken Börsenjahr driftet ein 70/30-Depot oft auf 85/15.'),
+          h('div', {
+            style: {
+              display: 'flex', alignItems: 'center', gap: '10px', marginTop: '4px',
+              backgroundColor: 'rgba(245,158,11,0.12)', borderRadius: '12px', padding: '10px 16px'
+            }
+          },
+            h('div', { style: { width: '10px', height: '10px', borderRadius: '5px', backgroundColor: '#F59E0B', flexShrink: 0 } }),
+            h('span', { style: { fontSize: '24px', fontWeight: 600, color: '#F59E0B' } }, 'Nachkaufen statt Umschichten — kein Steuerereignis')
+          )
+        )
+      )
+    ]),
+    keyLearning('Nachkaufen anstatt Umschichten spart Abgeltungssteuer beim Rebalancing.'),
+    igFooter(),
+  ]);
+
+  // ========== SLIDE 6 — AKTION 5 ==========
+  const slide6 = slideRoot([
+    logoCorner(),
+    badge('SCHRITT 5'),
+    headline('Die versteckte Steuer im Januar', 58),
+    subline('Was ETF-Anleger jetzt vorbereiten müssen'),
+    visualBlock([
+      h('div', {
+        style: {
+          display: 'flex', flexDirection: 'column', gap: '20px',
+          flex: '1', justifyContent: 'center'
+        }
+      },
+        // Grafik: Ablauf Vorabpauschale
+        (() => {
+          const svg = `<svg width="860" height="200" viewBox="0 0 860 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Schritt 1: Depot hat thesaurierenden ETF -->
+  <rect x="20" y="50" width="200" height="100" rx="16" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+  <rect x="40" y="75" width="160" height="10" rx="5" fill="rgba(255,255,255,0.35)"/>
+  <rect x="40" y="95" width="130" height="8" rx="4" fill="rgba(255,255,255,0.2)"/>
+  <rect x="40" y="113" width="145" height="8" rx="4" fill="rgba(255,255,255,0.2)"/>
+  <!-- Pfeil 1 -->
+  <line x1="240" y1="100" x2="284" y2="100" stroke="rgba(255,255,255,0.4)" stroke-width="3" stroke-dasharray="8,5"/>
+  <polygon points="284,92 300,100 284,108" fill="rgba(255,255,255,0.4)"/>
+  <!-- Schritt 2: Kein Ausschüttung = Vorabpauschale -->
+  <rect x="310" y="50" width="230" height="100" rx="16" fill="rgba(239,68,68,0.15)" stroke="rgba(239,68,68,0.4)" stroke-width="1.5"/>
+  <rect x="330" y="75" width="190" height="10" rx="5" fill="rgba(239,68,68,0.4)"/>
+  <rect x="330" y="95" width="155" height="8" rx="4" fill="rgba(239,68,68,0.2)"/>
+  <rect x="330" y="113" width="170" height="8" rx="4" fill="rgba(239,68,68,0.2)"/>
+  <!-- Pfeil 2 -->
+  <line x1="560" y1="100" x2="604" y2="100" stroke="rgba(255,255,255,0.4)" stroke-width="3" stroke-dasharray="8,5"/>
+  <polygon points="604,92 620,100 604,108" fill="rgba(255,255,255,0.4)"/>
+  <!-- Schritt 3: Januar-Abzug -->
+  <rect x="630" y="50" width="210" height="100" rx="16" fill="rgba(16,185,129,0.15)" stroke="rgba(16,185,129,0.4)" stroke-width="1.5"/>
+  <rect x="650" y="75" width="170" height="10" rx="5" fill="rgba(16,185,129,0.4)"/>
+  <rect x="650" y="95" width="140" height="8" rx="4" fill="rgba(16,185,129,0.2)"/>
+  <rect x="650" y="113" width="155" height="8" rx="4" fill="rgba(16,185,129,0.2)"/>
+</svg>`;
+          const src = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
+          return h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px' } },
+            h('img', { src, width: 860, height: 200, style: { objectFit: 'contain' } }),
+            h('div', { style: { display: 'flex', gap: '20px', justifyContent: 'space-between' } },
+              h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.textMuted, textAlign: 'center', flex: '1' } }, 'Thesaurierender ETF'),
+              h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.red, textAlign: 'center', flex: '1' } }, 'Vorabpauschale 2026'),
+              h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.green, textAlign: 'center', flex: '1' } }, 'Januar-Abzug vermeiden')
+            )
+          );
+        })(),
+        // Erklärungsbox
+        h('div', {
+          style: {
+            display: 'flex', flexDirection: 'column',
+            backgroundColor: C.cardBg, borderRadius: '20px', padding: '28px', gap: '14px',
+            border: '1px solid rgba(255,255,255,0.15)'
+          }
+        },
+          h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
+            h('div', {
+              style: {
+                display: 'flex', width: '52px', height: '52px', borderRadius: '14px',
+                backgroundColor: C.red, alignItems: 'center', justifyContent: 'center', flexShrink: 0
+              }
+            },
+              h('span', { style: { fontSize: '28px', fontWeight: 800, color: '#FFFFFF' } }, '05')
+            ),
+            h('span', { style: { fontSize: '30px', fontWeight: 700, color: C.text } }, 'Vorabpauschale vorbereiten'),
+          ),
+          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textSoft, lineHeight: '1.45', paddingLeft: '68px' } },
+            'Bei thesaurierenden ETFs bucht das Finanzamt im Januar eine fiktive Mindestrendite ab (Basiszins 2026: 3,20 %). Stelle sicher, dass dein Freistellungsauftrag ausreicht und du genug Liquidität im Depot hast.'),
+          h('div', {
+            style: {
+              display: 'flex', alignItems: 'center', gap: '10px',
+              backgroundColor: 'rgba(239,68,68,0.1)', borderRadius: '12px', padding: '10px 16px'
+            }
+          },
+            h('div', { style: { width: '10px', height: '10px', borderRadius: '5px', backgroundColor: C.red, flexShrink: 0 } }),
+            h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.red } }, 'Bei 10.000 € Depot: ca. 59 € Abzug im Januar 2027')
+          )
+        )
+      )
+    ]),
+    keyLearning('Jetzt handeln — der Abzug kommt automatisch im Januar ohne Vorwarnung.', C.red),
+    igFooter(),
+  ]);
+
+  // ========== SLIDE 7 — CHECKLISTE ==========
   const slide7 = slideRoot([
     logoCorner(),
-    badge('DEINE CHECKLISTE'),
-    headline('4 Schritte bis zum 31. Dezember', 60),
+    badge('DEINE CHECKLISTE', 'green'),
+    headline('5 Schritte vor dem 31. Dezember', 58),
+    subline('Gesamtzeit: unter 1 Stunde'),
     visualBlock([
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '16px' } },
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px', flex: '1', justifyContent: 'center' } },
         ...[
-          { num: '01', text: 'Depot-Steuerübersicht bei deiner Bank öffnen', pct: 25 },
-          { num: '02', text: 'Positionen mit Buchverlust identifizieren', pct: 50 },
-          { num: '03', text: 'Verluste vor dem 31.12. realisieren (verkaufen)', pct: 75 },
-          { num: '04', text: 'Steuervorteil gesichert — Bank verrechnet automatisch', pct: 100 },
+          { num: '01', text: 'Freistellungsauftrag auf 1.000 € prüfen und stellen', pct: 20 },
+          { num: '02', text: 'Buchverluste realisieren und sofort zurückkaufen', pct: 40 },
+          { num: '03', text: 'bAV-Beitrag zum Jahresende optimieren', pct: 60 },
+          { num: '04', text: 'Portfolio auf Zielgewichtung prüfen und rebalancieren', pct: 80 },
+          { num: '05', text: 'Liquidität für Vorabpauschalen-Abzug bereitstellen', pct: 100 },
         ].map(l =>
           h('div', {
             style: {
-              display: 'flex', flexDirection: 'column', gap: '10px',
-              padding: '22px 26px', backgroundColor: C.cardBg, borderRadius: '18px'
+              display: 'flex', flexDirection: 'column', gap: '8px',
+              padding: '18px 24px',
+              backgroundColor: C.cardBg, borderRadius: '16px'
             }
           },
-            h('div', { style: { display: 'flex', alignItems: 'center', gap: '18px' } },
+            h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
               h('span', {
                 style: {
-                  fontSize: '38px', fontWeight: 800,
-                  color: l.pct === 100 ? C.green : C.text,
-                  minWidth: '58px'
+                  fontSize: '36px', fontWeight: 800,
+                  color: l.pct === 100 ? C.green : C.text, minWidth: '56px'
                 }
               }, l.num),
-              h('span', { style: { fontSize: '27px', fontWeight: 600, color: C.text, lineHeight: '1.3' } }, l.text)
+              h('span', {
+                style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.3' }
+              }, l.text)
             ),
-            h('div', { style: { display: 'flex', height: '6px', backgroundColor: C.border, borderRadius: '3px', overflow: 'hidden' } },
+            h('div', { style: { display: 'flex', height: '5px', backgroundColor: C.border, borderRadius: '3px', overflow: 'hidden' } },
               h('div', {
                 style: {
-                  display: 'flex', width: `${l.pct}%`, height: '6px',
-                  backgroundColor: l.pct === 100 ? C.green : C.text,
-                  borderRadius: '3px'
+                  display: 'flex', width: `${l.pct}%`, height: '5px',
+                  backgroundColor: l.pct === 100 ? C.green : C.text, borderRadius: '3px'
                 }
               })
             )
@@ -470,46 +640,78 @@ async function main() {
         )
       )
     ]),
-    keyLearning('30 Minuten Aufwand, einmal im Jahr — mit echtem Geld-zurück-Effekt.', C.green),
+    keyLearning('Alle 5 Schritte sind kostenlos. Alles, was du brauchst: 1 Stunde Zeit.', C.green),
     igFooter(),
   ]);
 
   // ========== SLIDE 8 — CTA ==========
   const slide8 = slideRoot([
     logoCorner(),
-    badge('JETZT HANDELN'),
-    headline('Hast du deinen Verlusttopf schon geprüft?', 56),
+    badge('SPEICHERN'),
+    headline('Dein Geld. Dein Vorteil.', 64),
+    subline('Teile das mit jemandem, dem sein Geld wichtig ist'),
     visualBlock([
-      h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '28px', flex: '1' } },
-        // Big logo centered
-        h('img', {
-          src: logoB64,
-          width: 160, height: 160,
-          style: { borderRadius: '24px', objectFit: 'cover' }
-        }),
-        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', maxWidth: '860px' } },
-          h('span', { style: { fontSize: '32px', fontWeight: 600, color: C.textSoft, textAlign: 'center', lineHeight: '1.45' } },
-            'Schreib in die Kommentare, welche Depot-Summe bei dir möglicherweise steuerlich optimierbar wäre.'),
-          h('div', { style: { display: 'flex', gap: '14px', flexWrap: 'wrap', justifyContent: 'center' } },
-            h('div', { style: { display: 'flex', backgroundColor: C.cardBg, borderRadius: '12px', padding: '14px 22px' } },
-              h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.green } }, 'Speichern nicht vergessen')
-            ),
-            h('div', { style: { display: 'flex', backgroundColor: C.cardBg, borderRadius: '12px', padding: '14px 22px' } },
-              h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text } }, 'Teile es mit Freunden')
-            )
-          )
+      h('div', {
+        style: {
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          justifyContent: 'center', flex: '1', gap: '28px'
+        }
+      },
+        h('div', {
+          style: {
+            display: 'flex', flexDirection: 'column', alignItems: 'center',
+            backgroundColor: C.cardBg, borderRadius: '24px', padding: '40px',
+            gap: '16px', border: '1px solid rgba(255,255,255,0.15)'
+          }
+        },
+          h('span', {
+            style: {
+              fontSize: '36px', fontWeight: 700, color: C.text,
+              textAlign: 'center', lineHeight: '1.4'
+            }
+          }, 'Welchen Schritt hast du in\ndiesem Jahr noch nicht erledigt?'),
+          h('span', {
+            style: {
+              fontSize: '28px', fontWeight: 500, color: C.textMuted,
+              textAlign: 'center', lineHeight: '1.5'
+            }
+          }, 'Schreib es in die Kommentare — wir helfen dir dabei.'),
         ),
-        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' } },
-          h('span', { style: { fontSize: '30px', fontWeight: 700, color: C.text } }, '@benarofinanzen'),
-          h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted } }, 'Finanzen einfach erklärt')
+        h('div', {
+          style: {
+            display: 'flex', flexDirection: 'column', gap: '16px',
+            alignItems: 'center', width: '100%'
+          }
+        },
+          h('div', {
+            style: {
+              display: 'flex', alignItems: 'center', gap: '12px',
+              backgroundColor: 'rgba(16,185,129,0.15)', borderRadius: '16px',
+              padding: '18px 32px', border: '1px solid rgba(16,185,129,0.3)'
+            }
+          },
+            h('span', { style: { fontSize: '28px', fontWeight: 600, color: C.green } }, 'Speichern nicht vergessen'),
+          ),
+          h('span', {
+            style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, textAlign: 'center' }
+          }, 'Folge @benarofinanzen für wöchentliche Finanztipps'),
         )
       )
     ]),
-    keyLearning('Frist läuft ab: 31. Dezember 2026. Jetzt ist der richtige Zeitpunkt.', C.green),
-    igFooter(),
+    h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '16px' } },
+      h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted } }, '@benarofinanzen'),
+      h('div', {
+        style: {
+          display: 'flex', backgroundColor: C.green, borderRadius: '12px',
+          padding: '10px 22px'
+        }
+      },
+        h('span', { style: { fontSize: '22px', fontWeight: 700, color: '#FFFFFF' } }, 'Benaro Finanzen')
+      )
+    ),
   ]);
 
-  // ========== GENERATE ALL SLIDES ==========
+  // ========== GENERIEREN ==========
   const slides = [slide1, slide2, slide3, slide4, slide5, slide6, slide7, slide8];
 
   for (let i = 0; i < slides.length; i++) {
@@ -518,9 +720,9 @@ async function main() {
     const pngData = resvg.render();
     const pngPath = path.join(outputDir, `slide-${String(i + 1).padStart(2, '0')}.png`);
     fs.writeFileSync(pngPath, pngData.asPng());
-    console.log(`Slide ${i + 1}/${slides.length} generiert: ${pngPath}`);
+    console.log(`Slide ${i + 1}/${slides.length} generiert: ${path.basename(pngPath)}`);
   }
-  console.log('Alle Slides erfolgreich generiert!');
+  console.log('Alle Slides erfolgreich erstellt!');
 }
 
 main().catch(e => { console.error(e); process.exit(1); });
