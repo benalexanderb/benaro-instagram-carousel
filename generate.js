@@ -1,5 +1,5 @@
-// generate.js — Carousel: Jahresend-Finanzcheck 2026
-// Thema: Diese 5 Aktionen verfallen am 31. Dezember
+// generate.js — Carousel: Gold vs. Bitcoin 2026
+// Thema: Welcher Inflationsschutz lohnt sich wirklich?
 const fs = require('fs');
 const path = require('path');
 
@@ -14,14 +14,16 @@ async function main() {
   ]);
 
   const C = {
-    bg: '#001F61',
+    bg: '#001F60',
     text: '#FFFFFF',
     textSoft: '#E5E7EB',
     textMuted: '#9CA3AF',
-    cardBg: 'rgba(255,255,255,0.1)',
-    border: 'rgba(255,255,255,0.2)',
+    cardBg: 'rgba(255,255,255,0.10)',
+    border: 'rgba(255,255,255,0.18)',
     green: '#10B981',
     red: '#EF4444',
+    gold: '#F59E0B',
+    orange: '#F97316',
   };
 
   const W = 1080, H = 1350;
@@ -29,7 +31,9 @@ async function main() {
   const logoPath = path.join(__dirname, 'skills/instagram-carousel-skill/templates/benaro-logo.jpg');
   const logoB64 = 'data:image/jpeg;base64,' + fs.readFileSync(logoPath).toString('base64');
 
-  const outputDir = path.join(__dirname, 'output/carousel_2026-10-23/slides');
+  const TODAY = '2026-10-28';
+  const outputDir = path.join(__dirname, `output/carousel_${TODAY}/slides`);
+  fs.mkdirSync(outputDir, { recursive: true });
 
   const h = (type, props, ...ch) => ({
     type, props: { ...props, children: ch.length === 1 ? ch[0] : ch.length === 0 ? undefined : ch }
@@ -37,24 +41,40 @@ async function main() {
 
   // ========== REUSABLE COMPONENTS ==========
 
-  function slideRoot(children) {
+  function slideRoot(...children) {
     return h('div', {
       style: {
         display: 'flex', flexDirection: 'column',
         width: W, height: H, padding: '70px',
         backgroundColor: C.bg, fontFamily: 'Outfit',
-        position: 'relative',
       }
     }, ...children);
   }
 
+  function logo() {
+    return h('div', {
+      style: { display: 'flex', position: 'absolute', top: '50px', right: '50px' }
+    },
+      h('img', {
+        src: logoB64,
+        width: 110, height: 110,
+        style: { borderRadius: '14px', objectFit: 'cover' }
+      })
+    );
+  }
+
   function badge(text, color) {
-    const bg = color === 'green' ? C.green : color === 'red' ? C.red : color === 'orange' ? '#F59E0B' : C.cardBg;
-    return h('div', { style: { display: 'flex', marginBottom: '18px' } },
+    let bg;
+    if (color === 'green') bg = C.green;
+    else if (color === 'red') bg = C.red;
+    else if (color === 'gold') bg = C.gold;
+    else if (color === 'orange') bg = C.orange;
+    else bg = 'rgba(255,255,255,0.15)';
+    return h('div', { style: { display: 'flex', marginBottom: '20px' } },
       h('span', {
         style: {
-          display: 'flex', fontSize: '22px', fontWeight: 700, letterSpacing: '3px',
-          color: C.text, backgroundColor: bg,
+          display: 'flex', fontSize: '20px', fontWeight: 700, letterSpacing: '3px',
+          color: '#000000', backgroundColor: bg,
           padding: '10px 22px', borderRadius: '12px'
         }
       }, text)
@@ -62,657 +82,448 @@ async function main() {
   }
 
   function headline(text, size) {
-    const sz = size || 64;
     return h('span', {
       style: {
-        fontSize: `${sz}px`, fontWeight: 800,
-        color: C.text, lineHeight: '1.08',
-        letterSpacing: '-1.5px', marginBottom: '6px'
+        fontSize: `${size || 66}px`, fontWeight: 800,
+        color: C.text, lineHeight: '1.07',
+        letterSpacing: '-1.5px', marginBottom: '8px'
       }
     }, text);
   }
 
-  function subline(text) {
+  function subline(text, size) {
     return h('span', {
       style: {
-        fontSize: '28px', fontWeight: 500,
-        color: C.textMuted, lineHeight: '1.5', marginTop: '8px'
+        fontSize: `${size || 30}px`, fontWeight: 500,
+        color: C.textMuted, lineHeight: '1.45', marginTop: '10px'
       }
     }, text);
   }
 
   function keyLearning(text, accentColor) {
-    const accent = accentColor || C.text;
+    const accent = accentColor || C.green;
     return h('div', {
       style: {
-        display: 'flex', alignItems: 'center', gap: '14px',
+        display: 'flex', alignItems: 'center', gap: '16px',
         backgroundColor: C.cardBg, borderRadius: '16px',
-        padding: '22px 28px', marginTop: '16px'
+        padding: '22px 28px', marginTop: '20px',
+        border: `1px solid ${C.border}`
       }
     },
       h('div', {
         style: {
-          display: 'flex', width: '6px', minHeight: '40px',
+          display: 'flex', width: '6px', minHeight: '44px',
           backgroundColor: accent, borderRadius: '3px', flexShrink: 0
         }
       }),
       h('span', {
         style: {
-          fontSize: '27px', fontWeight: 600,
-          color: C.text, lineHeight: '1.4'
+          fontSize: '26px', fontWeight: 600,
+          color: C.textSoft, lineHeight: '1.4'
         }
       }, text)
     );
   }
 
-  function logoCorner() {
-    return h('div', {
-      style: {
-        display: 'flex', position: 'absolute',
-        top: '70px', right: '70px'
-      }
-    },
-      h('img', {
-        src: logoB64,
-        width: 120, height: 120,
-        style: { borderRadius: '12px', objectFit: 'cover' }
-      })
-    );
-  }
-
-  function igFooter() {
-    return h('div', {
-      style: {
-        display: 'flex', alignItems: 'center', marginTop: '12px'
-      }
-    },
+  function igHandle() {
+    return h('div', { style: { display: 'flex', marginTop: 'auto', paddingTop: '16px' } },
       h('span', {
         style: {
-          fontSize: '24px', fontWeight: 500, color: C.textMuted
+          fontSize: '24px', fontWeight: 600,
+          color: 'rgba(255,255,255,0.45)', letterSpacing: '0.5px'
         }
       }, '@benarofinanzen')
     );
   }
 
-  function visualBlock(children) {
-    return h('div', {
-      style: {
-        display: 'flex', flex: '1', flexDirection: 'column',
-        justifyContent: 'center', gap: '14px'
-      }
-    }, ...children);
-  }
+  // ========== SLIDE 1: HOOK ==========
 
-  // ========== SLIDE 1 — HOOK ==========
-  const slide1 = slideRoot([
-    logoCorner(),
-    badge('DRINGEND', 'red'),
-    headline('In 69 Tagen ist es', 72),
-    headline('zu spät', 72),
-    subline('5 Finanzaktionen, die am 31. Dezember verfallen'),
-    visualBlock([
-      (() => {
-        // SVG: Countdown-Kalender mit Tagen
-        const svg = `<svg width="860" height="380" viewBox="0 0 860 380" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="gRed" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#EF4444" stop-opacity="0.25"/>
-      <stop offset="100%" stop-color="#EF4444" stop-opacity="0.08"/>
-    </linearGradient>
-    <linearGradient id="gGreen" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#10B981" stop-opacity="0.25"/>
-      <stop offset="100%" stop-color="#10B981" stop-opacity="0.08"/>
-    </linearGradient>
-  </defs>
-  <!-- Kalender-Hintergrund links (Oktober) -->
-  <rect x="20" y="20" width="380" height="340" rx="24" fill="url(#gRed)" stroke="rgba(239,68,68,0.4)" stroke-width="2"/>
-  <!-- Kalender Kopf Oktober -->
-  <rect x="20" y="20" width="380" height="70" rx="24" fill="rgba(239,68,68,0.35)"/>
-  <!-- Kalender-Zeilen Oktober -->
-  <rect x="45" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="103" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="161" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="219" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="277" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="335" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="45" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="103" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="161" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="219" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="277" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="335" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="45" y="238" width="48" height="48" rx="10" fill="rgba(255,255,255,0.12)"/>
-  <rect x="103" y="238" width="48" height="48" rx="10" fill="rgba(239,68,68,0.35)" stroke="rgba(239,68,68,0.6)" stroke-width="2"/>
-  <rect x="45" y="298" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="103" y="298" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="161" y="298" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="219" y="298" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="277" y="298" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="335" y="298" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <!-- Pfeil zwischen Kalaendern -->
-  <line x1="430" y1="190" x2="468" y2="190" stroke="rgba(255,255,255,0.5)" stroke-width="4" stroke-dasharray="10,6"/>
-  <polygon points="468,180 488,190 468,200" fill="rgba(255,255,255,0.5)"/>
-  <!-- Kalender-Hintergrund rechts (Dezember) -->
-  <rect x="460" y="20" width="380" height="340" rx="24" fill="url(#gGreen)" stroke="rgba(16,185,129,0.4)" stroke-width="2"/>
-  <!-- Kalender Kopf Dezember -->
-  <rect x="460" y="20" width="380" height="70" rx="24" fill="rgba(16,185,129,0.3)"/>
-  <!-- Kalender Zeilen Dezember -->
-  <rect x="485" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="543" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="601" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="659" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="717" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="775" y="118" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="485" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="543" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="601" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="659" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="717" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="775" y="178" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="485" y="238" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="543" y="238" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="601" y="238" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="659" y="238" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="717" y="238" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="775" y="238" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="485" y="298" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="543" y="298" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="601" y="298" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="659" y="298" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <rect x="717" y="298" width="48" height="48" rx="10" fill="rgba(255,255,255,0.08)"/>
-  <!-- 31. rot markiert -->
-  <rect x="775" y="298" width="48" height="48" rx="10" fill="rgba(239,68,68,0.5)" stroke="rgba(239,68,68,0.9)" stroke-width="2.5"/>
-  <!-- X auf dem 31 -->
-  <line x1="786" y1="309" x2="812" y2="335" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-linecap="round"/>
-  <line x1="812" y1="309" x2="786" y2="335" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-linecap="round"/>
-</svg>`;
-        const src = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
-        return h('div', { style: { display: 'flex', flexDirection: 'column', gap: '12px' } },
-          h('img', { src, width: 860, height: 380, style: { objectFit: 'contain' } }),
-          h('div', { style: { display: 'flex', justifyContent: 'space-around', paddingLeft: '40px', paddingRight: '40px' } },
-            h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.red, textAlign: 'center' } }, 'Oktober 2026'),
-            h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.green, textAlign: 'center' } }, 'Deadline: 31. Dez.')
-          )
-        );
-      })()
-    ]),
-    keyLearning('Wer jetzt handelt, sichert sich bis zu 500 € mehr im Jahr.'),
-    igFooter(),
-  ]);
-
-  // ========== SLIDE 2 — STAT HERO ==========
-  const slide2 = slideRoot([
-    logoCorner(),
-    badge('DIE ZAHLEN'),
-    headline('So viel Geld liegt brach'),
-    subline('Weil Jahresendfristen ignoriert werden'),
-    visualBlock([
-      h('div', {
+  const slide1 = slideRoot(
+    logo(),
+    badge('DAS SOLLTEST DU WISSEN', 'gold'),
+    h('div', { style: { display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center' } },
+      h('span', {
         style: {
-          display: 'flex', flexDirection: 'column', alignItems: 'center',
-          justifyContent: 'center', gap: '14px', flex: '1'
+          fontSize: '110px', fontWeight: 800,
+          color: C.gold, lineHeight: '1.0',
+          letterSpacing: '-3px'
         }
-      },
-        h('span', {
-          style: {
-            fontSize: '148px', fontWeight: 800, color: C.green,
-            letterSpacing: '-6px', lineHeight: '1'
-          }
-        }, '1.000 €'),
-        h('span', {
-          style: {
-            fontSize: '30px', fontWeight: 600, color: C.textSoft,
-            textAlign: 'center', lineHeight: '1.4', maxWidth: '760px'
-          }
-        }, 'Sparerpauschbetrag pro Jahr — steuerfrei für Kapitalerträge'),
-        h('div', {
-          style: { display: 'flex', marginTop: '16px', gap: '24px' }
-        },
-          h('div', {
-            style: {
-              display: 'flex', flexDirection: 'column', alignItems: 'center',
-              backgroundColor: C.cardBg, borderRadius: '16px',
-              padding: '22px 32px', gap: '6px'
-            }
-          },
-            h('span', { style: { fontSize: '38px', fontWeight: 800, color: C.text } }, '263 €'),
-            h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, textAlign: 'center' } }, 'Steuer gespart\nbei 1.000 € Erträgen')
-          ),
-          h('div', {
-            style: {
-              display: 'flex', flexDirection: 'column', alignItems: 'center',
-              backgroundColor: C.cardBg, borderRadius: '16px',
-              padding: '22px 32px', gap: '6px'
-            }
-          },
-            h('span', { style: { fontSize: '38px', fontWeight: 800, color: C.red } }, '40 %'),
-            h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, textAlign: 'center' } }, 'nutzen ihn\nnicht vollständig')
-          ),
-          h('div', {
-            style: {
-              display: 'flex', flexDirection: 'column', alignItems: 'center',
-              backgroundColor: C.cardBg, borderRadius: '16px',
-              padding: '22px 32px', gap: '6px'
-            }
-          },
-            h('span', { style: { fontSize: '38px', fontWeight: 800, color: C.text } }, '31.12.'),
-            h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, textAlign: 'center' } }, 'Frist —\nkein Aufschub')
-          )
-        )
-      )
-    ]),
-    keyLearning('2.000 € für Ehepaare — wer jetzt nichts tut, verschenkt echtes Geld.'),
-    igFooter(),
-  ]);
-
-  // ========== SLIDE 3 — ERWARTUNG VS. REALITÄT ==========
-  const slide3 = slideRoot([
-    logoCorner(),
-    badge('DER IRRTUM'),
-    headline('Was die meisten denken — und was wirklich gilt', 52),
-    visualBlock([
-      h('div', { style: { display: 'flex', gap: '16px', flex: '1' } },
-        // Links: Erwartung
-        h('div', {
-          style: {
-            display: 'flex', flex: '1', flexDirection: 'column',
-            backgroundColor: 'rgba(239,68,68,0.1)', borderRadius: '20px',
-            padding: '30px', gap: '16px',
-            border: '1px solid rgba(239,68,68,0.3)'
-          }
-        },
-          h('span', { style: { fontSize: '21px', fontWeight: 700, letterSpacing: '2px', color: C.red } }, 'WAS VIELE DENKEN'),
-          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(239,68,68,0.4)', borderRadius: '2px' } }),
-          h('span', { style: { fontSize: '29px', fontWeight: 600, color: C.textSoft, lineHeight: '1.45' } },
-            '"Kümmere ich mich Anfang Januar"'),
-          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, lineHeight: '1.45', marginTop: '8px' } },
-            '"Das Finanzamt erinnert mich schon"'),
-          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, lineHeight: '1.45' } },
-            '"Der Steuervorteil läuft nicht weg"'),
-          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, lineHeight: '1.45' } },
-            '"Das ist zu kompliziert für mich"'),
-        ),
-        // Rechts: Realität
-        h('div', {
-          style: {
-            display: 'flex', flex: '1', flexDirection: 'column',
-            backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '20px',
-            padding: '30px', gap: '16px',
-            border: '1px solid rgba(16,185,129,0.3)'
-          }
-        },
-          h('span', { style: { fontSize: '21px', fontWeight: 700, letterSpacing: '2px', color: C.green } }, 'DIE REALITÄT'),
-          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(16,185,129,0.4)', borderRadius: '2px' } }),
-          h('span', { style: { fontSize: '29px', fontWeight: 600, color: C.textSoft, lineHeight: '1.45' } },
-            'Fristen laufen am 31.12. ab — ohne Ausnahme'),
-          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, lineHeight: '1.45', marginTop: '8px' } },
-            'Niemand informiert dich'),
-          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, lineHeight: '1.45' } },
-            'Jahresverluste verfallen, Freibeträge auch'),
-          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, lineHeight: '1.45' } },
-            'Jede Aktion dauert unter 15 Minuten'),
-        )
-      )
-    ]),
-    keyLearning('5 einfache Schritte — jetzt erklären wir dir alle im Detail.', C.green),
-    igFooter(),
-  ]);
-
-  // ========== SLIDE 4 — AKTIONEN 1 & 2 ==========
-  const slide4 = slideRoot([
-    logoCorner(),
-    badge('SCHRITT 1 & 2'),
-    headline('Steuervorteile sichern — heute noch', 56),
-    subline('Dauer je Schritt: ca. 5 Minuten'),
-    visualBlock([
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '16px', flex: '1', justifyContent: 'center' } },
-        // Aktion 1
-        h('div', {
-          style: {
-            display: 'flex', flexDirection: 'column',
-            backgroundColor: C.cardBg, borderRadius: '20px', padding: '28px', gap: '10px',
-            border: '1px solid rgba(255,255,255,0.15)'
-          }
-        },
-          h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
-            h('div', {
-              style: {
-                display: 'flex', width: '52px', height: '52px', borderRadius: '14px',
-                backgroundColor: C.green, alignItems: 'center', justifyContent: 'center', flexShrink: 0
-              }
-            },
-              h('span', { style: { fontSize: '28px', fontWeight: 800, color: '#FFFFFF' } }, '01')
-            ),
-            h('span', { style: { fontSize: '30px', fontWeight: 700, color: C.text } }, 'Freistellungsauftrag prüfen'),
-          ),
-          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textSoft, lineHeight: '1.45', paddingLeft: '68px' } },
-            'Stelle sicher, dass du bei deiner Bank einen Freistellungsauftrag über 1.000 € gestellt hast. Sonst zahlt die Bank automatisch 26,375 % Steuern auf deine Erträge.'),
-          h('div', {
-            style: {
-              display: 'flex', alignItems: 'center', gap: '10px', paddingLeft: '68px', marginTop: '4px',
-              backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '12px', padding: '10px 16px'
-            }
-          },
-            h('div', { style: { width: '10px', height: '10px', borderRadius: '5px', backgroundColor: C.green, flexShrink: 0 } }),
-            h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.green } }, 'Spart bis zu 263 € pro 1.000 € Erträge')
-          )
-        ),
-        // Aktion 2
-        h('div', {
-          style: {
-            display: 'flex', flexDirection: 'column',
-            backgroundColor: C.cardBg, borderRadius: '20px', padding: '28px', gap: '10px',
-            border: '1px solid rgba(255,255,255,0.15)'
-          }
-        },
-          h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
-            h('div', {
-              style: {
-                display: 'flex', width: '52px', height: '52px', borderRadius: '14px',
-                backgroundColor: C.green, alignItems: 'center', justifyContent: 'center', flexShrink: 0
-              }
-            },
-              h('span', { style: { fontSize: '28px', fontWeight: 800, color: '#FFFFFF' } }, '02')
-            ),
-            h('span', { style: { fontSize: '30px', fontWeight: 700, color: C.text } }, 'Verluste gezielt verrechnen'),
-          ),
-          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textSoft, lineHeight: '1.45', paddingLeft: '68px' } },
-            'Wenn du Positionen mit Buchverlusten im Depot hast: Verkaufe und kaufe sie sofort zurück. So realisierst du steuerlich verwertbare Verluste.'),
-          h('div', {
-            style: {
-              display: 'flex', alignItems: 'center', gap: '10px', paddingLeft: '68px', marginTop: '4px',
-              backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '12px', padding: '10px 16px'
-            }
-          },
-            h('div', { style: { width: '10px', height: '10px', borderRadius: '5px', backgroundColor: C.green, flexShrink: 0 } }),
-            h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.green } }, 'Reduziert deine Steuerlast auf Gewinne')
-          )
-        )
-      )
-    ]),
-    keyLearning('Beide Maßnahmen sind kostenlos und dauern insgesamt unter 15 Minuten.'),
-    igFooter(),
-  ]);
-
-  // ========== SLIDE 5 — AKTIONEN 3 & 4 ==========
-  const slide5 = slideRoot([
-    logoCorner(),
-    badge('SCHRITT 3 & 4'),
-    headline('Mehr aus deinem Geld holen', 58),
-    subline('Zwei Maßnahmen, die langfristig wirken'),
-    visualBlock([
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '16px', flex: '1', justifyContent: 'center' } },
-        // Aktion 3
-        h('div', {
-          style: {
-            display: 'flex', flexDirection: 'column',
-            backgroundColor: C.cardBg, borderRadius: '20px', padding: '28px', gap: '10px',
-            border: '1px solid rgba(255,255,255,0.15)'
-          }
-        },
-          h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
-            h('div', {
-              style: {
-                display: 'flex', width: '52px', height: '52px', borderRadius: '14px',
-                backgroundColor: '#F59E0B', alignItems: 'center', justifyContent: 'center', flexShrink: 0
-              }
-            },
-              h('span', { style: { fontSize: '28px', fontWeight: 800, color: '#FFFFFF' } }, '03')
-            ),
-            h('span', { style: { fontSize: '30px', fontWeight: 700, color: C.text } }, 'bAV-Beitrag für 2026 erhöhen'),
-          ),
-          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textSoft, lineHeight: '1.45', paddingLeft: '68px' } },
-            'Der Jahreswechsel ist der ideale Moment, um deine betriebliche Altersvorsorge anzupassen. Beiträge bis 7.728 € jährlich sind steuer- und sozialabgabenfrei.'),
-          h('div', {
-            style: {
-              display: 'flex', alignItems: 'center', gap: '10px', marginTop: '4px',
-              backgroundColor: 'rgba(245,158,11,0.12)', borderRadius: '12px', padding: '10px 16px'
-            }
-          },
-            h('div', { style: { width: '10px', height: '10px', borderRadius: '5px', backgroundColor: '#F59E0B', flexShrink: 0 } }),
-            h('span', { style: { fontSize: '24px', fontWeight: 600, color: '#F59E0B' } }, 'Plus 15 % Pflicht-Zuschuss vom Arbeitgeber')
-          )
-        ),
-        // Aktion 4
-        h('div', {
-          style: {
-            display: 'flex', flexDirection: 'column',
-            backgroundColor: C.cardBg, borderRadius: '20px', padding: '28px', gap: '10px',
-            border: '1px solid rgba(255,255,255,0.15)'
-          }
-        },
-          h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
-            h('div', {
-              style: {
-                display: 'flex', width: '52px', height: '52px', borderRadius: '14px',
-                backgroundColor: '#F59E0B', alignItems: 'center', justifyContent: 'center', flexShrink: 0
-              }
-            },
-              h('span', { style: { fontSize: '28px', fontWeight: 800, color: '#FFFFFF' } }, '04')
-            ),
-            h('span', { style: { fontSize: '30px', fontWeight: 700, color: C.text } }, 'Depot-Rebalancing durchführen'),
-          ),
-          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textSoft, lineHeight: '1.45', paddingLeft: '68px' } },
-            'Prüfe, ob deine Portfoliogewichtung noch deiner Strategie entspricht. Nach einem starken Börsenjahr driftet ein 70/30-Depot oft auf 85/15.'),
-          h('div', {
-            style: {
-              display: 'flex', alignItems: 'center', gap: '10px', marginTop: '4px',
-              backgroundColor: 'rgba(245,158,11,0.12)', borderRadius: '12px', padding: '10px 16px'
-            }
-          },
-            h('div', { style: { width: '10px', height: '10px', borderRadius: '5px', backgroundColor: '#F59E0B', flexShrink: 0 } }),
-            h('span', { style: { fontSize: '24px', fontWeight: 600, color: '#F59E0B' } }, 'Nachkaufen statt Umschichten — kein Steuerereignis')
-          )
-        )
-      )
-    ]),
-    keyLearning('Nachkaufen anstatt Umschichten spart Abgeltungssteuer beim Rebalancing.'),
-    igFooter(),
-  ]);
-
-  // ========== SLIDE 6 — AKTION 5 ==========
-  const slide6 = slideRoot([
-    logoCorner(),
-    badge('SCHRITT 5'),
-    headline('Die versteckte Steuer im Januar', 58),
-    subline('Was ETF-Anleger jetzt vorbereiten müssen'),
-    visualBlock([
-      h('div', {
+      }, '20 %'),
+      h('span', {
         style: {
-          display: 'flex', flexDirection: 'column', gap: '20px',
-          flex: '1', justifyContent: 'center'
+          fontSize: '64px', fontWeight: 800,
+          color: C.text, lineHeight: '1.08',
+          letterSpacing: '-1.5px', marginTop: '10px'
         }
-      },
-        // Grafik: Ablauf Vorabpauschale
-        (() => {
-          const svg = `<svg width="860" height="200" viewBox="0 0 860 200" xmlns="http://www.w3.org/2000/svg">
-  <!-- Schritt 1: Depot hat thesaurierenden ETF -->
-  <rect x="20" y="50" width="200" height="100" rx="16" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
-  <rect x="40" y="75" width="160" height="10" rx="5" fill="rgba(255,255,255,0.35)"/>
-  <rect x="40" y="95" width="130" height="8" rx="4" fill="rgba(255,255,255,0.2)"/>
-  <rect x="40" y="113" width="145" height="8" rx="4" fill="rgba(255,255,255,0.2)"/>
-  <!-- Pfeil 1 -->
-  <line x1="240" y1="100" x2="284" y2="100" stroke="rgba(255,255,255,0.4)" stroke-width="3" stroke-dasharray="8,5"/>
-  <polygon points="284,92 300,100 284,108" fill="rgba(255,255,255,0.4)"/>
-  <!-- Schritt 2: Kein Ausschüttung = Vorabpauschale -->
-  <rect x="310" y="50" width="230" height="100" rx="16" fill="rgba(239,68,68,0.15)" stroke="rgba(239,68,68,0.4)" stroke-width="1.5"/>
-  <rect x="330" y="75" width="190" height="10" rx="5" fill="rgba(239,68,68,0.4)"/>
-  <rect x="330" y="95" width="155" height="8" rx="4" fill="rgba(239,68,68,0.2)"/>
-  <rect x="330" y="113" width="170" height="8" rx="4" fill="rgba(239,68,68,0.2)"/>
-  <!-- Pfeil 2 -->
-  <line x1="560" y1="100" x2="604" y2="100" stroke="rgba(255,255,255,0.4)" stroke-width="3" stroke-dasharray="8,5"/>
-  <polygon points="604,92 620,100 604,108" fill="rgba(255,255,255,0.4)"/>
-  <!-- Schritt 3: Januar-Abzug -->
-  <rect x="630" y="50" width="210" height="100" rx="16" fill="rgba(16,185,129,0.15)" stroke="rgba(16,185,129,0.4)" stroke-width="1.5"/>
-  <rect x="650" y="75" width="170" height="10" rx="5" fill="rgba(16,185,129,0.4)"/>
-  <rect x="650" y="95" width="140" height="8" rx="4" fill="rgba(16,185,129,0.2)"/>
-  <rect x="650" y="113" width="155" height="8" rx="4" fill="rgba(16,185,129,0.2)"/>
-</svg>`;
-          const src = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
-          return h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px' } },
-            h('img', { src, width: 860, height: 200, style: { objectFit: 'contain' } }),
-            h('div', { style: { display: 'flex', gap: '20px', justifyContent: 'space-between' } },
-              h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.textMuted, textAlign: 'center', flex: '1' } }, 'Thesaurierender ETF'),
-              h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.red, textAlign: 'center', flex: '1' } }, 'Vorabpauschale 2026'),
-              h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.green, textAlign: 'center', flex: '1' } }, 'Januar-Abzug vermeiden')
-            )
-          );
-        })(),
-        // Erklärungsbox
-        h('div', {
-          style: {
-            display: 'flex', flexDirection: 'column',
-            backgroundColor: C.cardBg, borderRadius: '20px', padding: '28px', gap: '14px',
-            border: '1px solid rgba(255,255,255,0.15)'
-          }
-        },
-          h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
-            h('div', {
-              style: {
-                display: 'flex', width: '52px', height: '52px', borderRadius: '14px',
-                backgroundColor: C.red, alignItems: 'center', justifyContent: 'center', flexShrink: 0
-              }
-            },
-              h('span', { style: { fontSize: '28px', fontWeight: 800, color: '#FFFFFF' } }, '05')
-            ),
-            h('span', { style: { fontSize: '30px', fontWeight: 700, color: C.text } }, 'Vorabpauschale vorbereiten'),
-          ),
-          h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textSoft, lineHeight: '1.45', paddingLeft: '68px' } },
-            'Bei thesaurierenden ETFs bucht das Finanzamt im Januar eine fiktive Mindestrendite ab (Basiszins 2026: 3,20 %). Stelle sicher, dass dein Freistellungsauftrag ausreicht und du genug Liquidität im Depot hast.'),
-          h('div', {
-            style: {
-              display: 'flex', alignItems: 'center', gap: '10px',
-              backgroundColor: 'rgba(239,68,68,0.1)', borderRadius: '12px', padding: '10px 16px'
-            }
-          },
-            h('div', { style: { width: '10px', height: '10px', borderRadius: '5px', backgroundColor: C.red, flexShrink: 0 } }),
-            h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.red } }, 'Bei 10.000 € Depot: ca. 59 € Abzug im Januar 2027')
-          )
-        )
-      )
-    ]),
-    keyLearning('Jetzt handeln — der Abzug kommt automatisch im Januar ohne Vorwarnung.', C.red),
-    igFooter(),
-  ]);
-
-  // ========== SLIDE 7 — CHECKLISTE ==========
-  const slide7 = slideRoot([
-    logoCorner(),
-    badge('DEINE CHECKLISTE', 'green'),
-    headline('5 Schritte vor dem 31. Dezember', 58),
-    subline('Gesamtzeit: unter 1 Stunde'),
-    visualBlock([
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px', flex: '1', justifyContent: 'center' } },
-        ...[
-          { num: '01', text: 'Freistellungsauftrag auf 1.000 € prüfen und stellen', pct: 20 },
-          { num: '02', text: 'Buchverluste realisieren und sofort zurückkaufen', pct: 40 },
-          { num: '03', text: 'bAV-Beitrag zum Jahresende optimieren', pct: 60 },
-          { num: '04', text: 'Portfolio auf Zielgewichtung prüfen und rebalancieren', pct: 80 },
-          { num: '05', text: 'Liquidität für Vorabpauschalen-Abzug bereitstellen', pct: 100 },
-        ].map(l =>
-          h('div', {
-            style: {
-              display: 'flex', flexDirection: 'column', gap: '8px',
-              padding: '18px 24px',
-              backgroundColor: C.cardBg, borderRadius: '16px'
-            }
-          },
-            h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
-              h('span', {
-                style: {
-                  fontSize: '36px', fontWeight: 800,
-                  color: l.pct === 100 ? C.green : C.text, minWidth: '56px'
-                }
-              }, l.num),
-              h('span', {
-                style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.3' }
-              }, l.text)
-            ),
-            h('div', { style: { display: 'flex', height: '5px', backgroundColor: C.border, borderRadius: '3px', overflow: 'hidden' } },
-              h('div', {
-                style: {
-                  display: 'flex', width: `${l.pct}%`, height: '5px',
-                  backgroundColor: l.pct === 100 ? C.green : C.text, borderRadius: '3px'
-                }
-              })
-            )
-          )
-        )
-      )
-    ]),
-    keyLearning('Alle 5 Schritte sind kostenlos. Alles, was du brauchst: 1 Stunde Zeit.', C.green),
-    igFooter(),
-  ]);
-
-  // ========== SLIDE 8 — CTA ==========
-  const slide8 = slideRoot([
-    logoCorner(),
-    badge('SPEICHERN'),
-    headline('Dein Geld. Dein Vorteil.', 64),
-    subline('Teile das mit jemandem, dem sein Geld wichtig ist'),
-    visualBlock([
+      }, 'deines Geldes sind weg.'),
+      h('span', {
+        style: {
+          fontSize: '30px', fontWeight: 500,
+          color: C.textMuted, lineHeight: '1.5', marginTop: '24px'
+        }
+      }, 'Seit 2020 hat die Inflation über 20 % Kaufkraft vernichtet — auf jedem Sparbuch.'),
       h('div', {
         style: {
-          display: 'flex', flexDirection: 'column', alignItems: 'center',
-          justifyContent: 'center', flex: '1', gap: '28px'
+          display: 'flex', gap: '20px', marginTop: '40px'
         }
       },
         h('div', {
           style: {
             display: 'flex', flexDirection: 'column', alignItems: 'center',
-            backgroundColor: C.cardBg, borderRadius: '24px', padding: '40px',
-            gap: '16px', border: '1px solid rgba(255,255,255,0.15)'
+            backgroundColor: C.cardBg, borderRadius: '16px',
+            padding: '24px 36px', border: `1px solid ${C.border}`, flex: 1
           }
         },
-          h('span', {
-            style: {
-              fontSize: '36px', fontWeight: 700, color: C.text,
-              textAlign: 'center', lineHeight: '1.4'
-            }
-          }, 'Welchen Schritt hast du in\ndiesem Jahr noch nicht erledigt?'),
-          h('span', {
-            style: {
-              fontSize: '28px', fontWeight: 500, color: C.textMuted,
-              textAlign: 'center', lineHeight: '1.5'
-            }
-          }, 'Schreib es in die Kommentare — wir helfen dir dabei.'),
+          h('span', { style: { fontSize: '42px', fontWeight: 800, color: C.text } }, '100 €'),
+          h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted, marginTop: '6px' } }, 'Wert 2020')
         ),
         h('div', {
           style: {
-            display: 'flex', flexDirection: 'column', gap: '16px',
-            alignItems: 'center', width: '100%'
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: '36px', fontWeight: 700, color: C.textMuted
+          }
+        }, '='),
+        h('div', {
+          style: {
+            display: 'flex', flexDirection: 'column', alignItems: 'center',
+            backgroundColor: `rgba(239,68,68,0.15)`, borderRadius: '16px',
+            padding: '24px 36px', border: `1px solid rgba(239,68,68,0.3)`, flex: 1
+          }
+        },
+          h('span', { style: { fontSize: '42px', fontWeight: 800, color: C.red } }, '80 €'),
+          h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted, marginTop: '6px' } }, 'Wert 2026')
+        )
+      )
+    ),
+    igHandle()
+  );
+
+  // ========== SLIDE 2: DAS PROBLEM ==========
+
+  const inflationSvg = `<svg width="880" height="280" viewBox="0 0 880 280" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="barGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#F59E0B"/>
+        <stop offset="100%" stop-color="#EF4444"/>
+      </linearGradient>
+    </defs>
+    <rect x="0" y="50" width="120" height="38" rx="8" fill="url(#barGrad)" opacity="0.7"/>
+    <rect x="0" y="114" width="190" height="38" rx="8" fill="url(#barGrad)" opacity="0.8"/>
+    <rect x="0" y="178" width="340" height="38" rx="8" fill="url(#barGrad)" opacity="0.9"/>
+    <rect x="0" y="242" width="580" height="38" rx="8" fill="url(#barGrad)"/>
+  </svg>`;
+  const inflationSrc = `data:image/svg+xml;base64,${Buffer.from(inflationSvg).toString('base64')}`;
+
+  const slide2 = slideRoot(
+    logo(),
+    badge('DAS PROBLEM'),
+    h('div', { style: { display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center' } },
+      headline('Inflation frisst dein Geld — jedes Jahr.', 56),
+      subline('Kumulierte Geldentwertung seit 2020:'),
+      h('div', { style: { display: 'flex', marginTop: '30px', gap: '0px' } },
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '12px', width: '180px', paddingTop: '57px' } },
+          h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.textMuted, height: '38px', display: 'flex', alignItems: 'center' } }, '2022'),
+          h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.textMuted, height: '38px', display: 'flex', alignItems: 'center', marginTop: '12px' } }, '2023'),
+          h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.textMuted, height: '38px', display: 'flex', alignItems: 'center', marginTop: '12px' } }, '2024'),
+          h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.text, height: '38px', display: 'flex', alignItems: 'center', marginTop: '12px' } }, '2026')
+        ),
+        h('div', { style: { display: 'flex', flexDirection: 'column', flex: 1 } },
+          h('img', { src: inflationSrc, width: 880, height: 280, style: { objectFit: 'contain' } })
+        ),
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '12px', width: '120px', paddingTop: '57px' } },
+          h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.gold, height: '38px', display: 'flex', alignItems: 'center' } }, '+ 7 %'),
+          h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.gold, height: '38px', display: 'flex', alignItems: 'center', marginTop: '12px' } }, '+ 10 %'),
+          h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.gold, height: '38px', display: 'flex', alignItems: 'center', marginTop: '12px' } }, '+ 16 %'),
+          h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.red, height: '38px', display: 'flex', alignItems: 'center', marginTop: '12px' } }, '+ 21 %')
+        )
+      )
+    ),
+    keyLearning('100 € auf dem Sparbuch sind 2026 effektiv nur noch ~79 € wert.', C.red),
+    igHandle()
+  );
+
+  // ========== SLIDE 3: GOLD ==========
+
+  const slide3 = slideRoot(
+    logo(),
+    badge('ANLAGEKLASSE 1', 'gold'),
+    h('div', { style: { display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center' } },
+      headline('Gold — der klassische Inflationsschutz', 56),
+      subline('Performance 2021–2026: +38 %'),
+      h('div', { style: { display: 'flex', gap: '24px', marginTop: '32px' } },
+        h('div', {
+          style: {
+            display: 'flex', flexDirection: 'column', flex: 1,
+            backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '16px',
+            padding: '28px', border: '1px solid rgba(16,185,129,0.3)'
+          }
+        },
+          h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.green, marginBottom: '16px', letterSpacing: '1px' } }, 'VORTEILE'),
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '12px' } },
+            h('span', { style: { fontSize: '23px', fontWeight: 600, color: C.textSoft } }, '+ Inflationsschutz seit Jahrtausenden'),
+            h('span', { style: { fontSize: '23px', fontWeight: 600, color: C.textSoft } }, '+ Krisenfest (Krieg, Rezession)'),
+            h('span', { style: { fontSize: '23px', fontWeight: 600, color: C.textSoft } }, '+ Physisch besitzbar (Münzen, Barren)'),
+            h('span', { style: { fontSize: '23px', fontWeight: 600, color: C.textSoft } }, '+ Geringe Volatilität')
+          )
+        ),
+        h('div', {
+          style: {
+            display: 'flex', flexDirection: 'column', flex: 1,
+            backgroundColor: 'rgba(239,68,68,0.10)', borderRadius: '16px',
+            padding: '28px', border: '1px solid rgba(239,68,68,0.25)'
+          }
+        },
+          h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.red, marginBottom: '16px', letterSpacing: '1px' } }, 'NACHTEILE'),
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '12px' } },
+            h('span', { style: { fontSize: '23px', fontWeight: 600, color: C.textSoft } }, '- Keine Dividenden/Zinsen'),
+            h('span', { style: { fontSize: '23px', fontWeight: 600, color: C.textSoft } }, '- Lagerkosten (physisch)'),
+            h('span', { style: { fontSize: '23px', fontWeight: 600, color: C.textSoft } }, '- Langsames Wachstum'),
+            h('span', { style: { fontSize: '23px', fontWeight: 600, color: C.textSoft } }, '- Kein Cashflow')
+          )
+        )
+      )
+    ),
+    keyLearning('Gold ist kein Renditetreiber — es ist eine Versicherung gegen Chaos.', C.gold),
+    igHandle()
+  );
+
+  // ========== SLIDE 4: BITCOIN ==========
+
+  const slide4 = slideRoot(
+    logo(),
+    badge('ANLAGEKLASSE 2', 'orange'),
+    h('div', { style: { display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center' } },
+      headline('Bitcoin — das digitale Gold?', 58),
+      subline('Performance 2021–2026: +145 % (mit hoher Volatilität)'),
+      h('div', { style: { display: 'flex', gap: '24px', marginTop: '32px' } },
+        h('div', {
+          style: {
+            display: 'flex', flexDirection: 'column', flex: 1,
+            backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '16px',
+            padding: '28px', border: '1px solid rgba(16,185,129,0.3)'
+          }
+        },
+          h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.green, marginBottom: '16px', letterSpacing: '1px' } }, 'VORTEILE'),
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '12px' } },
+            h('span', { style: { fontSize: '23px', fontWeight: 600, color: C.textSoft } }, '+ Begrenztes Angebot (21 Mio. BTC)'),
+            h('span', { style: { fontSize: '23px', fontWeight: 600, color: C.textSoft } }, '+ Global, dezentral, zensurresistent'),
+            h('span', { style: { fontSize: '23px', fontWeight: 600, color: C.textSoft } }, '+ Hohes Renditepotenzial'),
+            h('span', { style: { fontSize: '23px', fontWeight: 600, color: C.textSoft } }, '+ Bitcoin-ETF seit 2024 möglich')
+          )
+        ),
+        h('div', {
+          style: {
+            display: 'flex', flexDirection: 'column', flex: 1,
+            backgroundColor: 'rgba(239,68,68,0.10)', borderRadius: '16px',
+            padding: '28px', border: '1px solid rgba(239,68,68,0.25)'
+          }
+        },
+          h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.red, marginBottom: '16px', letterSpacing: '1px' } }, 'NACHTEILE'),
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '12px' } },
+            h('span', { style: { fontSize: '23px', fontWeight: 600, color: C.textSoft } }, '- Extreme Volatilität (-70 % möglich)'),
+            h('span', { style: { fontSize: '23px', fontWeight: 600, color: C.textSoft } }, '- Regulierungsrisiko weltweit'),
+            h('span', { style: { fontSize: '23px', fontWeight: 600, color: C.textSoft } }, '- Kein innerer Wert / Substanz'),
+            h('span', { style: { fontSize: '23px', fontWeight: 600, color: C.textSoft } }, '- Hohe psychologische Belastung')
+          )
+        )
+      )
+    ),
+    keyLearning('Bitcoin kann 3x steigen — aber auch 70 % fallen. Nur für starke Nerven.', C.orange),
+    igHandle()
+  );
+
+  // ========== SLIDE 5: VERGLEICH ==========
+
+  const barSvg = `<svg width="860" height="320" viewBox="0 0 860 320" xmlns="http://www.w3.org/2000/svg">
+    <rect x="60" y="${320 - 38*4 - 30}" width="240" height="${38*4}" rx="8" fill="#F59E0B" opacity="0.85"/>
+    <rect x="340" y="${320 - 38*6 - 30}" width="240" height="${38*6}" rx="8" fill="#F97316" opacity="0.85"/>
+    <rect x="620" y="${320 - 38*5 - 30}" width="240" height="${38*5}" rx="8" fill="#10B981" opacity="0.85"/>
+    <line x1="0" y1="${320 - 30}" x2="860" y2="${320 - 30}" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+  </svg>`;
+  const barSrc = `data:image/svg+xml;base64,${Buffer.from(barSvg).toString('base64')}`;
+
+  const slide5 = slideRoot(
+    logo(),
+    badge('DER VERGLEICH'),
+    h('div', { style: { display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center' } },
+      headline('5-Jahres-Rendite im Vergleich', 58),
+      subline('2021 – 2026 (kumuliert, vor Steuern):'),
+      h('div', { style: { display: 'flex', flexDirection: 'column', marginTop: '20px' } },
+        h('img', { src: barSrc, width: 860, height: 320, style: { objectFit: 'contain' } }),
+        h('div', { style: { display: 'flex', gap: '0px', marginTop: '8px' } },
+          h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 } },
+            h('span', { style: { fontSize: '32px', fontWeight: 800, color: C.gold } }, '+38 %'),
+            h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.textMuted } }, 'Gold')
+          ),
+          h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 } },
+            h('span', { style: { fontSize: '32px', fontWeight: 800, color: C.orange } }, '+145 %'),
+            h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.textMuted } }, 'Bitcoin')
+          ),
+          h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 } },
+            h('span', { style: { fontSize: '32px', fontWeight: 800, color: C.green } }, '+72 %'),
+            h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.textMuted } }, 'ETF World')
+          )
+        )
+      )
+    ),
+    keyLearning('Bitcoin gewinnt auf dem Papier — aber kaum jemand hält durch den -70 %-Crash.', C.gold),
+    igHandle()
+  );
+
+  // ========== SLIDE 6: STRATEGIE ==========
+
+  const slide6 = slideRoot(
+    logo(),
+    badge('DIE LÖSUNG', 'green'),
+    h('div', { style: { display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center' } },
+      headline('Die kluge Depotbeimischung 2026', 56),
+      subline('Empfohlene Verteilung für langfristigen Vermögensaufbau:'),
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '18px', marginTop: '30px' } },
+        h('div', {
+          style: {
+            display: 'flex', alignItems: 'center', gap: '20px',
+            backgroundColor: 'rgba(16,185,129,0.12)', borderRadius: '14px',
+            padding: '22px 28px', border: '1px solid rgba(16,185,129,0.25)'
           }
         },
           h('div', {
             style: {
-              display: 'flex', alignItems: 'center', gap: '12px',
-              backgroundColor: 'rgba(16,185,129,0.15)', borderRadius: '16px',
-              padding: '18px 32px', border: '1px solid rgba(16,185,129,0.3)'
+              display: 'flex', width: '90px', height: '56px', borderRadius: '10px',
+              backgroundColor: C.green, alignItems: 'center', justifyContent: 'center',
+              flexShrink: 0
             }
           },
-            h('span', { style: { fontSize: '28px', fontWeight: 600, color: C.green } }, 'Speichern nicht vergessen'),
+            h('span', { style: { fontSize: '26px', fontWeight: 800, color: '#000' } }, '85 %')
           ),
-          h('span', {
-            style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, textAlign: 'center' }
-          }, 'Folge @benarofinanzen für wöchentliche Finanztipps'),
+          h('div', { style: { display: 'flex', flexDirection: 'column' } },
+            h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.text } }, 'ETF World (MSCI World / ACWI)'),
+            h('span', { style: { fontSize: '21px', fontWeight: 500, color: C.textMuted } }, 'Basis-Rendite, global diversifiziert')
+          )
+        ),
+        h('div', {
+          style: {
+            display: 'flex', alignItems: 'center', gap: '20px',
+            backgroundColor: 'rgba(245,158,11,0.12)', borderRadius: '14px',
+            padding: '22px 28px', border: '1px solid rgba(245,158,11,0.25)'
+          }
+        },
+          h('div', {
+            style: {
+              display: 'flex', width: '90px', height: '56px', borderRadius: '10px',
+              backgroundColor: C.gold, alignItems: 'center', justifyContent: 'center',
+              flexShrink: 0
+            }
+          },
+            h('span', { style: { fontSize: '26px', fontWeight: 800, color: '#000' } }, '10 %')
+          ),
+          h('div', { style: { display: 'flex', flexDirection: 'column' } },
+            h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.text } }, 'Gold (Xetra-Gold / ETC)'),
+            h('span', { style: { fontSize: '21px', fontWeight: 500, color: C.textMuted } }, 'Absicherung gegen Krisen & Inflation')
+          )
+        ),
+        h('div', {
+          style: {
+            display: 'flex', alignItems: 'center', gap: '20px',
+            backgroundColor: 'rgba(249,115,22,0.12)', borderRadius: '14px',
+            padding: '22px 28px', border: '1px solid rgba(249,115,22,0.25)'
+          }
+        },
+          h('div', {
+            style: {
+              display: 'flex', width: '90px', height: '56px', borderRadius: '10px',
+              backgroundColor: C.orange, alignItems: 'center', justifyContent: 'center',
+              flexShrink: 0
+            }
+          },
+            h('span', { style: { fontSize: '26px', fontWeight: 800, color: '#000' } }, '5 %')
+          ),
+          h('div', { style: { display: 'flex', flexDirection: 'column' } },
+            h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.text } }, 'Bitcoin (Bitcoin-ETF)'),
+            h('span', { style: { fontSize: '21px', fontWeight: 500, color: C.textMuted } }, 'Wachstumschance, kleiner Anteil')
+          )
         )
       )
-    ]),
-    h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '16px' } },
-      h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted } }, '@benarofinanzen'),
+    ),
+    keyLearning('Mehr als 5–10 % Krypto erhöht das Risiko unverhältnismäßig — Beimischung genügt.', C.green),
+    igHandle()
+  );
+
+  // ========== SLIDE 7: CTA ==========
+
+  const slide7 = slideRoot(
+    logo(),
+    badge('DEINE MEINUNG'),
+    h('div', { style: { display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center', alignItems: 'center' } },
+      h('span', {
+        style: {
+          fontSize: '64px', fontWeight: 800,
+          color: C.text, lineHeight: '1.08',
+          letterSpacing: '-1.5px', textAlign: 'center', marginBottom: '12px'
+        }
+      }, 'Was nutzt du als\nInflationsschutz?'),
+      h('div', { style: { display: 'flex', gap: '20px', marginTop: '30px', flexWrap: 'wrap', justifyContent: 'center' } },
+        h('div', {
+          style: {
+            display: 'flex', backgroundColor: 'rgba(245,158,11,0.18)', borderRadius: '16px',
+            padding: '22px 36px', border: '1px solid rgba(245,158,11,0.4)'
+          }
+        },
+          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.gold } }, 'A) Gold')
+        ),
+        h('div', {
+          style: {
+            display: 'flex', backgroundColor: 'rgba(249,115,22,0.18)', borderRadius: '16px',
+            padding: '22px 36px', border: '1px solid rgba(249,115,22,0.4)'
+          }
+        },
+          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.orange } }, 'B) Bitcoin')
+        ),
+        h('div', {
+          style: {
+            display: 'flex', backgroundColor: 'rgba(16,185,129,0.18)', borderRadius: '16px',
+            padding: '22px 36px', border: '1px solid rgba(16,185,129,0.3)'
+          }
+        },
+          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.green } }, 'C) Beides')
+        ),
+        h('div', {
+          style: {
+            display: 'flex', backgroundColor: C.cardBg, borderRadius: '16px',
+            padding: '22px 36px', border: `1px solid ${C.border}`
+          }
+        },
+          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.textSoft } }, 'D) Keins')
+        )
+      ),
+      h('span', {
+        style: {
+          fontSize: '28px', fontWeight: 600,
+          color: C.textMuted, marginTop: '36px', textAlign: 'center', lineHeight: '1.5'
+        }
+      }, 'Schreib deine Antwort in die Kommentare!\nFolge @benarofinanzen für mehr Finanzwissen.')
+    ),
+    h('div', { style: { display: 'flex', marginTop: 'auto', paddingTop: '16px', justifyContent: 'space-between', alignItems: 'center' } },
+      h('span', {
+        style: {
+          fontSize: '24px', fontWeight: 600,
+          color: 'rgba(255,255,255,0.45)', letterSpacing: '0.5px'
+        }
+      }, '@benarofinanzen'),
       h('div', {
         style: {
-          display: 'flex', backgroundColor: C.green, borderRadius: '12px',
-          padding: '10px 22px'
+          display: 'flex', backgroundColor: C.green, borderRadius: '10px',
+          padding: '10px 20px'
         }
       },
-        h('span', { style: { fontSize: '22px', fontWeight: 700, color: '#FFFFFF' } }, 'Benaro Finanzen')
+        h('span', { style: { fontSize: '20px', fontWeight: 700, color: '#000' } }, 'Speichern nicht vergessen!')
       )
-    ),
-  ]);
+    )
+  );
 
-  // ========== GENERIEREN ==========
-  const slides = [slide1, slide2, slide3, slide4, slide5, slide6, slide7, slide8];
+  // ========== GENERATE ALL SLIDES ==========
+
+  const slides = [slide1, slide2, slide3, slide4, slide5, slide6, slide7];
+  const labels = ['Hook', 'Problem', 'Gold', 'Bitcoin', 'Vergleich', 'Strategie', 'CTA'];
 
   for (let i = 0; i < slides.length; i++) {
     const svg = await satori(slides[i], { width: W, height: H, fonts });
@@ -720,9 +531,9 @@ async function main() {
     const pngData = resvg.render();
     const pngPath = path.join(outputDir, `slide-${String(i + 1).padStart(2, '0')}.png`);
     fs.writeFileSync(pngPath, pngData.asPng());
-    console.log(`Slide ${i + 1}/${slides.length} generiert: ${path.basename(pngPath)}`);
+    console.log(`Slide ${i + 1}/${slides.length} (${labels[i]}) — gespeichert: ${pngPath}`);
   }
-  console.log('Alle Slides erfolgreich erstellt!');
+  console.log('Alle Slides erfolgreich generiert!');
 }
 
 main().catch(e => { console.error(e); process.exit(1); });
