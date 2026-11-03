@@ -1,1037 +1,586 @@
 const fs = require('fs');
 const path = require('path');
-const satori = require('satori').default;
-const { Resvg } = require('@resvg/resvg-js');
-
-const TODAY = '2026-11-02';
-const OUT_DIR = path.join(__dirname, `output/carousel_${TODAY}/slides`);
-fs.mkdirSync(OUT_DIR, { recursive: true });
-
-const fontDir = path.join(__dirname, 'node_modules/@fontsource/outfit/files');
-const fonts = [400, 500, 600, 700, 800].flatMap(w => [
-  { name: 'Outfit', weight: w, style: 'normal', data: fs.readFileSync(`${fontDir}/outfit-latin-${w}-normal.woff`) },
-  { name: 'Outfit', weight: w, style: 'normal', data: fs.readFileSync(`${fontDir}/outfit-latin-ext-${w}-normal.woff`) },
-]);
-
-const logoB64 = 'data:image/jpeg;base64,' + fs.readFileSync(
-  path.join(__dirname, 'skills/instagram-carousel-skill/templates/benaro-logo.jpg')
-).toString('base64');
-
-const C = {
-  bg: '#001f60',
-  text: '#FFFFFF',
-  cardBg: 'rgba(255,255,255,0.10)',
-  cardBgStrong: 'rgba(255,255,255,0.15)',
-  green: '#10B981',
-  red: '#EF4444',
-  yellow: '#F59E0B',
-  dim: 'rgba(255,255,255,0.55)',
-  border: 'rgba(255,255,255,0.18)',
-};
-
-const W = 1080;
-const H = 1350;
-
-function logo(size = 80) {
-  return {
-    type: 'img',
-    props: {
-      src: logoB64,
-      width: size,
-      height: size,
-      style: { borderRadius: 12, flexShrink: 0 },
-    },
-  };
-}
-
-function badge(text, color = C.green) {
-  return {
-    type: 'div',
-    props: {
-      style: {
-        display: 'flex',
-        background: color,
-        borderRadius: 20,
-        padding: '6px 18px',
-        alignSelf: 'flex-start',
-      },
-      children: [{
-        type: 'span',
-        props: {
-          style: { fontFamily: 'Outfit', fontWeight: 700, fontSize: 20, color: '#fff', letterSpacing: 2 },
-          children: text,
-        },
-      }],
-    },
-  };
-}
-
-function keyLearning(text, accentColor = C.green) {
-  return {
-    type: 'div',
-    props: {
-      style: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-        gap: 14,
-        background: C.cardBg,
-        borderRadius: 14,
-        padding: '18px 22px',
-        marginTop: 8,
-      },
-      children: [
-        {
-          type: 'div',
-          props: {
-            style: { width: 4, minHeight: 40, background: accentColor, borderRadius: 4, flexShrink: 0, marginTop: 2 },
-          },
-        },
-        {
-          type: 'span',
-          props: {
-            style: { fontFamily: 'Outfit', fontWeight: 500, fontSize: 22, color: C.text, lineHeight: 1.45 },
-            children: text,
-          },
-        },
-      ],
-    },
-  };
-}
-
-function footer() {
-  return {
-    type: 'div',
-    props: {
-      style: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingTop: 12,
-      },
-      children: [
-        {
-          type: 'span',
-          props: {
-            style: { fontFamily: 'Outfit', fontWeight: 500, fontSize: 20, color: C.dim },
-            children: '@benarofinanzen',
-          },
-        },
-        logo(64),
-      ],
-    },
-  };
-}
-
-function slide(children) {
-  return {
-    type: 'div',
-    props: {
-      style: {
-        display: 'flex',
-        flexDirection: 'column',
-        width: W,
-        height: H,
-        background: C.bg,
-        padding: '52px 56px 44px',
-        fontFamily: 'Outfit',
-        boxSizing: 'border-box',
-      },
-      children,
-    },
-  };
-}
-
-function card(content, style = {}) {
-  return {
-    type: 'div',
-    props: {
-      style: {
-        display: 'flex',
-        flexDirection: 'column',
-        background: C.cardBg,
-        borderRadius: 18,
-        padding: '28px 28px',
-        ...style,
-      },
-      children: Array.isArray(content) ? content : [content],
-    },
-  };
-}
-
-async function renderSlide(jsx, filename) {
-  const svg = await satori(jsx, { width: W, height: H, fonts });
-  const resvg = new Resvg(svg, { fitTo: { mode: 'width', value: W } });
-  const png = resvg.render().asPng();
-  const outPath = path.join(OUT_DIR, filename);
-  fs.writeFileSync(outPath, png);
-  console.log(`✓ ${filename}`);
-}
-
-// ─────────────────────────────────────────────
-// SLIDE 1 — HOOK
-// ─────────────────────────────────────────────
-async function slide01() {
-  const jsx = slide([
-    // Header row
-    {
-      type: 'div',
-      props: {
-        style: { display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 36 },
-        children: [
-          badge('JETZT ENTSCHEIDEN'),
-          logo(80),
-        ],
-      },
-    },
-    // Headline — big hook
-    {
-      type: 'div',
-      props: {
-        style: { display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 28 },
-        children: [
-          {
-            type: 'span',
-            props: {
-              style: { fontFamily: 'Outfit', fontWeight: 800, fontSize: 68, color: C.text, lineHeight: 1.1 },
-              children: 'Dein Weihnachts-geld schläft —',
-            },
-          },
-          {
-            type: 'span',
-            props: {
-              style: { fontFamily: 'Outfit', fontWeight: 800, fontSize: 68, color: C.green, lineHeight: 1.1 },
-              children: 'oder arbeitet.',
-            },
-          },
-        ],
-      },
-    },
-    // Subline
-    {
-      type: 'span',
-      props: {
-        style: { fontFamily: 'Outfit', fontWeight: 400, fontSize: 26, color: C.dim, lineHeight: 1.45, marginBottom: 28 },
-        children: 'Was du in den nächsten Wochen entscheidest, entscheidet über dein Vermögen in 20 Jahren.',
-      },
-    },
-    // Visual: Two contrast cards
-    {
-      type: 'div',
-      props: {
-        style: { display: 'flex', flex: 1, flexDirection: 'row', gap: 20, alignItems: 'stretch' },
-        children: [
-          // Sleeping card
-          {
-            type: 'div',
-            props: {
-              style: {
-                display: 'flex',
-                flex: 1,
-                flexDirection: 'column',
-                background: 'rgba(239,68,68,0.18)',
-                border: `2px solid ${C.red}`,
-                borderRadius: 20,
-                padding: '28px 24px',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 16,
-              },
-              children: [
-                {
-                  type: 'div',
-                  props: {
-                    style: {
-                      display: 'flex',
-                      width: 72,
-                      height: 72,
-                      background: C.red,
-                      borderRadius: '50%',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    },
-                    children: [{
-                      type: 'span',
-                      props: { style: { fontSize: 36 }, children: '😴' },
-                    }],
-                  },
-                },
-                { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 700, fontSize: 26, color: C.red, textAlign: 'center' }, children: 'Ausgegeben' } },
-                { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 400, fontSize: 20, color: C.dim, textAlign: 'center', lineHeight: 1.4 }, children: 'Shopping, Urlaub, Konsum — weg.' } },
-                { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 800, fontSize: 30, color: C.red }, children: '= 0 € Gewinn' } },
-              ],
-            },
-          },
-          // Working card
-          {
-            type: 'div',
-            props: {
-              style: {
-                display: 'flex',
-                flex: 1,
-                flexDirection: 'column',
-                background: 'rgba(16,185,129,0.18)',
-                border: `2px solid ${C.green}`,
-                borderRadius: 20,
-                padding: '28px 24px',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 16,
-              },
-              children: [
-                {
-                  type: 'div',
-                  props: {
-                    style: {
-                      display: 'flex',
-                      width: 72,
-                      height: 72,
-                      background: C.green,
-                      borderRadius: '50%',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    },
-                    children: [{
-                      type: 'span',
-                      props: { style: { fontSize: 36 }, children: '📈' },
-                    }],
-                  },
-                },
-                { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 700, fontSize: 26, color: C.green, textAlign: 'center' }, children: 'Investiert' } },
-                { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 400, fontSize: 20, color: C.dim, textAlign: 'center', lineHeight: 1.4 }, children: 'ETF, Altersvorsorge, Sicherheit.' } },
-                { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 800, fontSize: 30, color: C.green }, children: '= Vermögen' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    { type: 'div', props: { style: { height: 20 } } },
-    footer(),
-  ]);
-  await renderSlide(jsx, 'slide-01.png');
-}
-
-// ─────────────────────────────────────────────
-// SLIDE 2 — AKT 1: Die Realität (Bar Chart)
-// ─────────────────────────────────────────────
-async function slide02() {
-  const bars = [
-    { label: 'Shopping & Konsum', pct: 38, color: C.red },
-    { label: 'Urlaub & Reisen', pct: 19, color: C.yellow },
-    { label: 'Ausgehen & Essen', pct: 16, color: C.yellow },
-    { label: 'Investieren & Sparen', pct: 27, color: C.green },
-  ];
-
-  const jsx = slide([
-    {
-      type: 'div',
-      props: {
-        style: { display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 },
-        children: [badge('DIE REALITÄT'), logo(72)],
-      },
-    },
-    {
-      type: 'span',
-      props: {
-        style: { fontFamily: 'Outfit', fontWeight: 800, fontSize: 48, color: C.text, lineHeight: 1.15, marginBottom: 8 },
-        children: '73 % geben ihr Weihnachts-geld sofort aus',
-      },
-    },
-    {
-      type: 'span',
-      props: {
-        style: { fontFamily: 'Outfit', fontWeight: 400, fontSize: 22, color: C.dim, marginBottom: 32 },
-        children: 'So verwenden Deutsche ihr Weihnachtsgeld:',
-      },
-    },
-    // Bar chart
-    {
-      type: 'div',
-      props: {
-        style: { display: 'flex', flex: 1, flexDirection: 'column', gap: 22, justifyContent: 'center' },
-        children: bars.map(b => ({
-          type: 'div',
-          props: {
-            style: { display: 'flex', flexDirection: 'column', gap: 8 },
-            children: [
-              {
-                type: 'div',
-                props: {
-                  style: { display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-                  children: [
-                    { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 600, fontSize: 22, color: C.text }, children: b.label } },
-                    { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 700, fontSize: 22, color: b.color }, children: `${b.pct} %` } },
-                  ],
-                },
-              },
-              {
-                type: 'div',
-                props: {
-                  style: { display: 'flex', width: '100%', height: 18, background: 'rgba(255,255,255,0.10)', borderRadius: 9 },
-                  children: [{
-                    type: 'div',
-                    props: {
-                      style: { display: 'flex', width: `${b.pct}%`, height: 18, background: b.color, borderRadius: 9 },
-                    },
-                  }],
-                },
-              },
-            ],
-          },
-        })),
-      },
-    },
-    { type: 'div', props: { style: { height: 16 } } },
-    keyLearning('Nur 27 % investieren ihr Weihnachtsgeld — obwohl es das einfachste Investment des Jahres ist.', C.green),
-    { type: 'div', props: { style: { height: 12 } } },
-    footer(),
-  ]);
-  await renderSlide(jsx, 'slide-02.png');
-}
-
-// ─────────────────────────────────────────────
-// SLIDE 3 — AKT 1: Der echte Preis (Vergleich)
-// ─────────────────────────────────────────────
-async function slide03() {
-  const jsx = slide([
-    {
-      type: 'div',
-      props: {
-        style: { display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 },
-        children: [badge('DER ECHTE PREIS', C.red), logo(72)],
-      },
-    },
-    {
-      type: 'span',
-      props: {
-        style: { fontFamily: 'Outfit', fontWeight: 800, fontSize: 46, color: C.text, lineHeight: 1.2, marginBottom: 6 },
-        children: '2.500 € ausgegeben =',
-      },
-    },
-    {
-      type: 'span',
-      props: {
-        style: { fontFamily: 'Outfit', fontWeight: 800, fontSize: 46, color: C.red, lineHeight: 1.2, marginBottom: 28 },
-        children: '9.676 € verloren',
-      },
-    },
-    // Two comparison cards
-    {
-      type: 'div',
-      props: {
-        style: { display: 'flex', flex: 1, flexDirection: 'row', gap: 24, alignItems: 'stretch' },
-        children: [
-          // Left: Ausgegeben
-          {
-            type: 'div',
-            props: {
-              style: {
-                display: 'flex',
-                flex: 1,
-                flexDirection: 'column',
-                background: 'rgba(239,68,68,0.15)',
-                border: `2px solid ${C.red}`,
-                borderRadius: 20,
-                padding: '28px 24px',
-                gap: 16,
-              },
-              children: [
-                { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 700, fontSize: 20, color: C.red, letterSpacing: 1 }, children: 'AUSGEGEBEN' } },
-                { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 800, fontSize: 52, color: C.red }, children: '2.500 €' } },
-                { type: 'div', props: { style: { display: 'flex', height: 2, background: C.red, borderRadius: 2, opacity: 0.4 } } },
-                { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 600, fontSize: 20, color: C.dim, lineHeight: 1.45 }, children: 'Shopping, Urlaub, Konsum' } },
-                {
-                  type: 'div',
-                  props: {
-                    style: { display: 'flex', marginTop: 'auto', background: 'rgba(239,68,68,0.25)', borderRadius: 12, padding: '12px 16px' },
-                    children: [
-                      { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 700, fontSize: 22, color: C.text }, children: 'nach 20 Jahren:' } },
-                    ],
-                  },
-                },
-                { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 800, fontSize: 40, color: C.red }, children: '2.500 €' } },
-                { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 500, fontSize: 19, color: C.dim }, children: '(Kaufkraft gesunken!)' } },
-              ],
-            },
-          },
-          // Right: Investiert
-          {
-            type: 'div',
-            props: {
-              style: {
-                display: 'flex',
-                flex: 1,
-                flexDirection: 'column',
-                background: 'rgba(16,185,129,0.15)',
-                border: `2px solid ${C.green}`,
-                borderRadius: 20,
-                padding: '28px 24px',
-                gap: 16,
-              },
-              children: [
-                { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 700, fontSize: 20, color: C.green, letterSpacing: 1 }, children: 'INVESTIERT IN ETF' } },
-                { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 800, fontSize: 52, color: C.green }, children: '2.500 €' } },
-                { type: 'div', props: { style: { display: 'flex', height: 2, background: C.green, borderRadius: 2, opacity: 0.4 } } },
-                { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 600, fontSize: 20, color: C.dim, lineHeight: 1.45 }, children: '7 % p.a. Zinseszins' } },
-                {
-                  type: 'div',
-                  props: {
-                    style: { display: 'flex', marginTop: 'auto', background: 'rgba(16,185,129,0.25)', borderRadius: 12, padding: '12px 16px' },
-                    children: [
-                      { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 700, fontSize: 22, color: C.text }, children: 'nach 20 Jahren:' } },
-                    ],
-                  },
-                },
-                { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 800, fontSize: 40, color: C.green }, children: '9.676 €' } },
-                { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 500, fontSize: 19, color: C.dim }, children: '+7.176 € ohne Mehrarbeit' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    { type: 'div', props: { style: { height: 16 } } },
-    keyLearning('Nicht investieren kostet dich 7.176 € — ohne dass du auch nur einen Tag mehr arbeitest.', C.red),
-    { type: 'div', props: { style: { height: 12 } } },
-    footer(),
-  ]);
-  await renderSlide(jsx, 'slide-03.png');
-}
-
-// ─────────────────────────────────────────────
-// SLIDE 4 — AKT 2: Option 1 — ETF-Einmalanlage
-// ─────────────────────────────────────────────
-async function slide04() {
-  const steps = [
-    { label: 'Broker auswählen', detail: 'Consorsbank, Trade Republic, Scalable' },
-    { label: 'MSCI World ETF wählen', detail: 'z. B. iShares Core MSCI World' },
-    { label: 'Einmalanlagene tätigen', detail: 'Auf Sparplan oder direkt kaufen' },
-    { label: 'Liegen lassen', detail: 'Nicht täglich schauen — Zeit arbeitet für dich' },
-  ];
-
-  const jsx = slide([
-    {
-      type: 'div',
-      props: {
-        style: { display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 },
-        children: [badge('OPTION 1 VON 3'), logo(72)],
-      },
-    },
-    {
-      type: 'span',
-      props: {
-        style: { fontFamily: 'Outfit', fontWeight: 800, fontSize: 50, color: C.text, lineHeight: 1.2, marginBottom: 4 },
-        children: 'ETF-Einmalanlage',
-      },
-    },
-    {
-      type: 'span',
-      props: {
-        style: { fontFamily: 'Outfit', fontWeight: 700, fontSize: 32, color: C.green, lineHeight: 1.2, marginBottom: 24 },
-        children: 'Der einfachste Weg',
-      },
-    },
-    {
-      type: 'div',
-      props: {
-        style: { display: 'flex', flex: 1, flexDirection: 'column', gap: 18, justifyContent: 'center' },
-        children: steps.map((s, i) => ({
-          type: 'div',
-          props: {
-            style: {
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 20,
-              background: C.cardBg,
-              borderRadius: 16,
-              padding: '20px 24px',
-            },
-            children: [
-              {
-                type: 'div',
-                props: {
-                  style: {
-                    display: 'flex',
-                    width: 44,
-                    height: 44,
-                    background: C.green,
-                    borderRadius: '50%',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                  },
-                  children: [{
-                    type: 'span',
-                    props: { style: { fontFamily: 'Outfit', fontWeight: 800, fontSize: 22, color: '#fff' }, children: String(i + 1) },
-                  }],
-                },
-              },
-              {
-                type: 'div',
-                props: {
-                  style: { display: 'flex', flexDirection: 'column', gap: 2 },
-                  children: [
-                    { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 700, fontSize: 24, color: C.text }, children: s.label } },
-                    { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 400, fontSize: 20, color: C.dim }, children: s.detail } },
-                  ],
-                },
-              },
-            ],
-          },
-        })),
-      },
-    },
-    { type: 'div', props: { style: { height: 16 } } },
-    keyLearning('Einmal anlegen, 20 Jahre liegen lassen — der Zinseszinseffekt übernimmt den Rest.', C.green),
-    { type: 'div', props: { style: { height: 12 } } },
-    footer(),
-  ]);
-  await renderSlide(jsx, 'slide-04.png');
-}
-
-// ─────────────────────────────────────────────
-// SLIDE 5 — AKT 2: Option 2 — Altersvorsorge-Depot
-// ─────────────────────────────────────────────
-async function slide05() {
-  const items = [
-    { icon: '🏛️', label: 'Staatliche Förderung', value: 'bis zu 540 €/Jahr' },
-    { icon: '📅', label: 'Start', value: '01. Januar 2027' },
-    { icon: '💶', label: 'Kosten', value: 'nur ~0,1 % p.a. (ETF)' },
-    { icon: '👨‍👩‍👧', label: 'Eltern extra', value: '+300 €/Jahr je Kind' },
-  ];
-
-  const jsx = slide([
-    {
-      type: 'div',
-      props: {
-        style: { display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 },
-        children: [badge('OPTION 2 VON 3'), logo(72)],
-      },
-    },
-    {
-      type: 'span',
-      props: {
-        style: { fontFamily: 'Outfit', fontWeight: 800, fontSize: 50, color: C.text, lineHeight: 1.2, marginBottom: 4 },
-        children: 'Altersvorsorge-Depot',
-      },
-    },
-    {
-      type: 'span',
-      props: {
-        style: { fontFamily: 'Outfit', fontWeight: 700, fontSize: 32, color: C.green, lineHeight: 1.2, marginBottom: 24 },
-        children: '+540 € vom Staat geschenkt',
-      },
-    },
-    {
-      type: 'div',
-      props: {
-        style: { display: 'flex', flex: 1, flexDirection: 'column', gap: 16, justifyContent: 'center' },
-        children: items.map(item => ({
-          type: 'div',
-          props: {
-            style: {
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 20,
-              background: C.cardBg,
-              borderRadius: 16,
-              padding: '20px 24px',
-            },
-            children: [
-              {
-                type: 'div',
-                props: {
-                  style: {
-                    display: 'flex',
-                    width: 52,
-                    height: 52,
-                    background: 'rgba(16,185,129,0.2)',
-                    borderRadius: 14,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                    fontSize: 28,
-                  },
-                  children: [{ type: 'span', props: { children: item.icon } }],
-                },
-              },
-              {
-                type: 'div',
-                props: {
-                  style: { display: 'flex', flexDirection: 'column', gap: 2 },
-                  children: [
-                    { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 500, fontSize: 20, color: C.dim }, children: item.label } },
-                    { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 700, fontSize: 26, color: C.text }, children: item.value } },
-                  ],
-                },
-              },
-            ],
-          },
-        })),
-      },
-    },
-    { type: 'div', props: { style: { height: 16 } } },
-    keyLearning('Ab Januar 2027 fördert der Staat deinen ETF-Sparplan mit bis zu 540 € im Jahr — jetzt schon einzahlen!', C.green),
-    { type: 'div', props: { style: { height: 12 } } },
-    footer(),
-  ]);
-  await renderSlide(jsx, 'slide-05.png');
-}
-
-// ─────────────────────────────────────────────
-// SLIDE 6 — AKT 2: Option 3 — Notgroschen + ETF
-// ─────────────────────────────────────────────
-async function slide06() {
-  const jsx = slide([
-    {
-      type: 'div',
-      props: {
-        style: { display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 },
-        children: [badge('OPTION 3 VON 3'), logo(72)],
-      },
-    },
-    {
-      type: 'span',
-      props: {
-        style: { fontFamily: 'Outfit', fontWeight: 800, fontSize: 50, color: C.text, lineHeight: 1.2, marginBottom: 4 },
-        children: 'Erst absichern,',
-      },
-    },
-    {
-      type: 'span',
-      props: {
-        style: { fontFamily: 'Outfit', fontWeight: 800, fontSize: 50, color: C.green, lineHeight: 1.2, marginBottom: 24 },
-        children: 'dann investieren',
-      },
-    },
-    // Flow diagram
-    {
-      type: 'div',
-      props: {
-        style: { display: 'flex', flex: 1, flexDirection: 'column', justifyContent: 'center', gap: 20 },
-        children: [
-          // Step 1: Check Notgroschen
-          {
-            type: 'div',
-            props: {
-              style: {
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: 20,
-                background: 'rgba(245,158,11,0.15)',
-                border: `2px solid ${C.yellow}`,
-                borderRadius: 18,
-                padding: '24px 28px',
-              },
-              children: [
-                { type: 'span', props: { style: { fontSize: 40 }, children: '🔍' } },
-                {
-                  type: 'div',
-                  props: {
-                    style: { display: 'flex', flexDirection: 'column', gap: 4 },
-                    children: [
-                      { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 700, fontSize: 22, color: C.yellow }, children: 'SCHRITT 1: Notgroschen prüfen' } },
-                      { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 500, fontSize: 19, color: C.dim }, children: 'Ziel: 3 × monatliche Fixkosten auf Tagesgeld' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          // Arrow
-          {
-            type: 'div',
-            props: {
-              style: { display: 'flex', justifyContent: 'center', alignItems: 'center' },
-              children: [{ type: 'span', props: { style: { fontSize: 32, color: C.dim }, children: '↓' } }],
-            },
-          },
-          // Step 2: Rest in ETF
-          {
-            type: 'div',
-            props: {
-              style: {
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: 20,
-                background: 'rgba(16,185,129,0.15)',
-                border: `2px solid ${C.green}`,
-                borderRadius: 18,
-                padding: '24px 28px',
-              },
-              children: [
-                { type: 'span', props: { style: { fontSize: 40 }, children: '📈' } },
-                {
-                  type: 'div',
-                  props: {
-                    style: { display: 'flex', flexDirection: 'column', gap: 4 },
-                    children: [
-                      { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 700, fontSize: 22, color: C.green }, children: 'SCHRITT 2: Rest in ETF investieren' } },
-                      { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 500, fontSize: 19, color: C.dim }, children: 'Alles, was über dem Notgroschen liegt' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          // Info box
-          {
-            type: 'div',
-            props: {
-              style: {
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: 16,
-                background: C.cardBg,
-                borderRadius: 16,
-                padding: '20px 24px',
-              },
-              children: [
-                { type: 'span', props: { style: { fontSize: 32 }, children: '💡' } },
-                { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 500, fontSize: 20, color: C.dim, lineHeight: 1.45 }, children: 'Tagesgeldkonto: bis zu 4,25 % p.a. — perfekt für den Notgroschen' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    { type: 'div', props: { style: { height: 16 } } },
-    keyLearning('Ohne Notgroschen bist du gezwungen, schlecht zum falschen Zeitpunkt zu verkaufen — baue ihn zuerst auf.', C.yellow),
-    { type: 'div', props: { style: { height: 12 } } },
-    footer(),
-  ]);
-  await renderSlide(jsx, 'slide-06.png');
-}
-
-// ─────────────────────────────────────────────
-// SLIDE 7 — AKT 3: Die smarte Aufteilung
-// ─────────────────────────────────────────────
-async function slide07() {
-  const alloc = [
-    { pct: 50, euro: '1.250 €', label: 'ETF-Einmalanlage', desc: 'MSCI World, 20 Jahre liegen lassen', color: C.green },
-    { pct: 30, euro: '750 €', label: 'Altersvorsorge-Depot', desc: 'Ab Jan 2027: +540 € Förderung p.a.', color: '#3B82F6' },
-    { pct: 20, euro: '500 €', label: 'Notgroschen aufstocken', desc: 'Tagesgeld bis 4,25 % p.a.', color: C.yellow },
-  ];
-
-  const jsx = slide([
-    {
-      type: 'div',
-      props: {
-        style: { display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 },
-        children: [badge('DEIN PLAN'), logo(72)],
-      },
-    },
-    {
-      type: 'span',
-      props: {
-        style: { fontFamily: 'Outfit', fontWeight: 800, fontSize: 48, color: C.text, lineHeight: 1.2, marginBottom: 6 },
-        children: 'So teilst du 2.500 € clever auf',
-      },
-    },
-    {
-      type: 'span',
-      props: {
-        style: { fontFamily: 'Outfit', fontWeight: 400, fontSize: 22, color: C.dim, marginBottom: 28 },
-        children: 'Rendite + staatliche Förderung + Sicherheit kombiniert',
-      },
-    },
-    {
-      type: 'div',
-      props: {
-        style: { display: 'flex', flex: 1, flexDirection: 'column', gap: 20, justifyContent: 'center' },
-        children: alloc.map(a => ({
-          type: 'div',
-          props: {
-            style: {
-              display: 'flex',
-              flexDirection: 'column',
-              background: C.cardBg,
-              borderRadius: 18,
-              padding: '22px 24px',
-              gap: 12,
-              borderLeft: `5px solid ${a.color}`,
-            },
-            children: [
-              {
-                type: 'div',
-                props: {
-                  style: { display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-                  children: [
-                    { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 700, fontSize: 24, color: C.text }, children: a.label } },
-                    {
-                      type: 'div',
-                      props: {
-                        style: { display: 'flex', flexDirection: 'row', gap: 12, alignItems: 'center' },
-                        children: [
-                          { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 800, fontSize: 28, color: a.color }, children: `${a.pct} %` } },
-                          { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 700, fontSize: 22, color: C.dim }, children: a.euro } },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-              {
-                type: 'div',
-                props: {
-                  style: { display: 'flex', width: '100%', height: 10, background: 'rgba(255,255,255,0.10)', borderRadius: 5 },
-                  children: [{
-                    type: 'div',
-                    props: { style: { display: 'flex', width: `${a.pct}%`, height: 10, background: a.color, borderRadius: 5 } },
-                  }],
-                },
-              },
-              { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 400, fontSize: 20, color: C.dim }, children: a.desc } },
-            ],
-          },
-        })),
-      },
-    },
-    { type: 'div', props: { style: { height: 16 } } },
-    keyLearning('Diese Aufteilung kombiniert maximale Rendite, staatliche Förderung und finanzielle Sicherheit in einem Plan.', C.green),
-    { type: 'div', props: { style: { height: 12 } } },
-    footer(),
-  ]);
-  await renderSlide(jsx, 'slide-07.png');
-}
-
-// ─────────────────────────────────────────────
-// SLIDE 8 — CTA
-// ─────────────────────────────────────────────
-async function slide08() {
-  const jsx = slide([
-    {
-      type: 'div',
-      props: {
-        style: { display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 },
-        children: [badge('DEIN NÄCHSTER SCHRITT'), logo(80)],
-      },
-    },
-    {
-      type: 'div',
-      props: {
-        style: { display: 'flex', flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 28 },
-        children: [
-          // Big question
-          {
-            type: 'div',
-            props: {
-              style: {
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: 12,
-              },
-              children: [
-                {
-                  type: 'span',
-                  props: {
-                    style: { fontFamily: 'Outfit', fontWeight: 800, fontSize: 48, color: C.text, textAlign: 'center', lineHeight: 1.2 },
-                    children: 'Lass dein Weihnachts-geld für dich arbeiten.',
-                  },
-                },
-                {
-                  type: 'span',
-                  props: {
-                    style: { fontFamily: 'Outfit', fontWeight: 400, fontSize: 24, color: C.dim, textAlign: 'center', lineHeight: 1.5 },
-                    children: 'Benaro analysiert deine Situation und erstellt deinen persönlichen Investitionsplan — kostenlos.',
-                  },
-                },
-              ],
-            },
-          },
-          // CTA chips
-          {
-            type: 'div',
-            props: {
-              style: { display: 'flex', flexDirection: 'column', gap: 16, width: '100%' },
-              children: [
-                {
-                  type: 'div',
-                  props: {
-                    style: {
-                      display: 'flex',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      gap: 16,
-                      background: C.green,
-                      borderRadius: 18,
-                      padding: '20px 28px',
-                    },
-                    children: [
-                      { type: 'span', props: { style: { fontSize: 32 }, children: '📌' } },
-                      { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 700, fontSize: 24, color: '#fff' }, children: 'Post speichern — für später' } },
-                    ],
-                  },
-                },
-                {
-                  type: 'div',
-                  props: {
-                    style: {
-                      display: 'flex',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      gap: 16,
-                      background: C.cardBg,
-                      border: `2px solid ${C.border}`,
-                      borderRadius: 18,
-                      padding: '20px 28px',
-                    },
-                    children: [
-                      { type: 'span', props: { style: { fontSize: 32 }, children: '💬' } },
-                      { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 600, fontSize: 22, color: C.text }, children: 'Schreib uns — wir beraten kostenlos!' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    { type: 'div', props: { style: { height: 16 } } },
-    {
-      type: 'div',
-      props: {
-        style: { display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-        children: [
-          { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 500, fontSize: 20, color: C.dim }, children: '@benarofinanzen' } },
-          {
-            type: 'div',
-            props: {
-              style: { display: 'flex', background: C.cardBg, borderRadius: 12, padding: '8px 16px' },
-              children: [
-                { type: 'span', props: { style: { fontFamily: 'Outfit', fontWeight: 600, fontSize: 18, color: C.green }, children: 'benarofinanzen.com' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ]);
-  await renderSlide(jsx, 'slide-08.png');
-}
 
 async function main() {
-  console.log('Generating Benaro Instagram Carousel — 2026-11-02');
-  console.log('Thema: Weihnachtsgeld 2026 — Statt ausgeben: So lässt du es für dich arbeiten\n');
-  await slide01();
-  await slide02();
-  await slide03();
-  await slide04();
-  await slide05();
-  await slide06();
-  await slide07();
-  await slide08();
-  console.log('\n✅ Alle 8 Slides erfolgreich generiert!');
-  console.log(`Output: ${OUT_DIR}`);
+  const satoriModule = await import('satori');
+  const satori = satoriModule.default || satoriModule;
+  const { Resvg } = require('@resvg/resvg-js');
+
+  const W = 1080, H = 1350;
+  const TODAY = '2026-11-03';
+  const OUTPUT_DIR = path.join(__dirname, 'output', `carousel_${TODAY}`, 'slides');
+  fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+
+  const fontDir = path.join(__dirname, 'node_modules/@fontsource/outfit/files');
+  const fonts = [400, 500, 600, 700, 800].flatMap(w => [
+    { name: 'Outfit', weight: w, style: 'normal', data: fs.readFileSync(path.join(fontDir, `outfit-latin-${w}-normal.woff`)) },
+    { name: 'Outfit', weight: w, style: 'normal', data: fs.readFileSync(path.join(fontDir, `outfit-latin-ext-${w}-normal.woff`)) },
+  ]);
+
+  const C = {
+    bg: '#001F61',
+    text: '#FFFFFF',
+    textSoft: '#E5E7EB',
+    textMuted: '#9CA3AF',
+    cardBg: 'rgba(255,255,255,0.10)',
+    border: 'rgba(255,255,255,0.20)',
+    green: '#10B981',
+    red: '#EF4444',
+  };
+
+  const logoPath = path.join(__dirname, 'skills/instagram-carousel-skill/templates/benaro-logo.jpg');
+  const logoB64 = 'data:image/jpeg;base64,' + fs.readFileSync(logoPath).toString('base64');
+
+  const h = (type, props, ...ch) => ({
+    type,
+    props: {
+      ...props,
+      children: ch.length === 1 ? ch[0] : ch.length === 0 ? undefined : ch,
+    },
+  });
+
+  // ─── Reusable components ───────────────────────────────────────────────────
+
+  function badge(text) {
+    return h('div', { style: { display: 'flex', marginBottom: '16px' } },
+      h('span', {
+        style: {
+          display: 'flex', fontSize: '22px', fontWeight: 700, letterSpacing: '3px',
+          color: C.text, backgroundColor: C.cardBg, padding: '10px 22px', borderRadius: '12px',
+        },
+      }, text)
+    );
+  }
+
+  function headline(line1, line2, size) {
+    const sz = size || 64;
+    const baseStyle = {
+      fontSize: `${sz}px`, fontWeight: 800, color: C.text,
+      lineHeight: '1.1', letterSpacing: '-1.5px',
+    };
+    if (line2) {
+      return h('div', { style: { display: 'flex', flexDirection: 'column', marginBottom: '6px' } },
+        h('span', { style: baseStyle }, line1),
+        h('span', { style: baseStyle }, line2)
+      );
+    }
+    return h('span', { style: { ...baseStyle, marginBottom: '6px' } }, line1);
+  }
+
+  function subline(text) {
+    return h('span', {
+      style: { fontSize: '28px', fontWeight: 500, color: C.textMuted, lineHeight: '1.5', marginTop: '8px' },
+    }, text);
+  }
+
+  function keyLearning(text, accent) {
+    const ac = accent || C.text;
+    return h('div', {
+      style: {
+        display: 'flex', alignItems: 'center', gap: '14px',
+        backgroundColor: C.cardBg, borderRadius: '16px', padding: '22px 28px',
+      },
+    },
+      h('div', { style: { display: 'flex', width: '6px', minHeight: '40px', backgroundColor: ac, borderRadius: '3px' } }),
+      h('span', { style: { fontSize: '27px', fontWeight: 600, color: C.text, lineHeight: '1.4' } }, text)
+    );
+  }
+
+  function logo() {
+    return h('img', {
+      src: logoB64, width: 110, height: 110,
+      style: { borderRadius: '12px', objectFit: 'cover' },
+    });
+  }
+
+  function igHandle() {
+    return h('span', {
+      style: { fontSize: '24px', fontWeight: 500, color: C.textMuted, marginTop: '10px' },
+    }, '@benarofinanzen');
+  }
+
+  function slideRoot(children) {
+    return h('div', {
+      style: {
+        display: 'flex', flexDirection: 'column',
+        width: W, height: H, padding: '70px',
+        backgroundColor: C.bg, fontFamily: 'Outfit',
+      },
+    }, ...children);
+  }
+
+  function topRow(badgeEl) {
+    return h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4px' } },
+      badgeEl,
+      logo()
+    );
+  }
+
+  // ─── Slide 1: Hook ─────────────────────────────────────────────────────────
+  // Stat hero + context chips
+
+  const slide1 = slideRoot([
+    topRow(badge('ACHTUNG')),
+    headline('Black Friday:', 'Die teuerste Falle des Jahres', 62),
+    subline('Noch 24 Tage bis Black Friday 2026'),
+    h('div', {
+      style: {
+        display: 'flex', flex: '1', flexDirection: 'column',
+        justifyContent: 'center', alignItems: 'center', gap: '24px',
+      },
+    },
+      h('div', {
+        style: {
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          backgroundColor: 'rgba(239,68,68,0.15)', borderRadius: '28px',
+          padding: '44px 70px', border: '2px solid rgba(239,68,68,0.35)',
+        },
+      },
+        h('span', {
+          style: {
+            fontSize: '136px', fontWeight: 800, color: C.red,
+            lineHeight: '1.0', letterSpacing: '-4px',
+          },
+        }, '72 %'),
+        h('span', {
+          style: {
+            fontSize: '28px', fontWeight: 600, color: C.textSoft,
+            textAlign: 'center', lineHeight: '1.45',
+          },
+        }, 'der Käufer bereuen ihren Black-Friday-Einkauf')
+      ),
+      h('div', { style: { display: 'flex', gap: '16px' } },
+        h('div', {
+          style: {
+            display: 'flex', padding: '14px 26px',
+            backgroundColor: C.cardBg, borderRadius: '14px',
+          },
+        },
+          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textSoft } }, '5,3 Mrd. EUR Umsatz 2025')
+        ),
+        h('div', {
+          style: {
+            display: 'flex', padding: '14px 26px',
+            backgroundColor: C.cardBg, borderRadius: '14px',
+          },
+        },
+          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textSoft } }, '+18 % vs. Vorjahr')
+        )
+      )
+    ),
+    keyLearning('Black Friday ist kein Schnäppchen — er ist ein Marketinginstrument'),
+    igHandle(),
+  ]);
+
+  // ─── Slide 2: Preistrick Bar-Chart ─────────────────────────────────────────
+  // Preis wird 6 Wochen vorher erhoeht, dann "rabattiert"
+
+  const barSvg = `<svg width="840" height="280" viewBox="0 0 840 280" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#EF4444" stop-opacity="0.8"/>
+        <stop offset="100%" stop-color="#EF4444" stop-opacity="0.4"/>
+      </linearGradient>
+      <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#10B981" stop-opacity="0.9"/>
+        <stop offset="100%" stop-color="#10B981" stop-opacity="0.5"/>
+      </linearGradient>
+    </defs>
+    <line x1="0" y1="240" x2="840" y2="240" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+    <line x1="0" y1="170" x2="840" y2="170" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <line x1="0" y1="100" x2="840" y2="100" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <rect x="30" y="130" width="130" height="110" rx="10" fill="rgba(255,255,255,0.25)"/>
+    <rect x="200" y="60" width="130" height="180" rx="10" fill="url(#g1)"/>
+    <rect x="370" y="60" width="130" height="180" rx="10" fill="url(#g1)"/>
+    <rect x="540" y="100" width="130" height="140" rx="10" fill="url(#g2)"/>
+    <line x1="10" y1="130" x2="830" y2="130" stroke="rgba(255,255,255,0.55)" stroke-width="2" stroke-dasharray="12,7"/>
+    <line x1="605" y1="25" x2="605" y2="90" stroke="#10B981" stroke-width="3"/>
+    <polygon points="593,88 605,108 617,88" fill="#10B981"/>
+  </svg>`;
+  const barSrc = `data:image/svg+xml;base64,${Buffer.from(barSvg).toString('base64')}`;
+
+  const slide2 = slideRoot([
+    topRow(badge('DIE WAHRHEIT')),
+    headline('Wie Händler die Preise', 'wirklich setzen', 60),
+    h('div', {
+      style: {
+        display: 'flex', flex: '1', flexDirection: 'column',
+        justifyContent: 'center', gap: '16px',
+      },
+    },
+      h('img', { src: barSrc, width: 840, height: 280, style: { objectFit: 'contain' } }),
+      h('div', { style: { display: 'flex', justifyContent: 'space-around', marginTop: '8px' } },
+        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', width: '150px' } },
+          h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.textSoft } }, '100 EUR'),
+          h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted } }, 'September')
+        ),
+        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', width: '150px' } },
+          h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.red } }, '135 EUR'),
+          h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted } }, 'Oktober')
+        ),
+        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', width: '150px' } },
+          h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.red } }, '135 EUR'),
+          h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted } }, 'Nov. 1-26')
+        ),
+        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', width: '150px' } },
+          h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.green } }, '"110 EUR"'),
+          h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted } }, 'Black Friday')
+        )
+      ),
+      h('div', {
+        style: {
+          display: 'flex', alignItems: 'center', gap: '14px',
+          padding: '16px 22px', backgroundColor: 'rgba(239,68,68,0.12)',
+          borderRadius: '14px', border: '1px solid rgba(239,68,68,0.25)',
+        },
+      },
+        h('div', { style: { display: 'flex', width: '12px', height: '12px', borderRadius: '6px', backgroundColor: C.red } }),
+        h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft } }, '67 % der Angebote waren 8 Wochen vorher günstiger')
+      )
+    ),
+    keyLearning('Der gestrichelte Strich zeigt den echten Normalpreis — daran orientiere dich', C.red),
+    igHandle(),
+  ]);
+
+  // ─── Slide 3: Impulskauf-Funnel ────────────────────────────────────────────
+
+  const funnelSvg = `<svg width="700" height="300" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="rf1" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#EF4444" stop-opacity="0.7"/>
+        <stop offset="100%" stop-color="#EF4444" stop-opacity="0.5"/>
+      </linearGradient>
+      <linearGradient id="rf2" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#EF4444" stop-opacity="0.5"/>
+        <stop offset="100%" stop-color="#EF4444" stop-opacity="0.3"/>
+      </linearGradient>
+      <linearGradient id="rf3" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#EF4444" stop-opacity="0.3"/>
+        <stop offset="100%" stop-color="#EF4444" stop-opacity="0.15"/>
+      </linearGradient>
+    </defs>
+    <rect x="50" y="10" width="600" height="72" rx="10" fill="url(#rf1)"/>
+    <polygon points="50,82 650,82 590,114 110,114" fill="rgba(239,68,68,0.15)"/>
+    <rect x="110" y="114" width="480" height="72" rx="10" fill="url(#rf2)"/>
+    <polygon points="110,186 590,186 540,218 160,218" fill="rgba(239,68,68,0.1)"/>
+    <rect x="160" y="218" width="380" height="72" rx="10" fill="url(#rf3)"/>
+  </svg>`;
+  const funnelSrc = `data:image/svg+xml;base64,${Buffer.from(funnelSvg).toString('base64')}`;
+
+  const slide3 = slideRoot([
+    topRow(badge('DAS PROBLEM')),
+    headline('500 EUR ausgegeben —', '3 Verluste auf einmal', 62),
+    h('div', {
+      style: {
+        display: 'flex', flex: '1', flexDirection: 'column',
+        justifyContent: 'center', alignItems: 'center', gap: '14px',
+      },
+    },
+      h('div', { style: { display: 'flex', position: 'relative', width: '700px', height: '300px' } },
+        h('img', { src: funnelSrc, width: 700, height: 300, style: { objectFit: 'contain' } })
+      ),
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' } },
+        h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px', padding: '14px 22px', backgroundColor: 'rgba(239,68,68,0.15)', borderRadius: '12px' } },
+          h('div', { style: { display: 'flex', width: '16px', height: '16px', borderRadius: '4px', backgroundColor: 'rgba(239,68,68,0.8)' } }),
+          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft } }, '500 EUR Impulskauf — Geld weg')
+        ),
+        h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px', padding: '14px 22px', backgroundColor: 'rgba(239,68,68,0.10)', borderRadius: '12px' } },
+          h('div', { style: { display: 'flex', width: '16px', height: '16px', borderRadius: '4px', backgroundColor: 'rgba(239,68,68,0.55)' } }),
+          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft } }, 'Kaufkraftverlust durch Inflation')
+        ),
+        h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px', padding: '14px 22px', backgroundColor: 'rgba(239,68,68,0.07)', borderRadius: '12px' } },
+          h('div', { style: { display: 'flex', width: '16px', height: '16px', borderRadius: '4px', backgroundColor: 'rgba(239,68,68,0.3)' } }),
+          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft } }, 'Entgangene Rendite (Opportunitätskosten)')
+        )
+      )
+    ),
+    keyLearning('500 EUR heute ausgegeben = 1.935 EUR in 20 Jahren verloren', C.red),
+    igHandle(),
+  ]);
+
+  // ─── Slide 4: Erwartung vs. Realität ──────────────────────────────────────
+
+  const slide4 = slideRoot([
+    topRow(badge('ERWARTUNG VS. REALITÄT')),
+    headline('Was du denkst vs.', 'was wirklich passiert', 58),
+    h('div', {
+      style: {
+        display: 'flex', flex: '1', flexDirection: 'column',
+        justifyContent: 'center', gap: '18px',
+      },
+    },
+      h('div', { style: { display: 'flex', gap: '16px' } },
+        h('div', {
+          style: {
+            display: 'flex', flex: '1', flexDirection: 'column',
+            backgroundColor: C.cardBg, borderRadius: '20px',
+            padding: '28px', gap: '14px',
+          },
+        },
+          h('span', { style: { fontSize: '22px', fontWeight: 700, letterSpacing: '2px', color: C.textMuted } }, 'ERWARTUNG'),
+          h('div', { style: { display: 'flex', width: '100%', height: '4px', backgroundColor: C.border, borderRadius: '2px' } }),
+          h('span', { style: { fontSize: '28px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4' } }, '"Ich spare 30 % — das ist clever"'),
+          h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted } }, 'Geplantes Budget: 200 EUR')
+        ),
+        h('div', {
+          style: {
+            display: 'flex', flex: '1', flexDirection: 'column',
+            backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '20px',
+            padding: '28px', gap: '14px', border: '1px solid rgba(239,68,68,0.3)',
+          },
+        },
+          h('span', { style: { fontSize: '22px', fontWeight: 700, letterSpacing: '2px', color: C.red } }, 'REALITÄT'),
+          h('div', { style: { display: 'flex', width: '100%', height: '4px', backgroundColor: 'rgba(239,68,68,0.3)', borderRadius: '2px' } }),
+          h('span', { style: { fontSize: '28px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4' } }, '"Ich hab am Ende 480 EUR ausgegeben..."'),
+          h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.red } }, 'Tatsächlich: 480 EUR')
+        )
+      ),
+      h('div', { style: { display: 'flex', gap: '16px' } },
+        h('div', {
+          style: {
+            display: 'flex', flex: '1', flexDirection: 'column',
+            backgroundColor: C.cardBg, borderRadius: '20px',
+            padding: '28px', gap: '14px',
+          },
+        },
+          h('span', { style: { fontSize: '22px', fontWeight: 700, letterSpacing: '2px', color: C.textMuted } }, 'ERWARTUNG'),
+          h('div', { style: { display: 'flex', width: '100%', height: '4px', backgroundColor: C.border, borderRadius: '2px' } }),
+          h('span', { style: { fontSize: '28px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4' } }, '"Der Rabatt ist echt — ich habe ihn geprüft"')
+        ),
+        h('div', {
+          style: {
+            display: 'flex', flex: '1', flexDirection: 'column',
+            backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '20px',
+            padding: '28px', gap: '14px', border: '1px solid rgba(239,68,68,0.3)',
+          },
+        },
+          h('span', { style: { fontSize: '22px', fontWeight: 700, letterSpacing: '2px', color: C.red } }, 'REALITÄT'),
+          h('div', { style: { display: 'flex', width: '100%', height: '4px', backgroundColor: 'rgba(239,68,68,0.3)', borderRadius: '2px' } }),
+          h('span', { style: { fontSize: '28px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4' } }, '67 % der Angebote waren 8 Wochen vorher günstiger')
+        )
+      )
+    ),
+    keyLearning('Black Friday erhöht deine Ausgaben — nicht deine Ersparnisse', C.red),
+    igHandle(),
+  ]);
+
+  // ─── Slide 5: Die 3-Fragen-Regel ───────────────────────────────────────────
+
+  const questions = [
+    { num: '01', q: 'Hätte ich es auch ohne Rabatt gekauft?', pct: 33 },
+    { num: '02', q: 'Ist es seit mind. 30 Tagen auf meiner Wunschliste?', pct: 66 },
+    { num: '03', q: 'Habe ich diesen Kauf im Budget eingeplant?', pct: 100 },
+  ];
+
+  const slide5 = slideRoot([
+    topRow(badge('DIE METHODE')),
+    headline('Die 3-Fragen-Regel', 'vor jedem Kauf', 62),
+    h('div', {
+      style: {
+        display: 'flex', flex: '1', flexDirection: 'column',
+        justifyContent: 'center', gap: '20px',
+      },
+    },
+      ...questions.map(q =>
+        h('div', {
+          style: {
+            display: 'flex', flexDirection: 'column', gap: '12px',
+            padding: '24px 28px', backgroundColor: C.cardBg, borderRadius: '18px',
+          },
+        },
+          h('div', { style: { display: 'flex', alignItems: 'center', gap: '20px' } },
+            h('span', {
+              style: {
+                fontSize: '40px', fontWeight: 800,
+                color: q.pct === 100 ? C.green : C.text, minWidth: '58px',
+              },
+            }, q.num),
+            h('span', { style: { fontSize: '28px', fontWeight: 600, color: C.text, lineHeight: '1.3' } }, q.q)
+          ),
+          h('div', { style: { display: 'flex', height: '6px', backgroundColor: C.border, borderRadius: '3px', overflow: 'hidden' } },
+            h('div', { style: { display: 'flex', width: `${q.pct}%`, height: '6px', backgroundColor: q.pct === 100 ? C.green : C.text, borderRadius: '3px' } })
+          )
+        )
+      )
+    ),
+    keyLearning('Alle 3 Fragen mit JA? Dann kauf. Sonst: erst recht nicht.'),
+    igHandle(),
+  ]);
+
+  // ─── Slide 6: Investieren vs. Ausgeben Line-Chart ─────────────────────────
+  // 500 EUR bei 7 % p.a. ueber 20 Jahre = 1.935 EUR
+
+  const lineSvg = `<svg width="840" height="300" viewBox="0 0 840 300" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="lg1" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#10B981" stop-opacity="0.35"/>
+        <stop offset="100%" stop-color="#10B981" stop-opacity="0.0"/>
+      </linearGradient>
+    </defs>
+    <line x1="60" y1="260" x2="820" y2="260" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+    <line x1="60" y1="195" x2="820" y2="195" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    <line x1="60" y1="130" x2="820" y2="130" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    <line x1="60" y1="65" x2="820" y2="65" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    <line x1="60" y1="260" x2="820" y2="260" stroke="#EF4444" stroke-width="3" stroke-dasharray="12,6"/>
+    <path d="M 60 210 C 200 205 380 175 820 65" stroke="#10B981" stroke-width="4" fill="none"/>
+    <path d="M 60 210 C 200 205 380 175 820 65 L 820 260 L 60 260 Z" fill="url(#lg1)"/>
+    <circle cx="60" cy="210" r="8" fill="#10B981" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+    <circle cx="820" cy="65" r="8" fill="#10B981" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+    <circle cx="60" cy="260" r="8" fill="#EF4444" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+    <circle cx="820" cy="260" r="8" fill="#EF4444" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+  </svg>`;
+  const lineSrc = `data:image/svg+xml;base64,${Buffer.from(lineSvg).toString('base64')}`;
+
+  const slide6 = slideRoot([
+    topRow(badge('DER VERGLEICH')),
+    headline('Was aus 500 EUR in', '20 Jahren wird', 64),
+    h('div', {
+      style: {
+        display: 'flex', flex: '1', flexDirection: 'column',
+        justifyContent: 'center', gap: '14px',
+      },
+    },
+      h('div', { style: { display: 'flex', gap: '24px', marginBottom: '6px' } },
+        h('div', { style: { display: 'flex', alignItems: 'center', gap: '10px' } },
+          h('div', { style: { display: 'flex', width: '32px', height: '4px', backgroundColor: C.green } }),
+          h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.textSoft } }, 'ETF-Sparplan (7 % p.a.)')
+        ),
+        h('div', { style: { display: 'flex', alignItems: 'center', gap: '10px' } },
+          h('div', { style: { display: 'flex', width: '32px', height: '4px', backgroundColor: C.red } }),
+          h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.textSoft } }, 'Ausgegeben')
+        )
+      ),
+      h('img', { src: lineSrc, width: 840, height: 300, style: { objectFit: 'contain' } }),
+      h('div', { style: { display: 'flex', gap: '16px' } },
+        h('div', {
+          style: {
+            display: 'flex', flex: '1', flexDirection: 'column', alignItems: 'center',
+            backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '16px',
+            padding: '20px 16px', border: '1px solid rgba(16,185,129,0.3)',
+          },
+        },
+          h('span', { style: { fontSize: '42px', fontWeight: 800, color: C.green, letterSpacing: '-1px' } }, '1.935 EUR'),
+          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, marginTop: '4px' } }, 'investiert nach 20 J.')
+        ),
+        h('div', {
+          style: {
+            display: 'flex', flex: '1', flexDirection: 'column', alignItems: 'center',
+            backgroundColor: 'rgba(239,68,68,0.1)', borderRadius: '16px',
+            padding: '20px 16px', border: '1px solid rgba(239,68,68,0.3)',
+          },
+        },
+          h('span', { style: { fontSize: '42px', fontWeight: 800, color: C.red, letterSpacing: '-1px' } }, '0 EUR'),
+          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, marginTop: '4px' } }, 'ausgegeben nach 20 J.')
+        )
+      )
+    ),
+    keyLearning('Zinseszins-Effekt: 500 EUR x 7 % x 20 Jahre = 1.935 EUR'),
+    igHandle(),
+  ]);
+
+  // ─── Slide 7: Takeaways ─────────────────────────────────────────────────────
+
+  const learnings = [
+    { num: '01', text: 'Wunschliste 30+ Tage vor Black Friday anlegen', pct: 25 },
+    { num: '02', text: 'Preisalarm setzen (idealo, camelcamelcamel)', pct: 50 },
+    { num: '03', text: 'Budget: max. 20 % eines Monatseinkommens', pct: 75 },
+    { num: '04', text: 'Erspartes sofort in den ETF-Sparplan umleiten', pct: 100 },
+  ];
+
+  const slide7 = slideRoot([
+    topRow(badge('DEINE TAKEAWAYS')),
+    headline('4 Regeln für', 'den Black Friday', 64),
+    h('div', {
+      style: {
+        display: 'flex', flex: '1', flexDirection: 'column',
+        justifyContent: 'center', gap: '18px',
+      },
+    },
+      ...learnings.map(l =>
+        h('div', {
+          style: {
+            display: 'flex', flexDirection: 'column', gap: '10px',
+            padding: '20px 24px', backgroundColor: C.cardBg, borderRadius: '18px',
+          },
+        },
+          h('div', { style: { display: 'flex', alignItems: 'center', gap: '18px' } },
+            h('span', {
+              style: {
+                fontSize: '38px', fontWeight: 800,
+                color: l.pct === 100 ? C.green : C.text, minWidth: '56px',
+              },
+            }, l.num),
+            h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.3' } }, l.text)
+          ),
+          h('div', { style: { display: 'flex', height: '6px', backgroundColor: C.border, borderRadius: '3px', overflow: 'hidden' } },
+            h('div', { style: { display: 'flex', width: `${l.pct}%`, height: '6px', backgroundColor: l.pct === 100 ? C.green : C.text, borderRadius: '3px' } })
+          )
+        )
+      )
+    ),
+    keyLearning('Wer diese Regeln befolgt, spart im Schnitt über 300 EUR am Black Friday'),
+    igHandle(),
+  ]);
+
+  // ─── Slide 8: CTA ──────────────────────────────────────────────────────────
+
+  const slide8 = slideRoot([
+    topRow(badge('DEINE FRAGE')),
+    h('div', {
+      style: {
+        display: 'flex', flex: '1', flexDirection: 'column',
+        justifyContent: 'center', alignItems: 'center', gap: '28px',
+      },
+    },
+      headline('Wirst du dieses Jahr', 'Black Friday überspringen?', 56),
+      h('span', {
+        style: {
+          fontSize: '28px', fontWeight: 500, color: C.textSoft,
+          textAlign: 'center', lineHeight: '1.55',
+        },
+      }, 'Schreib "JA" oder "NEIN" in die Kommentare — wir sind gespannt!'),
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '14px', width: '100%', maxWidth: '720px' } },
+        h('div', {
+          style: {
+            display: 'flex', alignItems: 'center', gap: '16px',
+            padding: '20px 28px', backgroundColor: C.cardBg, borderRadius: '16px',
+          },
+        },
+          h('div', { style: { display: 'flex', width: '10px', height: '10px', borderRadius: '5px', backgroundColor: C.green } }),
+          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft } }, 'Speichern nicht vergessen')
+        ),
+        h('div', {
+          style: {
+            display: 'flex', alignItems: 'center', gap: '16px',
+            padding: '20px 28px', backgroundColor: C.cardBg, borderRadius: '16px',
+          },
+        },
+          h('div', { style: { display: 'flex', width: '10px', height: '10px', borderRadius: '5px', backgroundColor: C.green } }),
+          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft } }, 'Folge @benarofinanzen für mehr Finanztipps')
+        )
+      )
+    ),
+    igHandle(),
+  ]);
+
+  // ─── Generate all slides ────────────────────────────────────────────────────
+
+  const slides = [slide1, slide2, slide3, slide4, slide5, slide6, slide7, slide8];
+
+  for (let i = 0; i < slides.length; i++) {
+    const svg = await satori(slides[i], { width: W, height: H, fonts });
+    const resvg = new Resvg(svg, { fitTo: { mode: 'width', value: W } });
+    const pngData = resvg.render();
+    const pngPath = path.join(OUTPUT_DIR, `slide-${String(i + 1).padStart(2, '0')}.png`);
+    fs.writeFileSync(pngPath, pngData.asPng());
+    console.log(`Slide ${i + 1}/${slides.length} done: ${path.basename(pngPath)}`);
+  }
+
+  console.log('All slides generated!');
 }
 
-main().catch(err => { console.error(err); process.exit(1); });
+main().catch(e => {
+  console.error('Generation failed:', e.message);
+  console.error(e.stack);
+  process.exit(1);
+});
