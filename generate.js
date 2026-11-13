@@ -1,4 +1,3 @@
-'use strict';
 const fs = require('fs');
 const path = require('path');
 
@@ -6,59 +5,40 @@ async function main() {
   const satori = (await import('satori')).default || require('satori');
   const { Resvg } = require('@resvg/resvg-js');
 
-  const W = 1080, H = 1350;
-  const TODAY = '2026-11-09';
-  const OUTPUT_DIR = path.join(__dirname, 'output', `carousel_${TODAY}`, 'slides');
-
   const fontDir = path.join(__dirname, 'node_modules/@fontsource/outfit/files');
   const fonts = [400, 500, 600, 700, 800].flatMap(w => [
     { name: 'Outfit', weight: w, style: 'normal', data: fs.readFileSync(path.join(fontDir, `outfit-latin-${w}-normal.woff`)) },
     { name: 'Outfit', weight: w, style: 'normal', data: fs.readFileSync(path.join(fontDir, `outfit-latin-ext-${w}-normal.woff`)) },
   ]);
 
-  const logoB64 = 'data:image/jpeg;base64,' + fs.readFileSync(
-    path.join(__dirname, 'skills/instagram-carousel-skill/templates/benaro-logo.jpg')
-  ).toString('base64');
-
   const C = {
-    bg: '#001F61',
-    bgDark: '#001542',
+    bg: '#1B2D87',
+    bgDark: '#12207A',
+    bgDeep: '#0D1A60',
     text: '#FFFFFF',
-    textSoft: '#E5E7EB',
-    textMuted: '#9CA3AF',
-    cardBg: 'rgba(255,255,255,0.1)',
-    border: 'rgba(255,255,255,0.2)',
-    green: '#10B981',
-    red: '#EF4444',
+    textSoft: 'rgba(255,255,255,0.80)',
+    textMuted: 'rgba(255,255,255,0.50)',
+    cardBg: 'rgba(255,255,255,0.10)',
+    cardBgLight: 'rgba(255,255,255,0.18)',
+    border: 'rgba(255,255,255,0.15)',
+    accent: '#5BC8F5',
+    red: '#E63030',
+    white: '#FFFFFF',
   };
 
+  const W = 1080, H = 1350;
+
   const h = (type, props, ...ch) => ({
-    type,
-    props: { ...props, children: ch.length === 1 ? ch[0] : ch.length === 0 ? undefined : ch }
+    type, props: { ...props, children: ch.length === 1 ? ch[0] : ch.length === 0 ? undefined : ch }
   });
-
-  function logo() {
-    return h('img', {
-      src: logoB64,
-      width: 100,
-      height: 100,
-      style: { borderRadius: '12px', objectFit: 'cover' }
-    });
-  }
-
-  function topBar(dark = false) {
-    return h('div', {
-      style: { display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginBottom: '16px' }
-    }, logo());
-  }
 
   function badge(text) {
     return h('div', { style: { display: 'flex', marginBottom: '14px' } },
       h('span', {
         style: {
-          display: 'flex', fontSize: '20px', fontWeight: 700, letterSpacing: '3px',
-          color: C.text, backgroundColor: C.cardBg, padding: '10px 22px', borderRadius: '12px',
-          fontFamily: 'Outfit'
+          display: 'flex', fontSize: '22px', fontWeight: 700, letterSpacing: '3px',
+          color: C.accent, backgroundColor: 'rgba(91,200,245,0.15)',
+          padding: '10px 22px', borderRadius: '12px', textTransform: 'uppercase'
         }
       }, text)
     );
@@ -68,8 +48,8 @@ async function main() {
     return h('span', {
       style: {
         fontSize: `${size}px`, fontWeight: 800, color: C.text,
-        lineHeight: '1.08', letterSpacing: '-1.5px', marginBottom: '8px',
-        fontFamily: 'Outfit'
+        lineHeight: '1.05', letterSpacing: '-0.5px', marginBottom: '6px',
+        textTransform: 'uppercase'
       }
     }, text);
   }
@@ -77,368 +57,389 @@ async function main() {
   function subline(text) {
     return h('span', {
       style: {
-        fontSize: '28px', fontWeight: 500, color: C.textMuted,
-        lineHeight: '1.5', marginTop: '8px', fontFamily: 'Outfit'
+        fontSize: '28px', fontWeight: 500, color: C.textSoft,
+        lineHeight: '1.5', marginTop: '8px'
       }
     }, text);
   }
 
-  function keyLearning(text, accent = C.text) {
+  function keyLearning(text) {
     return h('div', {
       style: {
         display: 'flex', alignItems: 'center', gap: '14px',
-        backgroundColor: C.cardBg, borderRadius: '16px', padding: '22px 28px', marginTop: '20px'
+        backgroundColor: 'rgba(255,255,255,0.08)',
+        borderRadius: '16px', padding: '22px 28px', marginTop: 'auto'
       }
     },
-      h('div', { style: { display: 'flex', width: '6px', minHeight: '40px', backgroundColor: accent, borderRadius: '3px' } }),
-      h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.4', fontFamily: 'Outfit' } }, text)
+      h('div', { style: { display: 'flex', width: '6px', minHeight: '40px', backgroundColor: C.red, borderRadius: '3px' } }),
+      h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.4' } }, text)
     );
   }
 
-  function igHandle() {
-    return h('div', { style: { display: 'flex', marginTop: '12px' } },
-      h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted, fontFamily: 'Outfit' } }, '@benarofinanzen')
+  function bfLogo() {
+    return h('div', {
+      style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', marginTop: '18px' }
+    },
+      h('div', {
+        style: {
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          width: '72px', height: '56px',
+          border: '3px solid rgba(255,255,255,0.9)', borderRadius: '10px'
+        }
+      },
+        h('span', { style: { fontSize: '28px', fontWeight: 800, color: '#FFFFFF', letterSpacing: '2px' } }, 'BF')
+      ),
+      h('span', {
+        style: { fontSize: '14px', fontWeight: 600, color: 'rgba(255,255,255,0.7)', letterSpacing: '3px', textTransform: 'uppercase' }
+      }, 'BENARO FINANZEN')
     );
   }
 
-  function slideRoot(bgColor, children) {
+  function slide(children) {
     return h('div', {
       style: {
-        display: 'flex', flexDirection: 'column', width: W, height: H,
-        padding: '60px 70px', backgroundColor: bgColor, fontFamily: 'Outfit'
+        display: 'flex', flexDirection: 'column',
+        width: W, height: H, padding: '70px',
+        backgroundColor: C.bg, fontFamily: 'Outfit'
       }
     }, ...children);
   }
 
-  // ─── SLIDE 1: HOOK ───────────────────────────────────────────────────────────
-  const svgCountdown = `<svg width="860" height="300" viewBox="0 0 860 300" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="130" cy="150" r="110" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.3)" stroke-width="4"/>
-    <circle cx="130" cy="150" r="110" fill="none" stroke="#10B981" stroke-width="8" stroke-dasharray="440 692" stroke-linecap="round" transform="rotate(-90 130 150)"/>
-    <circle cx="310" cy="150" r="80" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)" stroke-width="3"/>
-    <circle cx="490" cy="150" r="80" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)" stroke-width="3"/>
-    <circle cx="670" cy="150" r="80" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)" stroke-width="3"/>
-  </svg>`;
-  const svgCountdownSrc = `data:image/svg+xml;base64,${Buffer.from(svgCountdown).toString('base64')}`;
-
-  const slide1 = slideRoot(C.bg, [
-    topBar(),
-    badge('BREAKING: 01.01.2027'),
-    headline('7 Wochen. Dann startet das neue Altersvorsorge-Depot.', 56),
-    subline('Der größte Rentensystem-Wandel seit 25 Jahren.'),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '16px' } },
-      h('img', { src: svgCountdownSrc, width: 860, height: 300, style: { objectFit: 'contain' } }),
-      h('div', { style: { display: 'flex', flexDirection: 'row', gap: '24px', justifyContent: 'center' } },
-        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' } },
-          h('span', { style: { fontSize: '96px', fontWeight: 800, color: C.green, lineHeight: '1', fontFamily: 'Outfit' } }, '7'),
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textMuted, letterSpacing: '2px', fontFamily: 'Outfit' } }, 'WOCHEN')
-        ),
-        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', marginLeft: '60px' } },
-          h('span', { style: { fontSize: '64px', fontWeight: 800, color: C.textSoft, lineHeight: '1', fontFamily: 'Outfit' } }, '49'),
-          h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.textMuted, letterSpacing: '2px', fontFamily: 'Outfit' } }, 'TAGE')
-        ),
-        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', marginLeft: '40px' } },
-          h('span', { style: { fontSize: '64px', fontWeight: 800, color: C.textSoft, lineHeight: '1', fontFamily: 'Outfit' } }, '1.176'),
-          h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.textMuted, letterSpacing: '2px', fontFamily: 'Outfit' } }, 'STUNDEN')
-        )
-      )
-    ),
-    keyLearning('Wer jetzt handelt, profitiert ab dem ersten Tag.', C.green),
-    igHandle(),
-  ]);
-
-  // ─── SLIDE 2: PROBLEM (STAT HERO) ────────────────────────────────────────────
-  const svgRentenniveau = `<svg width="860" height="260" viewBox="0 0 860 260" xmlns="http://www.w3.org/2000/svg">
-    <rect x="40" y="20" width="140" height="220" rx="10" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
-    <rect x="40" y="130" width="140" height="110" rx="6" fill="rgba(239,68,68,0.3)"/>
-    <rect x="40" y="20" width="140" height="110" rx="6" fill="rgba(239,68,68,0.6)"/>
-    <rect x="220" y="20" width="140" height="220" rx="10" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
-    <rect x="220" y="98" width="140" height="142" rx="6" fill="rgba(239,68,68,0.15)"/>
-    <rect x="220" y="20" width="140" height="78" rx="6" fill="rgba(239,68,68,0.5)"/>
-    <rect x="400" y="20" width="140" height="220" rx="10" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
-    <rect x="400" y="80" width="140" height="160" rx="6" fill="rgba(255,255,255,0.03)"/>
-    <rect x="400" y="20" width="140" height="60" rx="6" fill="rgba(239,68,68,0.3)"/>
-    <rect x="580" y="20" width="240" height="220" rx="10" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.3)" stroke-width="2"/>
-    <rect x="600" y="40" width="200" height="180" rx="8" fill="rgba(16,185,129,0.15)"/>
-  </svg>`;
-  const svgRentenniveauSrc = `data:image/svg+xml;base64,${Buffer.from(svgRentenniveau).toString('base64')}`;
-
-  const slide2 = slideRoot(C.bgDark, [
-    topBar(),
-    badge('DAS PROBLEM'),
-    headline('Das Rentenniveau sinkt auf 43 %', 54),
-    subline('Was bleibt dir im Alter wirklich?'),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '20px' } },
-      h('img', { src: svgRentenniveauSrc, width: 860, height: 260, style: { objectFit: 'contain' } }),
-      h('div', { style: { display: 'flex', flexDirection: 'row', gap: '14px' } },
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '16px', padding: '20px 24px', gap: '6px', border: '1px solid rgba(239,68,68,0.3)' } },
-          h('span', { style: { fontSize: '36px', fontWeight: 800, color: C.red, fontFamily: 'Outfit' } }, '43 %'),
-          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, lineHeight: '1.3', fontFamily: 'Outfit' } }, 'Rentenniveau bis 2040')
-        ),
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '16px', padding: '20px 24px', gap: '6px', border: '1px solid rgba(239,68,68,0.3)' } },
-          h('span', { style: { fontSize: '36px', fontWeight: 800, color: C.red, fontFamily: 'Outfit' } }, '1.200 EUR'),
-          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, lineHeight: '1.3', fontFamily: 'Outfit' } }, 'monatliche Rentenlücke')
-        ),
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '16px', padding: '20px 24px', gap: '6px', border: '1px solid rgba(16,185,129,0.3)' } },
-          h('span', { style: { fontSize: '36px', fontWeight: 800, color: C.green, fontFamily: 'Outfit' } }, '540 EUR'),
-          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, lineHeight: '1.3', fontFamily: 'Outfit' } }, 'staatliche Förderung p.a.')
-        )
-      )
-    ),
-    keyLearning('78 % der Deutschen unterschätzen, wie viel ihnen im Alter fehlt.', C.red),
-    igHandle(),
-  ]);
-
-  // ─── SLIDE 3: DIE LÖSUNG (Kontrast: Riester vs. AV-Depot) ───────────────────
-  const slide3 = slideRoot(C.bg, [
-    topBar(),
-    badge('DIE LÖSUNG'),
-    headline('Das Altersvorsorge-Depot schlägt Riester in allen Punkten', 48),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '16px' } },
-      h('div', { style: { display: 'flex', flexDirection: 'row', gap: '14px' } },
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '20px', padding: '28px', gap: '14px', border: '1px solid rgba(255,255,255,0.1)' } },
-          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: C.textMuted, fontFamily: 'Outfit' } }, 'RIESTER-RENTE'),
-          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(239,68,68,0.5)', borderRadius: '2px' } }),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4', fontFamily: 'Outfit', textDecoration: 'line-through', opacity: '0.6' } }, '1,8 % Kosten p.a.'),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4', fontFamily: 'Outfit', textDecoration: 'line-through', opacity: '0.6' } }, 'Komplizierte Regeln'),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4', fontFamily: 'Outfit', textDecoration: 'line-through', opacity: '0.6' } }, 'Eingeschränkte ETFs')
-        ),
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '20px', padding: '28px', gap: '14px', border: '1px solid rgba(16,185,129,0.3)' } },
-          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: C.green, fontFamily: 'Outfit' } }, 'AV-DEPOT 2027'),
-          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: C.green, borderRadius: '2px' } }),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.4', fontFamily: 'Outfit' } }, 'ab 0,1 % Kosten p.a.'),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.4', fontFamily: 'Outfit' } }, 'Einfache Einrichtung'),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.4', fontFamily: 'Outfit' } }, 'Alle ETFs wählbar')
-        )
-      ),
-      h('div', { style: { display: 'flex', flexDirection: 'row', gap: '14px' } },
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'row', alignItems: 'center', gap: '14px', backgroundColor: C.cardBg, borderRadius: '16px', padding: '20px 24px' } },
-          h('div', { style: { display: 'flex', width: '12px', height: '12px', borderRadius: '6px', backgroundColor: C.green } }),
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.text, lineHeight: '1.3', fontFamily: 'Outfit' } }, 'Bis zu 1.800 EUR staatliche Förderung pro Jahr')
-        ),
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'row', alignItems: 'center', gap: '14px', backgroundColor: C.cardBg, borderRadius: '16px', padding: '20px 24px' } },
-          h('div', { style: { display: 'flex', width: '12px', height: '12px', borderRadius: '6px', backgroundColor: C.green } }),
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.text, lineHeight: '1.3', fontFamily: 'Outfit' } }, 'Staatlich zertifiziert und reguliert')
-        )
-      )
-    ),
-    keyLearning('16 Millionen Riester-Sparer stehen jetzt vor einer wichtigen Entscheidung.'),
-    igHandle(),
-  ]);
-
-  // ─── SLIDE 4: CHECKLISTE (5 Schritte) ───────────────────────────────────────
-  const steps = [
-    { num: '01', text: 'Anbieter vergleichen (Trade Republic, Scalable, ING)', pct: 20 },
-    { num: '02', text: 'Für Warteliste deines Wunsch-Anbieters anmelden', pct: 40 },
-    { num: '03', text: 'Monatlichen Betrag festlegen (empfohlen: mind. 50 EUR)', pct: 60 },
-    { num: '04', text: 'Steueridentifikationsnummer bereithalten', pct: 80 },
-    { num: '05', text: 'Am 01.01.2027 sofort Depot eröffnen und Dauerauftrag einrichten', pct: 100 },
-  ];
-
-  const slide4 = slideRoot(C.bgDark, [
-    topBar(),
-    badge('DEINE CHECKLISTE'),
-    headline('5 Schritte vor dem 01.01.2027', 58),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '12px' } },
-      ...steps.map(s =>
+  // ─── SLIDE 1: HOOK ─────────────────────────────────────────────────────────
+  const slide1 = slide([
+    badge('WECKRUF'),
+    headline('DEIN GELD SCHLÄFT — DU NICHT', 62),
+    subline('Die meisten arbeiten 40 Stunden pro Woche. Ihr Geld: 0.'),
+    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '20px', marginTop: '24px' } },
+      h('div', { style: { display: 'flex', gap: '16px' } },
         h('div', {
           style: {
-            display: 'flex', flexDirection: 'column', gap: '8px',
-            padding: '18px 24px', backgroundColor: C.cardBg, borderRadius: '16px'
+            display: 'flex', flex: '1', flexDirection: 'column', alignItems: 'center',
+            backgroundColor: C.bgDark, borderRadius: '20px', padding: '32px 24px', gap: '14px',
+            border: `1px solid ${C.border}`
           }
         },
-          h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
-            h('span', { style: { fontSize: '32px', fontWeight: 800, color: s.pct === 100 ? C.green : 'rgba(255,255,255,0.4)', minWidth: '52px', fontFamily: 'Outfit' } }, s.num),
-            h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.text, lineHeight: '1.3', fontFamily: 'Outfit' } }, s.text)
+          h('div', {
+            style: {
+              display: 'flex', width: '60px', height: '60px', borderRadius: '30px',
+              backgroundColor: 'rgba(230,48,48,0.2)', alignItems: 'center', justifyContent: 'center',
+              border: `2px solid ${C.red}`
+            }
+          },
+            h('span', { style: { fontSize: '30px', fontWeight: 800, color: C.red } }, '8h')
           ),
-          h('div', { style: { display: 'flex', height: '5px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' } },
-            h('div', { style: { display: 'flex', width: `${s.pct}%`, height: '5px', backgroundColor: s.pct === 100 ? C.green : 'rgba(255,255,255,0.4)', borderRadius: '3px' } })
+          h('span', { style: { fontSize: '24px', fontWeight: 800, color: C.text, textTransform: 'uppercase', textAlign: 'center' } }, 'AKTIVES EINKOMMEN'),
+          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, textAlign: 'center', lineHeight: '1.4' } }, 'Du tauschst Zeit gegen Geld. Endet, wenn du aufhörst.'),
+          h('div', { style: { display: 'flex', width: '100%', height: '4px', backgroundColor: C.red, borderRadius: '2px' } })
+        ),
+        h('div', {
+          style: {
+            display: 'flex', flex: '1', flexDirection: 'column', alignItems: 'center',
+            backgroundColor: 'rgba(91,200,245,0.10)', borderRadius: '20px', padding: '32px 24px', gap: '14px',
+            border: `2px solid ${C.accent}`
+          }
+        },
+          h('div', {
+            style: {
+              display: 'flex', width: '60px', height: '60px', borderRadius: '30px',
+              backgroundColor: 'rgba(91,200,245,0.2)', alignItems: 'center', justifyContent: 'center',
+              border: `2px solid ${C.accent}`
+            }
+          },
+            h('span', { style: { fontSize: '24px', fontWeight: 800, color: C.accent } }, '24h')
+          ),
+          h('span', { style: { fontSize: '24px', fontWeight: 800, color: C.text, textTransform: 'uppercase', textAlign: 'center' } }, 'PASSIVES EINKOMMEN'),
+          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, textAlign: 'center', lineHeight: '1.4' } }, 'Geld arbeitet für dich — auch wenn du schläfst.'),
+          h('div', { style: { display: 'flex', width: '100%', height: '4px', backgroundColor: C.accent, borderRadius: '2px' } })
+        )
+      ),
+      h('div', {
+        style: {
+          display: 'flex', backgroundColor: 'rgba(91,200,245,0.08)', borderRadius: '16px',
+          padding: '20px 28px', border: `1px solid rgba(91,200,245,0.25)`
+        }
+      },
+        h('span', { style: { fontSize: '28px', fontWeight: 600, color: C.accent, lineHeight: '1.4' } },
+          'Wer nur aktiv verdient, kann nie wirklich frei sein.')
+      )
+    ),
+    keyLearning('Passives Einkommen: Geld verdienen ohne deine Zeit zu verkaufen.'),
+    bfLogo(),
+  ]);
+
+  // ─── SLIDE 2: STATISTIK ────────────────────────────────────────────────────
+  const slide2 = slide([
+    badge('DIE REALITÄT'),
+    headline('NUR 15 % DER DEUTSCHEN HABEN PASSIVES EINKOMMEN', 54),
+    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '24px' } },
+      h('div', { style: { display: 'flex', gap: '10px', marginBottom: '8px' } },
+        [0, 1, 2].map(() =>
+          h('div', { style: { display: 'flex', width: '0', height: '0', borderLeft: '14px solid transparent', borderRight: '14px solid transparent', borderTop: `20px solid ${C.red}` } })
+        )
+      ),
+      h('span', { style: { fontSize: '150px', fontWeight: 800, color: C.accent, lineHeight: '1' } }, '85%'),
+      h('div', { style: { display: 'flex', width: '200px', height: '5px', backgroundColor: C.red, borderRadius: '3px', marginTop: '-10px' } }),
+      h('span', {
+        style: { fontSize: '30px', fontWeight: 600, color: C.text, lineHeight: '1.5', textAlign: 'center', maxWidth: '860px' }
+      }, 'der Deutschen haben kein passives Einkommen — und sind damit komplett vom Jobgehalt abhängig.'),
+      h('div', {
+        style: {
+          display: 'flex', backgroundColor: 'rgba(230,48,48,0.10)', borderRadius: '14px',
+          padding: '18px 28px', border: `1px solid ${C.red}`, alignItems: 'center', gap: '12px'
+        }
+      },
+        h('div', { style: { display: 'flex', width: '12px', height: '12px', borderRadius: '6px', backgroundColor: C.red } }),
+        h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.red } }, 'Rentenniveau bis 2040: nur 43 % des Nettolohns')
+      )
+    ),
+    keyLearning('Wer nur auf das Gehalt baut, baut auf ein einziges, brüchiges Fundament.'),
+    bfLogo(),
+  ]);
+
+  // ─── SLIDE 3: PROBLEM ──────────────────────────────────────────────────────
+  const slide3 = slide([
+    badge('DAS PROBLEM'),
+    headline('ZEIT IST DEIN GRÖSSTER ENGPASS', 62),
+    subline('Du kannst mehr Geld verdienen — aber nie mehr Zeit kaufen.'),
+    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '16px', marginTop: '20px' } },
+      ...[
+        { label: '24 Stunden pro Tag', pct: 100, color: C.border, desc: 'Deine gesamte tägliche Zeit' },
+        { label: '8h Schlaf', pct: 33, color: 'rgba(91,200,245,0.4)', desc: 'Nicht verhandelbar' },
+        { label: '8h Arbeit (Aktiveinkommen)', pct: 33, color: C.red, desc: 'Zeit gegen Geld' },
+        { label: '8h Familie, Alltag, Erholung', pct: 33, color: 'rgba(255,255,255,0.3)', desc: 'Deine Lebenszeit' },
+        { label: '0h passives Einkommen', pct: 0, color: C.accent, desc: 'Ohne Plan bleibt es bei 0' },
+      ].map(item =>
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px' } },
+          h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
+            h('span', { style: { fontSize: '26px', fontWeight: 700, color: item.pct === 0 ? C.accent : C.text } }, item.label),
+            h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted } }, item.desc)
+          ),
+          h('div', { style: { display: 'flex', height: '10px', backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: '5px', overflow: 'hidden' } },
+            h('div', { style: { display: 'flex', width: `${item.pct}%`, height: '10px', backgroundColor: item.color, borderRadius: '5px' } })
           )
         )
       )
     ),
-    keyLearning('Schritt 1 dauert 10 Minuten. Die anderen noch weniger.', C.green),
-    igHandle(),
+    keyLearning('Aktives Einkommen hat eine harte Grenze: 24 Stunden pro Tag.'),
+    bfLogo(),
   ]);
 
-  // ─── SLIDE 5: ANBIETER VERGLEICH ─────────────────────────────────────────────
-  const providers = [
-    { name: 'Trade Republic', zins: '3,0 %', sparplan: 'ab 1 EUR', extra: 'Größte Nutzerbasis', color: 'rgba(255,255,255,0.08)', accent: C.text },
-    { name: 'Scalable Capital', zins: '4,0 %', sparplan: 'ab 1 EUR', extra: '8.000+ ETFs', color: 'rgba(255,255,255,0.08)', accent: C.textSoft },
-    { name: 'ING', zins: '3,25 %', sparplan: 'ab 1 EUR', extra: 'Vollbank + Depot', color: 'rgba(255,255,255,0.08)', accent: C.textSoft },
-  ];
-
-  const slide5 = slideRoot(C.bg, [
-    topBar(),
-    badge('ANBIETER IM VERGLEICH'),
-    headline('Diese 3 starten am 01.01.2027', 58),
-    subline('Alle kostenlos. Alle vorbereitet.'),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '14px' } },
-      ...providers.map((p, i) =>
+  // ─── SLIDE 4: WENDEPUNKT ────────────────────────────────────────────────────
+  const slide4 = slide([
+    badge('DER WENDEPUNKT'),
+    headline('PASSIVES EINKOMMEN BRICHT DIESE GRENZE', 56),
+    subline('Einmal aufgebaut — läuft es, auch wenn du schläfst.'),
+    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '18px', marginTop: '20px' } },
+      h('div', { style: { display: 'flex', gap: '16px' } },
         h('div', {
           style: {
-            display: 'flex', flexDirection: 'row', alignItems: 'center',
-            backgroundColor: i === 0 ? 'rgba(16,185,129,0.1)' : C.cardBg,
-            border: i === 0 ? '2px solid rgba(16,185,129,0.4)' : '1px solid rgba(255,255,255,0.1)',
-            borderRadius: '18px', padding: '22px 28px', gap: '20px'
+            display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: C.bgDark,
+            borderRadius: '20px', padding: '28px', gap: '12px', border: `1px solid ${C.border}`
+          }
+        },
+          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: C.textMuted, textTransform: 'uppercase' } }, 'AKTIVES EINKOMMEN'),
+          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: C.red } }),
+          h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.text, lineHeight: '1.4' } }, 'Gehalt'),
+          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4' } }, 'Ohne Arbeit = kein Geld. Urlaub, Krankheit, Rente: Einnahmen stoppen sofort.'),
+          h('span', { style: { fontSize: '24px', fontWeight: 800, color: C.red, marginTop: '8px' } }, 'ABHÄNGIG VON DEINER ZEIT')
+        ),
+        h('div', {
+          style: {
+            display: 'flex', flex: '1', flexDirection: 'column',
+            backgroundColor: 'rgba(91,200,245,0.10)', borderRadius: '20px', padding: '28px', gap: '12px',
+            border: `2px solid ${C.accent}`
+          }
+        },
+          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: C.accent, textTransform: 'uppercase' } }, 'PASSIVES EINKOMMEN'),
+          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: C.accent } }),
+          h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.text, lineHeight: '1.4' } }, 'ETF-Dividenden, Zinsen, Miete'),
+          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, lineHeight: '1.4' } }, 'Geld wächst auch nachts. Einmal aufgebaut, kein Zeiteinsatz nötig.'),
+          h('span', { style: { fontSize: '24px', fontWeight: 800, color: C.accent, marginTop: '8px' } }, 'UNABHÄNGIG VON DEINER ZEIT')
+        )
+      ),
+      h('div', {
+        style: {
+          display: 'flex', backgroundColor: 'rgba(91,200,245,0.08)', borderRadius: '16px',
+          padding: '22px 28px', alignItems: 'center', gap: '16px'
+        }
+      },
+        h('div', { style: { display: 'flex', width: '8px', minHeight: '48px', backgroundColor: C.accent, borderRadius: '4px' } }),
+        h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4' } },
+          'Der Unterschied: Du bist nicht mehr der Engpass. Dein Kapital arbeitet, während du schläfst.')
+      )
+    ),
+    keyLearning('Passives Einkommen macht deine Zeit wieder dir gehörig.'),
+    bfLogo(),
+  ]);
+
+  // ─── SLIDE 5: 5 STRATEGIEN ──────────────────────────────────────────────────
+  const strategies = [
+    { num: '01', title: 'ETF-DIVIDENDEN', detail: 'Ab 25 €/Monat im Sparplan', color: C.accent },
+    { num: '02', title: 'TAGESGELD', detail: 'Bis zu 4,25 % p.a. — sofort verfügbar', color: C.accent },
+    { num: '03', title: 'MIETIMMOBILIEN', detail: 'Miete als monatliche Einnahme', color: C.accent },
+    { num: '04', title: 'DIGITALE PRODUKTE', detail: 'E-Books, Kurse, Vorlagen', color: C.accent },
+    { num: '05', title: 'STAATSANLEIHEN', detail: 'Zinsen vom Staat — sicher & planbar', color: C.accent },
+  ];
+
+  const slide5 = slide([
+    badge('DIE 5 STRATEGIEN'),
+    headline('5 WEGE ZU PASSIVEM EINKOMMEN', 62),
+    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '14px', marginTop: '16px' } },
+      ...strategies.map((s, i) =>
+        h('div', {
+          style: {
+            display: 'flex', alignItems: 'center', gap: '20px',
+            backgroundColor: i === 0 ? 'rgba(91,200,245,0.12)' : C.bgDark,
+            borderRadius: '16px', padding: '20px 24px',
+            border: i === 0 ? `2px solid ${C.accent}` : `1px solid ${C.border}`
           }
         },
           h('div', {
             style: {
               display: 'flex', width: '52px', height: '52px', borderRadius: '12px',
-              backgroundColor: i === 0 ? C.green : 'rgba(255,255,255,0.1)',
-              alignItems: 'center', justifyContent: 'center', flexShrink: '0'
+              backgroundColor: 'rgba(91,200,245,0.15)', alignItems: 'center', justifyContent: 'center',
+              border: `1px solid rgba(91,200,245,0.3)`
             }
           },
-            h('span', { style: { fontSize: '20px', fontWeight: 800, color: '#FFFFFF', fontFamily: 'Outfit' } }, `${i + 1}`)
+            h('span', { style: { fontSize: '20px', fontWeight: 800, color: C.accent } }, s.num)
           ),
           h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', gap: '4px' } },
-            h('span', { style: { fontSize: '28px', fontWeight: 700, color: i === 0 ? C.green : C.text, fontFamily: 'Outfit' } }, p.name),
-            h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, fontFamily: 'Outfit' } }, p.extra)
+            h('span', { style: { fontSize: '26px', fontWeight: 800, color: C.text, textTransform: 'uppercase', letterSpacing: '1px' } }, s.title),
+            h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted } }, s.detail)
           ),
-          h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' } },
-            h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.text, fontFamily: 'Outfit' } }, p.zins),
-            h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted, fontFamily: 'Outfit' } }, 'Tagesgeld p.a.')
-          )
+          h('div', { style: { display: 'flex', width: '8px', height: '8px', borderRadius: '4px', backgroundColor: C.accent } })
         )
-      ),
-      h('div', { style: { display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px', backgroundColor: 'rgba(16,185,129,0.08)', borderRadius: '14px', padding: '16px 24px' } },
-        h('div', { style: { display: 'flex', width: '10px', height: '10px', borderRadius: '5px', backgroundColor: C.green } }),
-        h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textSoft, fontFamily: 'Outfit' } }, 'Wartelisten bei allen drei Anbietern bereits offen')
       )
     ),
-    keyLearning('Tipp: Melde dich bei allen drei an. Eröffnen kannst du erst ab 01.01.2027.'),
-    igHandle(),
+    keyLearning('Jede Strategie hat ihren Platz — kombiniere mindestens zwei.'),
+    bfLogo(),
   ]);
 
-  // ─── SLIDE 6: FÖRDERUNG DETAILS ───────────────────────────────────────────────
-  const foerderungen = [
-    { title: 'Grundförderung', betrag: '300 EUR/Jahr', detail: '50 % auf erste 600 EUR Einzahlung' },
-    { title: 'Höchstförderung', betrag: '1.800 EUR/Jahr', detail: 'mit Kinderzulage (3+ Kinder)' },
-    { title: 'Kinderbonus', betrag: '300 EUR/Kind', detail: 'Zusätzlich pro Kind unter 18' },
+  // ─── SLIDE 6: FAHRPLAN ─────────────────────────────────────────────────────
+  const steps = [
+    { num: 1, text: 'NOTGROSCHEN: 3 Monate Fixkosten auf Tagesgeld', sub: 'Sicherheitsnetz zuerst — sonst musst du ETF-Anteile verkaufen' },
+    { num: 2, text: 'ERSTEN SPARPLAN: Ab 25 € / Monat in ETF', sub: 'Automatisch, monatlich — Zinseszins beginnt sofort zu wirken' },
+    { num: 3, text: 'REINVESTIEREN: Dividenden & Zinsen nie ausgeben', sub: 'Reinvestiert verdoppelung du dein passives Einkommen alle 10 Jahre' },
   ];
 
-  const slide6 = slideRoot(C.bgDark, [
-    topBar(),
-    badge('SO VIEL BEKOMMST DU'),
-    headline('Die staatliche Förderung im Detail', 52),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '16px' } },
-      h('div', { style: { display: 'flex', flexDirection: 'row', gap: '14px' } },
-        ...foerderungen.map((f, i) =>
+  const slide6 = slide([
+    badge('DEIN FAHRPLAN'),
+    headline('SO STARTEST DU IN 3 SCHRITTEN', 62),
+    subline('Reihenfolge entscheidet — nicht die Höhe der Einzahlung.'),
+    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '20px', marginTop: '20px' } },
+      ...steps.map((step, i) =>
+        h('div', { style: { display: 'flex', gap: '20px', alignItems: 'flex-start' } },
+          h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0px' } },
+            h('div', {
+              style: {
+                display: 'flex', width: '52px', height: '52px', borderRadius: '26px',
+                backgroundColor: C.accent, alignItems: 'center', justifyContent: 'center'
+              }
+            },
+              h('span', { style: { fontSize: '26px', fontWeight: 800, color: C.bg } }, `${step.num}`)
+            ),
+            i < steps.length - 1
+              ? h('div', { style: { display: 'flex', width: '3px', height: '40px', backgroundColor: 'rgba(91,200,245,0.3)', marginTop: '4px' } })
+              : undefined
+          ),
           h('div', {
             style: {
-              display: 'flex', flex: '1', flexDirection: 'column', gap: '10px',
-              backgroundColor: i === 0 ? 'rgba(16,185,129,0.12)' : C.cardBg,
-              borderRadius: '20px', padding: '24px',
-              border: i === 0 ? '1px solid rgba(16,185,129,0.3)' : '1px solid rgba(255,255,255,0.1)'
+              display: 'flex', flex: '1', flexDirection: 'column', gap: '6px',
+              backgroundColor: C.bgDark, borderRadius: '16px', padding: '20px 24px',
+              border: `1px solid ${C.border}`
             }
           },
-            h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '1px', color: i === 0 ? C.green : C.textMuted, fontFamily: 'Outfit' } }, f.title.toUpperCase()),
-            h('span', { style: { fontSize: '30px', fontWeight: 800, color: C.text, lineHeight: '1.1', fontFamily: 'Outfit' } }, f.betrag),
-            h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4', fontFamily: 'Outfit' } }, f.detail)
+            h('span', { style: { fontSize: '24px', fontWeight: 800, color: C.text, textTransform: 'uppercase', lineHeight: '1.3' } }, step.text),
+            h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4' } }, step.sub)
           )
-        )
-      ),
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px', backgroundColor: C.cardBg, borderRadius: '18px', padding: '24px 28px' } },
-        h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.textMuted, letterSpacing: '2px', fontFamily: 'Outfit' } }, 'RECHENBEISPIEL'),
-        h('div', { style: { display: 'flex', height: '3px', backgroundColor: C.border, borderRadius: '2px' } }),
-        h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.5', fontFamily: 'Outfit' } },
-          'Familie mit 2 Kindern: 100 EUR/Monat einzahlen'),
-        h('div', { style: { display: 'flex', flexDirection: 'row', gap: '8px', alignItems: 'center' } },
-          h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textSoft, fontFamily: 'Outfit' } }, 'Eigenleistung: 1.200 EUR/Jahr'),
-          h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted, fontFamily: 'Outfit' } }, '+'),
-          h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.green, fontFamily: 'Outfit' } }, 'Foerderung: 900 EUR/Jahr')
         )
       )
     ),
-    keyLearning('75 % Förderquote bei Familien mit 2 Kindern — das schlägt jede Riester-Police.', C.green),
-    igHandle(),
+    keyLearning('Anfangen schlägt Perfektionismus — jeden Monat, auch mit kleinem Betrag.'),
+    bfLogo(),
   ]);
 
-  // ─── SLIDE 7: LEARNINGS + TAKEAWAYS ──────────────────────────────────────────
+  // ─── SLIDE 7: KEY LEARNINGS ─────────────────────────────────────────────────
   const learnings = [
-    { num: '01', text: 'Jetzt Anbieter vergleichen und für Warteliste anmelden', pct: 33 },
-    { num: '02', text: 'Monatlichen Sparbetrag festlegen — schon ab 1 EUR/Monat möglich', pct: 66 },
-    { num: '03', text: 'Am 01.01.2027 sofort starten — Förderung gilt rückwirkend für 2027', pct: 100 },
+    { num: '01', text: 'Zeit ist endlich — Geld kann unbegrenzt für dich wachsen', pct: 33 },
+    { num: '02', text: 'Passives Einkommen braucht aktiven Aufbau — aber nur einmal', pct: 66 },
+    { num: '03', text: 'Wer früh startet, gewinnt den Zinseszins-Vorteil', pct: 100 },
   ];
 
-  const slide7 = slideRoot(C.bg, [
-    topBar(),
-    badge('DEINE 3 TAKEAWAYS'),
-    headline('Das nimmst du mit', 58),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '14px' } },
+  const slide7 = slide([
+    badge('DEIN LERNMOMENT'),
+    headline('3 DINGE DIE DU MITGENOMMEN HAST', 58),
+    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '18px', marginTop: '20px' } },
       ...learnings.map(l =>
         h('div', {
           style: {
-            display: 'flex', flexDirection: 'column', gap: '10px',
-            padding: '24px 28px', backgroundColor: C.cardBg, borderRadius: '18px'
+            display: 'flex', flexDirection: 'column', gap: '12px', padding: '24px 28px',
+            backgroundColor: C.bgDark, borderRadius: '18px',
+            border: l.pct === 100 ? `2px solid ${C.accent}` : `1px solid ${C.border}`
           }
         },
           h('div', { style: { display: 'flex', alignItems: 'center', gap: '18px' } },
-            h('span', { style: { fontSize: '40px', fontWeight: 800, color: l.pct === 100 ? C.green : C.text, minWidth: '60px', fontFamily: 'Outfit' } }, l.num),
-            h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.3', fontFamily: 'Outfit' } }, l.text)
+            h('span', { style: { fontSize: '38px', fontWeight: 800, color: l.pct === 100 ? C.accent : C.white, minWidth: '60px' } }, l.num),
+            h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.3' } }, l.text)
           ),
-          h('div', { style: { display: 'flex', height: '6px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' } },
-            h('div', { style: { display: 'flex', width: `${l.pct}%`, height: '6px', backgroundColor: l.pct === 100 ? C.green : C.text, borderRadius: '3px' } })
+          h('div', { style: { display: 'flex', height: '6px', backgroundColor: C.border, borderRadius: '3px', overflow: 'hidden' } },
+            h('div', { style: { display: 'flex', width: `${l.pct}%`, height: '6px', backgroundColor: l.pct === 100 ? C.accent : C.red, borderRadius: '3px' } })
           )
         )
-      ),
-      h('div', { style: { display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '14px', backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '16px', padding: '22px 28px', border: '1px solid rgba(16,185,129,0.3)' } },
-        h('div', { style: { display: 'flex', width: '6px', minHeight: '40px', backgroundColor: C.green, borderRadius: '3px' } }),
-        h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.4', fontFamily: 'Outfit' } }, 'In 7 Wochen ist der Startschuss. Fang jetzt mit der Vorbereitung an.')
       )
     ),
-    igHandle(),
+    keyLearning('Passives Einkommen ist kein Glück — es ist ein Plan, den du jetzt umsetzt.'),
+    bfLogo(),
   ]);
 
-  // ─── SLIDE 8: CTA ─────────────────────────────────────────────────────────────
-  const slide8 = slideRoot(C.bgDark, [
-    h('div', { style: { display: 'flex', flexDirection: 'column', flex: '1', alignItems: 'center', justifyContent: 'center', gap: '32px' } },
-      h('img', { src: logoB64, width: 140, height: 140, style: { borderRadius: '24px', objectFit: 'cover' } }),
-      badge('JETZT HANDELN'),
+  // ─── SLIDE 8: CTA ───────────────────────────────────────────────────────────
+  const slide8 = slide([
+    badge('JETZT DU'),
+    h('div', {
+      style: {
+        display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '28px'
+      }
+    },
+      h('div', { style: { display: 'flex', width: '80px', height: '5px', backgroundColor: C.red, borderRadius: '3px' } }),
       h('span', {
         style: {
-          fontSize: '52px', fontWeight: 800, color: C.text,
-          lineHeight: '1.15', letterSpacing: '-1.5px', textAlign: 'center',
-          maxWidth: '860px', fontFamily: 'Outfit'
+          fontSize: '50px', fontWeight: 800, color: C.text, textAlign: 'center',
+          lineHeight: '1.2', textTransform: 'uppercase', maxWidth: '880px'
         }
-      }, 'Bei welchem Anbieter öffnest du dein Altersvorsorge-Depot?'),
+      }, 'WAS WÄRE DEIN ERSTER SCHRITT ZU PASSIVEM EINKOMMEN?'),
+      h('div', { style: { display: 'flex', width: '80px', height: '5px', backgroundColor: C.red, borderRadius: '3px' } }),
       h('span', {
-        style: { fontSize: '28px', fontWeight: 500, color: C.textMuted, textAlign: 'center', fontFamily: 'Outfit' }
-      }, 'Schreib es in die Kommentare 👇'),
-      h('div', { style: { display: 'flex', flexDirection: 'row', gap: '14px', marginTop: '8px' } },
-        h('div', { style: { display: 'flex', backgroundColor: C.cardBg, borderRadius: '50px', padding: '14px 28px' } },
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.text, fontFamily: 'Outfit' } }, 'Trade Republic')
-        ),
-        h('div', { style: { display: 'flex', backgroundColor: C.cardBg, borderRadius: '50px', padding: '14px 28px' } },
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.text, fontFamily: 'Outfit' } }, 'Scalable')
-        ),
-        h('div', { style: { display: 'flex', backgroundColor: C.cardBg, borderRadius: '50px', padding: '14px 28px' } },
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.text, fontFamily: 'Outfit' } }, 'ING')
-        )
-      )
+        style: { fontSize: '28px', fontWeight: 500, color: C.textSoft, textAlign: 'center', lineHeight: '1.5', maxWidth: '780px' }
+      }, 'Schreib uns in die Kommentare — wir helfen dir dabei, den richtigen Weg zu finden.'),
+      h('div', {
+        style: {
+          display: 'flex', backgroundColor: 'rgba(91,200,245,0.10)', borderRadius: '16px',
+          padding: '18px 32px', border: `1px solid rgba(91,200,245,0.3)`
+        }
+      },
+        h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.accent } }, '@benarofinanzen')
+      ),
+      bfLogo(),
     ),
-    h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', paddingBottom: '0px' } },
-      h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textMuted, fontFamily: 'Outfit' } }, 'Folge uns für mehr Finanzwissen:'),
-      h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.text, fontFamily: 'Outfit' } }, '@benarofinanzen')
-    ),
+    h('span', { style: { fontSize: '18px', fontWeight: 500, color: C.textMuted, textAlign: 'center', marginTop: '8px' } }, 'Speichern nicht vergessen 📌')
   ]);
 
-  const slides = [slide1, slide2, slide3, slide4, slide5, slide6, slide7, slide8];
+  // ─── GENERATE ALL SLIDES ────────────────────────────────────────────────────
+  const TODAY = new Date().toISOString().slice(0, 10);
+  const outDir = path.join(__dirname, 'output', `carousel_${TODAY}`, 'slides');
 
-  for (let i = 0; i < slides.length; i++) {
-    const svg = await satori(slides[i], { width: W, height: H, fonts });
+  const allSlides = [slide1, slide2, slide3, slide4, slide5, slide6, slide7, slide8];
+
+  for (let i = 0; i < allSlides.length; i++) {
+    const svg = await satori(allSlides[i], { width: W, height: H, fonts });
     const resvg = new Resvg(svg, { fitTo: { mode: 'width', value: W } });
     const pngData = resvg.render();
-    const pngPath = path.join(OUTPUT_DIR, `slide-${String(i + 1).padStart(2, '0')}.png`);
+    const pngPath = path.join(outDir, `slide-${String(i + 1).padStart(2, '0')}.png`);
     fs.writeFileSync(pngPath, pngData.asPng());
-    console.log(`Slide ${i + 1}/${slides.length} generiert: ${pngPath}`);
+    console.log(`Slide ${i + 1}/${allSlides.length} generiert: ${pngPath}`);
   }
 
-  console.log('\nAlle Slides erfolgreich generiert!');
-  console.log(`Ausgabe: ${OUTPUT_DIR}`);
+  console.log('Alle Slides erfolgreich generiert!');
 }
 
-main().catch(e => {
-  console.error('Fehler:', e);
-  process.exit(1);
-});
+main().catch(e => { console.error(e); process.exit(1); });
