@@ -1,28 +1,18 @@
-'use strict';
 const fs = require('fs');
 const path = require('path');
 
 async function main() {
-  const satori = (await import('satori')).default || require('satori');
+  const satori = (await import('satori')).default;
   const { Resvg } = require('@resvg/resvg-js');
 
-  const W = 1080, H = 1350;
-  const TODAY = '2026-11-09';
-  const OUTPUT_DIR = path.join(__dirname, 'output', `carousel_${TODAY}`, 'slides');
-
   const fontDir = path.join(__dirname, 'node_modules/@fontsource/outfit/files');
-  const fonts = [400, 500, 600, 700, 800].flatMap(w => [
-    { name: 'Outfit', weight: w, style: 'normal', data: fs.readFileSync(path.join(fontDir, `outfit-latin-${w}-normal.woff`)) },
-    { name: 'Outfit', weight: w, style: 'normal', data: fs.readFileSync(path.join(fontDir, `outfit-latin-ext-${w}-normal.woff`)) },
+  const fonts = [400,500,600,700,800].flatMap(w => [
+    { name:'Outfit', weight:w, style:'normal', data: fs.readFileSync(path.join(fontDir, `outfit-latin-${w}-normal.woff`)) },
+    { name:'Outfit', weight:w, style:'normal', data: fs.readFileSync(path.join(fontDir, `outfit-latin-ext-${w}-normal.woff`)) },
   ]);
-
-  const logoB64 = 'data:image/jpeg;base64,' + fs.readFileSync(
-    path.join(__dirname, 'skills/instagram-carousel-skill/templates/benaro-logo.jpg')
-  ).toString('base64');
 
   const C = {
     bg: '#001F61',
-    bgDark: '#001542',
     text: '#FFFFFF',
     textSoft: '#E5E7EB',
     textMuted: '#9CA3AF',
@@ -32,413 +22,483 @@ async function main() {
     red: '#EF4444',
   };
 
+  const W = 1080, H = 1350;
+  const PAD = 70;
+
   const h = (type, props, ...ch) => ({
-    type,
-    props: { ...props, children: ch.length === 1 ? ch[0] : ch.length === 0 ? undefined : ch }
+    type, props: { ...props, children: ch.length === 1 ? ch[0] : ch.length === 0 ? undefined : ch }
   });
 
+  const logoB64 = 'data:image/jpeg;base64,' + fs.readFileSync(
+    path.join(__dirname, 'skills/instagram-carousel-skill/templates/benaro-logo.jpg')
+  ).toString('base64');
+
+  // === REUSABLE COMPONENTS ===
+
+  function slideRoot(bgColor, children) {
+    return h('div', { style: {
+      display:'flex', flexDirection:'column',
+      width: W, height: H,
+      padding: `${PAD}px`,
+      backgroundColor: bgColor || C.bg,
+      fontFamily: 'Outfit',
+      position: 'relative',
+    }}, ...children);
+  }
+
   function logo() {
-    return h('img', {
-      src: logoB64,
-      width: 100,
-      height: 100,
-      style: { borderRadius: '12px', objectFit: 'cover' }
-    });
-  }
-
-  function topBar(dark = false) {
-    return h('div', {
-      style: { display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginBottom: '16px' }
-    }, logo());
-  }
-
-  function badge(text) {
-    return h('div', { style: { display: 'flex', marginBottom: '14px' } },
-      h('span', {
-        style: {
-          display: 'flex', fontSize: '20px', fontWeight: 700, letterSpacing: '3px',
-          color: C.text, backgroundColor: C.cardBg, padding: '10px 22px', borderRadius: '12px',
-          fontFamily: 'Outfit'
-        }
-      }, text)
+    return h('div', { style: { display:'flex', position:'absolute', top:`${PAD}px`, right:`${PAD}px` } },
+      h('img', { src: logoB64, width: 120, height: 120, style: { borderRadius:'12px', objectFit:'cover' } })
     );
   }
 
-  function headline(text, size = 64) {
-    return h('span', {
-      style: {
-        fontSize: `${size}px`, fontWeight: 800, color: C.text,
-        lineHeight: '1.08', letterSpacing: '-1.5px', marginBottom: '8px',
-        fontFamily: 'Outfit'
-      }
-    }, text);
+  function badge(text) {
+    return h('div', { style: { display:'flex', marginBottom:'18px' } },
+      h('span', { style: {
+        display:'flex', fontSize:'22px', fontWeight:700, letterSpacing:'3px',
+        color: C.text, backgroundColor: C.cardBg,
+        padding:'10px 22px', borderRadius:'12px',
+      }}, text)
+    );
+  }
+
+  function headline(text, size=64) {
+    return h('span', { style: {
+      fontSize:`${size}px`, fontWeight:800,
+      color: C.text,
+      lineHeight:'1.08', letterSpacing:'-1.5px', marginBottom:'6px',
+    }}, text);
   }
 
   function subline(text) {
-    return h('span', {
-      style: {
-        fontSize: '28px', fontWeight: 500, color: C.textMuted,
-        lineHeight: '1.5', marginTop: '8px', fontFamily: 'Outfit'
-      }
-    }, text);
+    return h('span', { style: {
+      fontSize:'28px', fontWeight:500,
+      color: C.textMuted,
+      lineHeight:'1.5', marginTop:'8px',
+    }}, text);
   }
 
-  function keyLearning(text, accent = C.text) {
-    return h('div', {
-      style: {
-        display: 'flex', alignItems: 'center', gap: '14px',
-        backgroundColor: C.cardBg, borderRadius: '16px', padding: '22px 28px', marginTop: '20px'
-      }
-    },
-      h('div', { style: { display: 'flex', width: '6px', minHeight: '40px', backgroundColor: accent, borderRadius: '3px' } }),
-      h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.4', fontFamily: 'Outfit' } }, text)
+  function keyLearning(text, accent) {
+    return h('div', { style: {
+      display:'flex', alignItems:'center', gap:'14px',
+      backgroundColor: C.cardBg,
+      borderRadius:'16px', padding:'22px 28px', marginTop:'auto',
+    }},
+      h('div', { style: {
+        display:'flex', width:'6px', minHeight:'40px',
+        backgroundColor: accent || C.text, borderRadius:'3px',
+      }}),
+      h('span', { style: {
+        fontSize:'28px', fontWeight:600,
+        color: C.text, lineHeight:'1.4',
+      }}, text)
     );
   }
 
   function igHandle() {
-    return h('div', { style: { display: 'flex', marginTop: '12px' } },
-      h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted, fontFamily: 'Outfit' } }, '@benarofinanzen')
+    return h('div', { style: { display:'flex', alignItems:'center', marginTop:'12px' } },
+      h('span', { style: { fontSize:'24px', fontWeight:500, color: C.textMuted } }, '@benarofinanzen')
     );
   }
 
-  function slideRoot(bgColor, children) {
-    return h('div', {
-      style: {
-        display: 'flex', flexDirection: 'column', width: W, height: H,
-        padding: '60px 70px', backgroundColor: bgColor, fontFamily: 'Outfit'
-      }
-    }, ...children);
+  function visualFlex(children) {
+    return h('div', { style: {
+      display:'flex', flex:'1', flexDirection:'column', justifyContent:'center',
+    }}, ...children);
   }
 
-  // ─── SLIDE 1: HOOK ───────────────────────────────────────────────────────────
-  const svgCountdown = `<svg width="860" height="300" viewBox="0 0 860 300" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="130" cy="150" r="110" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.3)" stroke-width="4"/>
-    <circle cx="130" cy="150" r="110" fill="none" stroke="#10B981" stroke-width="8" stroke-dasharray="440 692" stroke-linecap="round" transform="rotate(-90 130 150)"/>
-    <circle cx="310" cy="150" r="80" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)" stroke-width="3"/>
-    <circle cx="490" cy="150" r="80" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)" stroke-width="3"/>
-    <circle cx="670" cy="150" r="80" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)" stroke-width="3"/>
-  </svg>`;
-  const svgCountdownSrc = `data:image/svg+xml;base64,${Buffer.from(svgCountdown).toString('base64')}`;
-
+  // === SLIDE 1: HOOK ===
+  // Badge: "JETZT WICHTIG" — Hook: Inflation fällt auf 2,1 % — Dein Tagesgeld verliert seinen Vorteil
   const slide1 = slideRoot(C.bg, [
-    topBar(),
-    badge('BREAKING: 01.01.2027'),
-    headline('7 Wochen. Dann startet das neue Altersvorsorge-Depot.', 56),
-    subline('Der größte Rentensystem-Wandel seit 25 Jahren.'),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '16px' } },
-      h('img', { src: svgCountdownSrc, width: 860, height: 300, style: { objectFit: 'contain' } }),
-      h('div', { style: { display: 'flex', flexDirection: 'row', gap: '24px', justifyContent: 'center' } },
-        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' } },
-          h('span', { style: { fontSize: '96px', fontWeight: 800, color: C.green, lineHeight: '1', fontFamily: 'Outfit' } }, '7'),
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textMuted, letterSpacing: '2px', fontFamily: 'Outfit' } }, 'WOCHEN')
+    logo(),
+    badge('JETZT WICHTIG'),
+    headline('Inflation fällt\nauf 2,1 %', 72),
+    subline('Was das jetzt für dein Geld bedeutet'),
+    visualFlex([
+      // Große zentrale Zahl + visuelle Darstellung
+      h('div', { style: { display:'flex', flexDirection:'column', alignItems:'center', gap:'24px' }},
+        // Stat Hero
+        h('div', { style: {
+          display:'flex', flexDirection:'column', alignItems:'center',
+          backgroundColor: C.cardBg, borderRadius:'28px', padding:'40px 60px', gap:'8px',
+        }},
+          h('span', { style: { fontSize:'140px', fontWeight:800, color: C.green, lineHeight:'1', letterSpacing:'-4px' }}, '2,1 %'),
+          h('span', { style: { fontSize:'28px', fontWeight:600, color: C.textSoft }}, 'Inflationsrate November 2026'),
         ),
-        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', marginLeft: '60px' } },
-          h('span', { style: { fontSize: '64px', fontWeight: 800, color: C.textSoft, lineHeight: '1', fontFamily: 'Outfit' } }, '49'),
-          h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.textMuted, letterSpacing: '2px', fontFamily: 'Outfit' } }, 'TAGE')
+        // Drei Pfeile abwärts symbolisieren fallende Inflation
+        h('div', { style: { display:'flex', flexDirection:'row', gap:'32px', alignItems:'center' }},
+          ...[
+            { label:'2022', val:'7,9 %', col:'rgba(239,68,68,0.9)' },
+            { label:'2024', val:'2,8 %', col:'rgba(251,191,36,0.9)' },
+            { label:'2026', val:'2,1 %', col: C.green },
+          ].map(item =>
+            h('div', { style: {
+              display:'flex', flexDirection:'column', alignItems:'center', gap:'8px',
+              backgroundColor:'rgba(255,255,255,0.07)', borderRadius:'16px', padding:'18px 24px',
+            }},
+              h('span', { style: { fontSize:'34px', fontWeight:800, color: item.col }}),
+              h('span', { style: { fontSize:'30px', fontWeight:800, color: item.col }}, item.val),
+              h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted }}, item.label),
+            )
+          )
         ),
-        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', marginLeft: '40px' } },
-          h('span', { style: { fontSize: '64px', fontWeight: 800, color: C.textSoft, lineHeight: '1', fontFamily: 'Outfit' } }, '1.176'),
-          h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.textMuted, letterSpacing: '2px', fontFamily: 'Outfit' } }, 'STUNDEN')
-        )
-      )
-    ),
-    keyLearning('Wer jetzt handelt, profitiert ab dem ersten Tag.', C.green),
+      ),
+    ]),
+    keyLearning('Die Inflation sinkt — aber das hat einen Haken für Sparer'),
     igHandle(),
   ]);
 
-  // ─── SLIDE 2: PROBLEM (STAT HERO) ────────────────────────────────────────────
-  const svgRentenniveau = `<svg width="860" height="260" viewBox="0 0 860 260" xmlns="http://www.w3.org/2000/svg">
-    <rect x="40" y="20" width="140" height="220" rx="10" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
-    <rect x="40" y="130" width="140" height="110" rx="6" fill="rgba(239,68,68,0.3)"/>
-    <rect x="40" y="20" width="140" height="110" rx="6" fill="rgba(239,68,68,0.6)"/>
-    <rect x="220" y="20" width="140" height="220" rx="10" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
-    <rect x="220" y="98" width="140" height="142" rx="6" fill="rgba(239,68,68,0.15)"/>
-    <rect x="220" y="20" width="140" height="78" rx="6" fill="rgba(239,68,68,0.5)"/>
-    <rect x="400" y="20" width="140" height="220" rx="10" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
-    <rect x="400" y="80" width="140" height="160" rx="6" fill="rgba(255,255,255,0.03)"/>
-    <rect x="400" y="20" width="140" height="60" rx="6" fill="rgba(239,68,68,0.3)"/>
-    <rect x="580" y="20" width="240" height="220" rx="10" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.3)" stroke-width="2"/>
-    <rect x="600" y="40" width="200" height="180" rx="8" fill="rgba(16,185,129,0.15)"/>
+  // === SLIDE 2: INFLATIONS-CHART 2022–2026 ===
+  // SVG Line Chart: Inflation über die Jahre
+  const inflationData = [
+    { year:'2022', val:7.9 },
+    { year:'2023', val:5.9 },
+    { year:'2024', val:2.8 },
+    { year:'2025', val:2.2 },
+    { year:'2026', val:2.1 },
+  ];
+  const svgW = 860, svgH = 360;
+  const chartPadL = 20, chartPadR = 20, chartPadT = 30, chartPadB = 10;
+  const chartW = svgW - chartPadL - chartPadR;
+  const chartH = svgH - chartPadT - chartPadB;
+  const maxVal = 9.0;
+  function xPos(i) { return chartPadL + (i / (inflationData.length - 1)) * chartW; }
+  function yPos(val) { return chartPadT + chartH - (val / maxVal) * chartH; }
+  const linePoints = inflationData.map((d,i) => `${xPos(i)},${yPos(d.val)}`).join(' ');
+  const gradientStops = `
+    <defs>
+      <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#EF4444"/>
+        <stop offset="60%" stop-color="#FBBF24"/>
+        <stop offset="100%" stop-color="#10B981"/>
+      </linearGradient>
+      <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="rgba(16,185,129,0.3)"/>
+        <stop offset="100%" stop-color="rgba(16,185,129,0.0)"/>
+      </linearGradient>
+    </defs>
+  `;
+  const areaPath = `M ${xPos(0)},${svgH} L ${inflationData.map((d,i) => `${xPos(i)},${yPos(d.val)}`).join(' L ')} L ${xPos(inflationData.length-1)},${svgH} Z`;
+  const inflationSvg = `<svg width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}" xmlns="http://www.w3.org/2000/svg">
+    ${gradientStops}
+    <path d="${areaPath}" fill="url(#areaGrad)" opacity="0.5"/>
+    <polyline points="${linePoints}" fill="none" stroke="url(#lineGrad)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    ${inflationData.map((d,i) => `<circle cx="${xPos(i)}" cy="${yPos(d.val)}" r="10" fill="${i===inflationData.length-1?'#10B981':i===0?'#EF4444':'#FBBF24'}" stroke="#001F61" stroke-width="4"/>`).join('')}
   </svg>`;
-  const svgRentenniveauSrc = `data:image/svg+xml;base64,${Buffer.from(svgRentenniveau).toString('base64')}`;
+  const inflationSrc = `data:image/svg+xml;base64,${Buffer.from(inflationSvg).toString('base64')}`;
 
-  const slide2 = slideRoot(C.bgDark, [
-    topBar(),
-    badge('DAS PROBLEM'),
-    headline('Das Rentenniveau sinkt auf 43 %', 54),
-    subline('Was bleibt dir im Alter wirklich?'),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '20px' } },
-      h('img', { src: svgRentenniveauSrc, width: 860, height: 260, style: { objectFit: 'contain' } }),
-      h('div', { style: { display: 'flex', flexDirection: 'row', gap: '14px' } },
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '16px', padding: '20px 24px', gap: '6px', border: '1px solid rgba(239,68,68,0.3)' } },
-          h('span', { style: { fontSize: '36px', fontWeight: 800, color: C.red, fontFamily: 'Outfit' } }, '43 %'),
-          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, lineHeight: '1.3', fontFamily: 'Outfit' } }, 'Rentenniveau bis 2040')
+  const slide2 = slideRoot(C.bg, [
+    logo(),
+    badge('DIE ENTWICKLUNG'),
+    headline('Inflation auf\nTiefstand', 60),
+    visualFlex([
+      h('div', { style: { display:'flex', flexDirection:'column', gap:'12px' }},
+        // Chart mit Labels
+        h('div', { style: { display:'flex', flexDirection:'column', gap:'0px' }},
+          h('img', { src: inflationSrc, width: svgW, height: svgH, style:{ objectFit:'contain', maxWidth:'100%' }}),
+          // X-Achsen-Labels
+          h('div', { style: { display:'flex', flexDirection:'row', justifyContent:'space-between', paddingLeft:'20px', paddingRight:'20px', marginTop:'8px' }},
+            ...inflationData.map((d,i) =>
+              h('div', { style: { display:'flex', flexDirection:'column', alignItems:'center', gap:'4px' }},
+                h('span', { style: { fontSize:'30px', fontWeight:800, color: i===0?C.red:i===inflationData.length-1?C.green:'#FBBF24' }}, d.val.toFixed(1)+' %'),
+                h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted }}, d.year),
+              )
+            )
+          ),
         ),
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '16px', padding: '20px 24px', gap: '6px', border: '1px solid rgba(239,68,68,0.3)' } },
-          h('span', { style: { fontSize: '36px', fontWeight: 800, color: C.red, fontFamily: 'Outfit' } }, '1.200 EUR'),
-          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, lineHeight: '1.3', fontFamily: 'Outfit' } }, 'monatliche Rentenlücke')
-        ),
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '16px', padding: '20px 24px', gap: '6px', border: '1px solid rgba(16,185,129,0.3)' } },
-          h('span', { style: { fontSize: '36px', fontWeight: 800, color: C.green, fontFamily: 'Outfit' } }, '540 EUR'),
-          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, lineHeight: '1.3', fontFamily: 'Outfit' } }, 'staatliche Förderung p.a.')
-        )
-      )
-    ),
-    keyLearning('78 % der Deutschen unterschätzen, wie viel ihnen im Alter fehlt.', C.red),
+      ),
+    ]),
+    keyLearning('In 4 Jahren: Von 7,9 % auf 2,1 % — das klingt gut. Aber es gibt einen Haken.'),
     igHandle(),
   ]);
 
-  // ─── SLIDE 3: DIE LÖSUNG (Kontrast: Riester vs. AV-Depot) ───────────────────
+  // === SLIDE 3: DAS PROBLEM — TAGESGELD FÄLLT AUCH ===
   const slide3 = slideRoot(C.bg, [
-    topBar(),
-    badge('DIE LÖSUNG'),
-    headline('Das Altersvorsorge-Depot schlägt Riester in allen Punkten', 48),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '16px' } },
-      h('div', { style: { display: 'flex', flexDirection: 'row', gap: '14px' } },
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '20px', padding: '28px', gap: '14px', border: '1px solid rgba(255,255,255,0.1)' } },
-          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: C.textMuted, fontFamily: 'Outfit' } }, 'RIESTER-RENTE'),
-          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(239,68,68,0.5)', borderRadius: '2px' } }),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4', fontFamily: 'Outfit', textDecoration: 'line-through', opacity: '0.6' } }, '1,8 % Kosten p.a.'),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4', fontFamily: 'Outfit', textDecoration: 'line-through', opacity: '0.6' } }, 'Komplizierte Regeln'),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4', fontFamily: 'Outfit', textDecoration: 'line-through', opacity: '0.6' } }, 'Eingeschränkte ETFs')
-        ),
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '20px', padding: '28px', gap: '14px', border: '1px solid rgba(16,185,129,0.3)' } },
-          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: C.green, fontFamily: 'Outfit' } }, 'AV-DEPOT 2027'),
-          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: C.green, borderRadius: '2px' } }),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.4', fontFamily: 'Outfit' } }, 'ab 0,1 % Kosten p.a.'),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.4', fontFamily: 'Outfit' } }, 'Einfache Einrichtung'),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.4', fontFamily: 'Outfit' } }, 'Alle ETFs wählbar')
-        )
-      ),
-      h('div', { style: { display: 'flex', flexDirection: 'row', gap: '14px' } },
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'row', alignItems: 'center', gap: '14px', backgroundColor: C.cardBg, borderRadius: '16px', padding: '20px 24px' } },
-          h('div', { style: { display: 'flex', width: '12px', height: '12px', borderRadius: '6px', backgroundColor: C.green } }),
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.text, lineHeight: '1.3', fontFamily: 'Outfit' } }, 'Bis zu 1.800 EUR staatliche Förderung pro Jahr')
-        ),
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'row', alignItems: 'center', gap: '14px', backgroundColor: C.cardBg, borderRadius: '16px', padding: '20px 24px' } },
-          h('div', { style: { display: 'flex', width: '12px', height: '12px', borderRadius: '6px', backgroundColor: C.green } }),
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.text, lineHeight: '1.3', fontFamily: 'Outfit' } }, 'Staatlich zertifiziert und reguliert')
-        )
-      )
-    ),
-    keyLearning('16 Millionen Riester-Sparer stehen jetzt vor einer wichtigen Entscheidung.'),
-    igHandle(),
-  ]);
-
-  // ─── SLIDE 4: CHECKLISTE (5 Schritte) ───────────────────────────────────────
-  const steps = [
-    { num: '01', text: 'Anbieter vergleichen (Trade Republic, Scalable, ING)', pct: 20 },
-    { num: '02', text: 'Für Warteliste deines Wunsch-Anbieters anmelden', pct: 40 },
-    { num: '03', text: 'Monatlichen Betrag festlegen (empfohlen: mind. 50 EUR)', pct: 60 },
-    { num: '04', text: 'Steueridentifikationsnummer bereithalten', pct: 80 },
-    { num: '05', text: 'Am 01.01.2027 sofort Depot eröffnen und Dauerauftrag einrichten', pct: 100 },
-  ];
-
-  const slide4 = slideRoot(C.bgDark, [
-    topBar(),
-    badge('DEINE CHECKLISTE'),
-    headline('5 Schritte vor dem 01.01.2027', 58),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '12px' } },
-      ...steps.map(s =>
-        h('div', {
-          style: {
-            display: 'flex', flexDirection: 'column', gap: '8px',
-            padding: '18px 24px', backgroundColor: C.cardBg, borderRadius: '16px'
-          }
-        },
-          h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
-            h('span', { style: { fontSize: '32px', fontWeight: 800, color: s.pct === 100 ? C.green : 'rgba(255,255,255,0.4)', minWidth: '52px', fontFamily: 'Outfit' } }, s.num),
-            h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.text, lineHeight: '1.3', fontFamily: 'Outfit' } }, s.text)
+    logo(),
+    badge('DAS PROBLEM'),
+    headline('Tagesgeld-Zinsen\nfolgen der Inflation', 56),
+    subline('Was die EZB senkt, senkt auch dein Zins'),
+    visualFlex([
+      h('div', { style: { display:'flex', flexDirection:'column', gap:'18px' }},
+        // Vergleich: Dann vs. Jetzt
+        h('div', { style: { display:'flex', flexDirection:'row', gap:'20px' }},
+          // Früher
+          h('div', { style: {
+            display:'flex', flex:'1', flexDirection:'column', gap:'12px',
+            backgroundColor:'rgba(239,68,68,0.1)', borderRadius:'20px', padding:'28px',
+            border:'2px solid rgba(239,68,68,0.3)',
+          }},
+            h('span', { style: { fontSize:'22px', fontWeight:700, letterSpacing:'2px', color: C.red }}, 'DAMALS 2024'),
+            h('div', { style: { display:'flex', width:'100%', height:'3px', backgroundColor:'rgba(239,68,68,0.3)', borderRadius:'2px' }}),
+            h('span', { style: { fontSize:'56px', fontWeight:800, color: C.text, lineHeight:'1' }}, '4,25 %'),
+            h('span', { style: { fontSize:'24px', fontWeight:500, color: C.textSoft }}, 'Tagesgeld p.a.'),
+            h('span', { style: { fontSize:'22px', fontWeight:400, color: C.textMuted }}, 'EZB-Zins: 4,5 %'),
           ),
-          h('div', { style: { display: 'flex', height: '5px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' } },
-            h('div', { style: { display: 'flex', width: `${s.pct}%`, height: '5px', backgroundColor: s.pct === 100 ? C.green : 'rgba(255,255,255,0.4)', borderRadius: '3px' } })
-          )
-        )
-      )
-    ),
-    keyLearning('Schritt 1 dauert 10 Minuten. Die anderen noch weniger.', C.green),
+          // Pfeil
+          h('div', { style: { display:'flex', alignItems:'center', justifyContent:'center', width:'40px' }},
+            h('span', { style: { fontSize:'40px', fontWeight:800, color: C.textMuted }}, '>')
+          ),
+          // Heute
+          h('div', { style: {
+            display:'flex', flex:'1', flexDirection:'column', gap:'12px',
+            backgroundColor: C.cardBg, borderRadius:'20px', padding:'28px',
+            border:'2px solid rgba(255,255,255,0.15)',
+          }},
+            h('span', { style: { fontSize:'22px', fontWeight:700, letterSpacing:'2px', color: C.textMuted }}, 'HEUTE 2026'),
+            h('div', { style: { display:'flex', width:'100%', height:'3px', backgroundColor: C.border, borderRadius:'2px' }}),
+            h('span', { style: { fontSize:'56px', fontWeight:800, color: C.text, lineHeight:'1' }}, '2,8 %'),
+            h('span', { style: { fontSize:'24px', fontWeight:500, color: C.textSoft }}, 'Tagesgeld p.a.'),
+            h('span', { style: { fontSize:'22px', fontWeight:400, color: C.textMuted }}, 'EZB-Zins: 2,5 %'),
+          ),
+        ),
+        // Info-Box
+        h('div', { style: {
+          display:'flex', alignItems:'center', gap:'16px',
+          backgroundColor:'rgba(239,68,68,0.08)', borderRadius:'16px', padding:'20px 24px',
+        }},
+          h('div', { style: { display:'flex', width:'12px', height:'12px', borderRadius:'6px', minWidth:'12px', backgroundColor: C.red }}),
+          h('span', { style: { fontSize:'26px', fontWeight:600, color: C.textSoft, lineHeight:'1.4' }}, 'Rückgang um 1,45 % — das sind bei 50.000 EUR: 725 EUR weniger pro Jahr'),
+        ),
+      ),
+    ]),
+    keyLearning('Weniger Inflation = weniger EZB-Zins = weniger Tagesgeld-Rendite', C.red),
     igHandle(),
   ]);
 
-  // ─── SLIDE 5: ANBIETER VERGLEICH ─────────────────────────────────────────────
-  const providers = [
-    { name: 'Trade Republic', zins: '3,0 %', sparplan: 'ab 1 EUR', extra: 'Größte Nutzerbasis', color: 'rgba(255,255,255,0.08)', accent: C.text },
-    { name: 'Scalable Capital', zins: '4,0 %', sparplan: 'ab 1 EUR', extra: '8.000+ ETFs', color: 'rgba(255,255,255,0.08)', accent: C.textSoft },
-    { name: 'ING', zins: '3,25 %', sparplan: 'ab 1 EUR', extra: 'Vollbank + Depot', color: 'rgba(255,255,255,0.08)', accent: C.textSoft },
-  ];
+  // === SLIDE 4: KONTRAST — TAGESGELD VS. ETF ===
+  const slide4 = slideRoot(C.bg, [
+    logo(),
+    badge('ERWARTUNG VS. REALITÄT'),
+    headline('Was viele denken\nvs. was stimmt', 56),
+    visualFlex([
+      h('div', { style: { display:'flex', gap:'18px' }},
+        // Links: Erwartung
+        h('div', { style: {
+          display:'flex', flex:'1', flexDirection:'column', gap:'16px',
+          backgroundColor:'rgba(255,255,255,0.07)', borderRadius:'24px', padding:'32px',
+        }},
+          h('span', { style: { fontSize:'22px', fontWeight:700, letterSpacing:'2px', color: C.textMuted }}, 'VIELE DENKEN'),
+          h('div', { style: { display:'flex', width:'100%', height:'3px', backgroundColor: C.border, borderRadius:'2px' }}),
+          h('span', { style: { fontSize:'28px', fontWeight:600, color: C.textSoft, lineHeight:'1.5' }}, '"Tagesgeld ist sicher und reicht als Investition"'),
+          h('div', { style: { display:'flex', flexDirection:'column', gap:'10px', marginTop:'8px' }},
+            ...[
+              { icon:'x', text:'Zinsen fallen weiter', neg:true },
+              { icon:'x', text:'Kaufkraft sinkt trotzdem', neg:true },
+              { icon:'x', text:'Kein Vermögensaufbau', neg:true },
+            ].map(item => h('div', { style: { display:'flex', alignItems:'center', gap:'12px' }},
+              h('div', { style: { display:'flex', width:'28px', height:'28px', borderRadius:'8px', backgroundColor:'rgba(239,68,68,0.15)', alignItems:'center', justifyContent:'center', minWidth:'28px' }},
+                h('span', { style: { fontSize:'18px', fontWeight:800, color: C.red }}, '—')
+              ),
+              h('span', { style: { fontSize:'24px', fontWeight:500, color: C.textMuted, lineHeight:'1.3' }}, item.text)
+            ))
+          ),
+        ),
+        // Rechts: Realität
+        h('div', { style: {
+          display:'flex', flex:'1', flexDirection:'column', gap:'16px',
+          backgroundColor:'rgba(16,185,129,0.1)', borderRadius:'24px', padding:'32px',
+          border:'2px solid rgba(16,185,129,0.3)',
+        }},
+          h('span', { style: { fontSize:'22px', fontWeight:700, letterSpacing:'2px', color: C.green }}, 'DIE REALITÄT'),
+          h('div', { style: { display:'flex', width:'100%', height:'3px', backgroundColor:'rgba(16,185,129,0.3)', borderRadius:'2px' }}),
+          h('span', { style: { fontSize:'28px', fontWeight:600, color: C.textSoft, lineHeight:'1.5' }}, 'Tagesgeld als Puffer — ETF für echten Aufbau'),
+          h('div', { style: { display:'flex', flexDirection:'column', gap:'10px', marginTop:'8px' }},
+            ...[
+              'Tagesgeld: Notgroschen (3 Monate)',
+              'ETF-Sparplan: 7 % p.a. langfristig',
+              'Altersvorsorge-Depot ab 2027',
+            ].map(text => h('div', { style: { display:'flex', alignItems:'center', gap:'12px' }},
+              h('div', { style: { display:'flex', width:'28px', height:'28px', borderRadius:'8px', backgroundColor:'rgba(16,185,129,0.2)', alignItems:'center', justifyContent:'center', minWidth:'28px' }},
+                h('span', { style: { fontSize:'18px', fontWeight:800, color: C.green }}, '+')
+              ),
+              h('span', { style: { fontSize:'24px', fontWeight:500, color: C.textSoft, lineHeight:'1.3' }}, text)
+            ))
+          ),
+        ),
+      ),
+    ]),
+    keyLearning('Tagesgeld ist kein Investment — es ist ein Puffer für Notfälle'),
+    igHandle(),
+  ]);
 
+  // === SLIDE 5: 3-TÖPFE-STRATEGIE ===
   const slide5 = slideRoot(C.bg, [
-    topBar(),
-    badge('ANBIETER IM VERGLEICH'),
-    headline('Diese 3 starten am 01.01.2027', 58),
-    subline('Alle kostenlos. Alle vorbereitet.'),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '14px' } },
-      ...providers.map((p, i) =>
-        h('div', {
-          style: {
-            display: 'flex', flexDirection: 'row', alignItems: 'center',
-            backgroundColor: i === 0 ? 'rgba(16,185,129,0.1)' : C.cardBg,
-            border: i === 0 ? '2px solid rgba(16,185,129,0.4)' : '1px solid rgba(255,255,255,0.1)',
-            borderRadius: '18px', padding: '22px 28px', gap: '20px'
-          }
-        },
-          h('div', {
-            style: {
-              display: 'flex', width: '52px', height: '52px', borderRadius: '12px',
-              backgroundColor: i === 0 ? C.green : 'rgba(255,255,255,0.1)',
-              alignItems: 'center', justifyContent: 'center', flexShrink: '0'
-            }
+    logo(),
+    badge('DIE STRATEGIE'),
+    headline('So teilst du dein\nGeld jetzt auf', 60),
+    subline('Das 3-Töpfe-Modell bei fallender Inflation'),
+    visualFlex([
+      h('div', { style: { display:'flex', flexDirection:'column', gap:'18px' }},
+        ...[
+          {
+            num: '1', label: 'GIROKONTO', title: 'Laufende Kosten', desc: 'Miete, Lebensmittel, Rechnungen', pct: 100, barW: '100%', col: C.textMuted,
           },
-            h('span', { style: { fontSize: '20px', fontWeight: 800, color: '#FFFFFF', fontFamily: 'Outfit' } }, `${i + 1}`)
-          ),
-          h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', gap: '4px' } },
-            h('span', { style: { fontSize: '28px', fontWeight: 700, color: i === 0 ? C.green : C.text, fontFamily: 'Outfit' } }, p.name),
-            h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, fontFamily: 'Outfit' } }, p.extra)
-          ),
-          h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' } },
-            h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.text, fontFamily: 'Outfit' } }, p.zins),
-            h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted, fontFamily: 'Outfit' } }, 'Tagesgeld p.a.')
+          {
+            num: '2', label: 'TAGESGELD', title: 'Notgroschen: 3 Monate', desc: '2,8 % p.a. — sicher & verfügbar', pct: 25, barW: '25%', col: '#FBBF24',
+          },
+          {
+            num: '3', label: 'ETF-DEPOT', title: 'Langfristiger Aufbau', desc: '~7 % p.a. — für 10+ Jahre', pct: 20, barW: '20%', col: C.green,
+          },
+        ].map(item =>
+          h('div', { style: {
+            display:'flex', flexDirection:'column', gap:'10px',
+            backgroundColor: C.cardBg, borderRadius:'20px', padding:'24px 28px',
+          }},
+            h('div', { style: { display:'flex', alignItems:'center', gap:'18px' }},
+              h('div', { style: {
+                display:'flex', width:'52px', height:'52px', borderRadius:'14px',
+                backgroundColor:'rgba(255,255,255,0.12)', alignItems:'center', justifyContent:'center', minWidth:'52px',
+              }},
+                h('span', { style: { fontSize:'28px', fontWeight:800, color: item.col }}, item.num)
+              ),
+              h('div', { style: { display:'flex', flexDirection:'column', gap:'2px' }},
+                h('span', { style: { fontSize:'22px', fontWeight:700, letterSpacing:'2px', color: item.col }}, item.label),
+                h('span', { style: { fontSize:'28px', fontWeight:700, color: C.text }}, item.title),
+                h('span', { style: { fontSize:'22px', fontWeight:500, color: C.textMuted }}, item.desc),
+              ),
+            ),
+            h('div', { style: { display:'flex', height:'6px', backgroundColor: C.border, borderRadius:'3px', overflow:'hidden' }},
+              h('div', { style: { display:'flex', width: item.barW, height:'6px', backgroundColor: item.col, borderRadius:'3px' }})
+            ),
           )
-        )
+        ),
       ),
-      h('div', { style: { display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px', backgroundColor: 'rgba(16,185,129,0.08)', borderRadius: '14px', padding: '16px 24px' } },
-        h('div', { style: { display: 'flex', width: '10px', height: '10px', borderRadius: '5px', backgroundColor: C.green } }),
-        h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textSoft, fontFamily: 'Outfit' } }, 'Wartelisten bei allen drei Anbietern bereits offen')
-      )
-    ),
-    keyLearning('Tipp: Melde dich bei allen drei an. Eröffnen kannst du erst ab 01.01.2027.'),
+    ]),
+    keyLearning('Töpfe trennen: Sicherheit trennen von Rendite — beides hat seinen Platz'),
     igHandle(),
   ]);
 
-  // ─── SLIDE 6: FÖRDERUNG DETAILS ───────────────────────────────────────────────
-  const foerderungen = [
-    { title: 'Grundförderung', betrag: '300 EUR/Jahr', detail: '50 % auf erste 600 EUR Einzahlung' },
-    { title: 'Höchstförderung', betrag: '1.800 EUR/Jahr', detail: 'mit Kinderzulage (3+ Kinder)' },
-    { title: 'Kinderbonus', betrag: '300 EUR/Kind', detail: 'Zusätzlich pro Kind unter 18' },
+  // === SLIDE 6: RECHENBEISPIEL — 10-JAHRES-VERGLEICH ===
+  const compSvgW = 860, compSvgH = 320;
+  const bars = [
+    { label: 'Tagesgeld\n2,8 %', val: 13107, maxVal_: 20000, col:'rgba(255,255,255,0.4)' },
+    { label: 'ETF-Sparplan\n~7 % p.a.', val: 20972, maxVal_: 20000, col: C.green },
+    { label: 'Altersvorsorge-\nDepot ab 2027', val: 23132, maxVal_: 20000, col:'#FBBF24' },
   ];
+  const maxBar = 25000;
+  const barW2 = 220;
+  const barGap = (compSvgW - bars.length * barW2) / (bars.length + 1);
 
-  const slide6 = slideRoot(C.bgDark, [
-    topBar(),
-    badge('SO VIEL BEKOMMST DU'),
-    headline('Die staatliche Förderung im Detail', 52),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '16px' } },
-      h('div', { style: { display: 'flex', flexDirection: 'row', gap: '14px' } },
-        ...foerderungen.map((f, i) =>
-          h('div', {
-            style: {
-              display: 'flex', flex: '1', flexDirection: 'column', gap: '10px',
-              backgroundColor: i === 0 ? 'rgba(16,185,129,0.12)' : C.cardBg,
-              borderRadius: '20px', padding: '24px',
-              border: i === 0 ? '1px solid rgba(16,185,129,0.3)' : '1px solid rgba(255,255,255,0.1)'
-            }
-          },
-            h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '1px', color: i === 0 ? C.green : C.textMuted, fontFamily: 'Outfit' } }, f.title.toUpperCase()),
-            h('span', { style: { fontSize: '30px', fontWeight: 800, color: C.text, lineHeight: '1.1', fontFamily: 'Outfit' } }, f.betrag),
-            h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4', fontFamily: 'Outfit' } }, f.detail)
-          )
-        )
+  const compSvg = `<svg width="${compSvgW}" height="${compSvgH}" viewBox="0 0 ${compSvgW} ${compSvgH}" xmlns="http://www.w3.org/2000/svg">
+    ${bars.map((b,i) => {
+      const x = barGap + i*(barW2 + barGap);
+      const barHeight = (b.val / maxBar) * (compSvgH - 40);
+      const y = compSvgH - 10 - barHeight;
+      return `<rect x="${x}" y="${y}" width="${barW2}" height="${barHeight}" rx="12" fill="${b.col}" opacity="0.9"/>`;
+    }).join('')}
+  </svg>`;
+  const compSrc = `data:image/svg+xml;base64,${Buffer.from(compSvg).toString('base64')}`;
+
+  const slide6 = slideRoot(C.bg, [
+    logo(),
+    badge('DAS RECHNET SICH'),
+    headline('100 EUR/Monat\nüber 10 Jahre', 60),
+    subline('Was aus deinem Geld wirklich wird'),
+    visualFlex([
+      h('div', { style: { display:'flex', flexDirection:'column', gap:'0px' }},
+        h('div', { style: { display:'flex', flexDirection:'row', justifyContent:'space-around', alignItems:'flex-end', paddingBottom:'0px' }},
+          ...bars.map((b,i) => {
+            const barHeight = Math.round((b.val / maxBar) * 300);
+            return h('div', { style: { display:'flex', flexDirection:'column', alignItems:'center', gap:'8px' }},
+              h('span', { style: { fontSize:'30px', fontWeight:800, color: b.col }},
+                `${(b.val/1000).toFixed(1)} T`
+              ),
+              h('div', { style: {
+                display:'flex', width:'200px', height:`${barHeight}px`,
+                backgroundColor: b.col, borderRadius:'14px 14px 0 0',
+              }}),
+            );
+          })
+        ),
+        h('div', { style: { display:'flex', height:'3px', backgroundColor: C.border, borderRadius:'2px', marginBottom:'12px' }}),
+        h('div', { style: { display:'flex', flexDirection:'row', justifyContent:'space-around' }},
+          ...bars.map(b => h('div', { style: { display:'flex', flexDirection:'column', alignItems:'center', gap:'4px', maxWidth:'200px' }},
+            h('span', { style: { fontSize:'22px', fontWeight:700, color: b.col, textAlign:'center' }}, b.label.replace('\n', ' ')),
+          ))
+        ),
       ),
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px', backgroundColor: C.cardBg, borderRadius: '18px', padding: '24px 28px' } },
-        h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.textMuted, letterSpacing: '2px', fontFamily: 'Outfit' } }, 'RECHENBEISPIEL'),
-        h('div', { style: { display: 'flex', height: '3px', backgroundColor: C.border, borderRadius: '2px' } }),
-        h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.5', fontFamily: 'Outfit' } },
-          'Familie mit 2 Kindern: 100 EUR/Monat einzahlen'),
-        h('div', { style: { display: 'flex', flexDirection: 'row', gap: '8px', alignItems: 'center' } },
-          h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textSoft, fontFamily: 'Outfit' } }, 'Eigenleistung: 1.200 EUR/Jahr'),
-          h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted, fontFamily: 'Outfit' } }, '+'),
-          h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.green, fontFamily: 'Outfit' } }, 'Foerderung: 900 EUR/Jahr')
-        )
-      )
-    ),
-    keyLearning('75 % Förderquote bei Familien mit 2 Kindern — das schlägt jede Riester-Police.', C.green),
+    ]),
+    keyLearning('ETF schlägt Tagesgeld nach 10 Jahren um rund 7.865 EUR — mit gleichem Einsatz'),
     igHandle(),
   ]);
 
-  // ─── SLIDE 7: LEARNINGS + TAKEAWAYS ──────────────────────────────────────────
-  const learnings = [
-    { num: '01', text: 'Jetzt Anbieter vergleichen und für Warteliste anmelden', pct: 33 },
-    { num: '02', text: 'Monatlichen Sparbetrag festlegen — schon ab 1 EUR/Monat möglich', pct: 66 },
-    { num: '03', text: 'Am 01.01.2027 sofort starten — Förderung gilt rückwirkend für 2027', pct: 100 },
-  ];
-
+  // === SLIDE 7: 4 LEARNINGS ===
   const slide7 = slideRoot(C.bg, [
-    topBar(),
-    badge('DEINE 3 TAKEAWAYS'),
-    headline('Das nimmst du mit', 58),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '14px' } },
-      ...learnings.map(l =>
-        h('div', {
-          style: {
-            display: 'flex', flexDirection: 'column', gap: '10px',
-            padding: '24px 28px', backgroundColor: C.cardBg, borderRadius: '18px'
-          }
-        },
-          h('div', { style: { display: 'flex', alignItems: 'center', gap: '18px' } },
-            h('span', { style: { fontSize: '40px', fontWeight: 800, color: l.pct === 100 ? C.green : C.text, minWidth: '60px', fontFamily: 'Outfit' } }, l.num),
-            h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.3', fontFamily: 'Outfit' } }, l.text)
-          ),
-          h('div', { style: { display: 'flex', height: '6px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' } },
-            h('div', { style: { display: 'flex', width: `${l.pct}%`, height: '6px', backgroundColor: l.pct === 100 ? C.green : C.text, borderRadius: '3px' } })
+    logo(),
+    badge('DEINE TAKEAWAYS'),
+    headline('Was du jetzt\nwissen musst', 60),
+    visualFlex([
+      h('div', { style: { display:'flex', flexDirection:'column', gap:'16px' }},
+        ...[
+          { num:'01', text:'Tagesgeld ist für den Notgroschen — nicht für Vermögensaufbau', pct:25, col: C.text },
+          { num:'02', text:'ETF-Sparplan läuft automatisch weiter — auch wenn Zinsen fallen', pct:50, col: C.text },
+          { num:'03', text:'Altersvorsorge-Depot ab 01.01.2027: bis zu 540 EUR staatliche Förderung', pct:75, col: C.text },
+          { num:'04', text:'Jetzt handeln: Sparplan einrichten dauert 10 Minuten', pct:100, col: C.green },
+        ].map(l =>
+          h('div', { style: {
+            display:'flex', flexDirection:'column', gap:'10px',
+            padding:'20px 24px', backgroundColor: C.cardBg, borderRadius:'18px',
+          }},
+            h('div', { style: { display:'flex', alignItems:'center', gap:'18px' }},
+              h('span', { style: { fontSize:'36px', fontWeight:800, color: l.pct===100 ? C.green : C.text, minWidth:'56px' }}, l.num),
+              h('span', { style: { fontSize:'26px', fontWeight:600, color: C.textSoft, lineHeight:'1.3' }}, l.text),
+            ),
+            h('div', { style: { display:'flex', height:'6px', backgroundColor: C.border, borderRadius:'3px', overflow:'hidden' }},
+              h('div', { style: { display:'flex', width:`${l.pct}%`, height:'6px', backgroundColor: l.pct===100 ? C.green : C.text, borderRadius:'3px' }})
+            ),
           )
-        )
+        ),
       ),
-      h('div', { style: { display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '14px', backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '16px', padding: '22px 28px', border: '1px solid rgba(16,185,129,0.3)' } },
-        h('div', { style: { display: 'flex', width: '6px', minHeight: '40px', backgroundColor: C.green, borderRadius: '3px' } }),
-        h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.4', fontFamily: 'Outfit' } }, 'In 7 Wochen ist der Startschuss. Fang jetzt mit der Vorbereitung an.')
-      )
-    ),
+    ]),
+    keyLearning('Fallende Inflation ist eine Chance — wenn du richtig reagierst'),
     igHandle(),
   ]);
 
-  // ─── SLIDE 8: CTA ─────────────────────────────────────────────────────────────
-  const slide8 = slideRoot(C.bgDark, [
-    h('div', { style: { display: 'flex', flexDirection: 'column', flex: '1', alignItems: 'center', justifyContent: 'center', gap: '32px' } },
-      h('img', { src: logoB64, width: 140, height: 140, style: { borderRadius: '24px', objectFit: 'cover' } }),
-      badge('JETZT HANDELN'),
-      h('span', {
-        style: {
-          fontSize: '52px', fontWeight: 800, color: C.text,
-          lineHeight: '1.15', letterSpacing: '-1.5px', textAlign: 'center',
-          maxWidth: '860px', fontFamily: 'Outfit'
-        }
-      }, 'Bei welchem Anbieter öffnest du dein Altersvorsorge-Depot?'),
-      h('span', {
-        style: { fontSize: '28px', fontWeight: 500, color: C.textMuted, textAlign: 'center', fontFamily: 'Outfit' }
-      }, 'Schreib es in die Kommentare 👇'),
-      h('div', { style: { display: 'flex', flexDirection: 'row', gap: '14px', marginTop: '8px' } },
-        h('div', { style: { display: 'flex', backgroundColor: C.cardBg, borderRadius: '50px', padding: '14px 28px' } },
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.text, fontFamily: 'Outfit' } }, 'Trade Republic')
+  // === SLIDE 8: CTA ===
+  const slide8 = slideRoot(C.bg, [
+    logo(),
+    badge('DEIN NÄCHSTER SCHRITT'),
+    visualFlex([
+      h('div', { style: { display:'flex', flexDirection:'column', alignItems:'center', gap:'32px' }},
+        h('div', { style: {
+          display:'flex', width:'160px', height:'160px',
+          backgroundColor: C.cardBg, borderRadius:'28px',
+          alignItems:'center', justifyContent:'center',
+        }},
+          h('img', { src: logoB64, width:120, height:120, style:{ borderRadius:'12px', objectFit:'cover' }}),
         ),
-        h('div', { style: { display: 'flex', backgroundColor: C.cardBg, borderRadius: '50px', padding: '14px 28px' } },
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.text, fontFamily: 'Outfit' } }, 'Scalable')
+        h('span', { style: {
+          fontSize:'52px', fontWeight:800, color: C.text,
+          textAlign:'center', lineHeight:'1.2', letterSpacing:'-1px',
+        }}, 'Hast du dein Geld\nnoch richtig aufgeteilt?'),
+        h('span', { style: {
+          fontSize:'30px', fontWeight:500, color: C.textMuted,
+          textAlign:'center', lineHeight:'1.5',
+        }}, 'Schreib uns, wenn du Fragen hast — wir helfen dir beim nächsten Schritt.'),
+        h('div', { style: {
+          display:'flex', flexDirection:'column', alignItems:'center', gap:'12px',
+          backgroundColor: C.cardBg, borderRadius:'20px', padding:'24px 40px',
+        }},
+          h('span', { style: { fontSize:'28px', fontWeight:700, color: C.green }}, 'Speichern, damit du es nicht vergisst'),
+          h('span', { style: { fontSize:'24px', fontWeight:500, color: C.textMuted }}, 'Folge @benarofinanzen für mehr'),
         ),
-        h('div', { style: { display: 'flex', backgroundColor: C.cardBg, borderRadius: '50px', padding: '14px 28px' } },
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.text, fontFamily: 'Outfit' } }, 'ING')
-        )
-      )
-    ),
-    h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', paddingBottom: '0px' } },
-      h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textMuted, fontFamily: 'Outfit' } }, 'Folge uns für mehr Finanzwissen:'),
-      h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.text, fontFamily: 'Outfit' } }, '@benarofinanzen')
-    ),
+      ),
+    ]),
+    igHandle(),
   ]);
 
   const slides = [slide1, slide2, slide3, slide4, slide5, slide6, slide7, slide8];
+  const outputDir = path.join(__dirname, 'output', `carousel_2026-11-15`, 'slides');
 
   for (let i = 0; i < slides.length; i++) {
     const svg = await satori(slides[i], { width: W, height: H, fonts });
     const resvg = new Resvg(svg, { fitTo: { mode: 'width', value: W } });
     const pngData = resvg.render();
-    const pngPath = path.join(OUTPUT_DIR, `slide-${String(i + 1).padStart(2, '0')}.png`);
+    const pngPath = path.join(outputDir, `slide-${String(i+1).padStart(2,'0')}.png`);
     fs.writeFileSync(pngPath, pngData.asPng());
-    console.log(`Slide ${i + 1}/${slides.length} generiert: ${pngPath}`);
+    console.log(`Slide ${i+1}/${slides.length} generiert: ${pngPath}`);
   }
-
-  console.log('\nAlle Slides erfolgreich generiert!');
-  console.log(`Ausgabe: ${OUTPUT_DIR}`);
+  console.log('Alle Slides erfolgreich generiert!');
 }
 
-main().catch(e => {
-  console.error('Fehler:', e);
-  process.exit(1);
-});
+main().catch(e => { console.error(e); process.exit(1); });
