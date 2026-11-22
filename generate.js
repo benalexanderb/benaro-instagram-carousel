@@ -1,4 +1,3 @@
-'use strict';
 const fs = require('fs');
 const path = require('path');
 
@@ -6,23 +5,14 @@ async function main() {
   const satori = (await import('satori')).default || require('satori');
   const { Resvg } = require('@resvg/resvg-js');
 
-  const W = 1080, H = 1350;
-  const TODAY = '2026-11-09';
-  const OUTPUT_DIR = path.join(__dirname, 'output', `carousel_${TODAY}`, 'slides');
-
   const fontDir = path.join(__dirname, 'node_modules/@fontsource/outfit/files');
   const fonts = [400, 500, 600, 700, 800].flatMap(w => [
     { name: 'Outfit', weight: w, style: 'normal', data: fs.readFileSync(path.join(fontDir, `outfit-latin-${w}-normal.woff`)) },
     { name: 'Outfit', weight: w, style: 'normal', data: fs.readFileSync(path.join(fontDir, `outfit-latin-ext-${w}-normal.woff`)) },
   ]);
 
-  const logoB64 = 'data:image/jpeg;base64,' + fs.readFileSync(
-    path.join(__dirname, 'skills/instagram-carousel-skill/templates/benaro-logo.jpg')
-  ).toString('base64');
-
   const C = {
     bg: '#001F61',
-    bgDark: '#001542',
     text: '#FFFFFF',
     textSoft: '#E5E7EB',
     textMuted: '#9CA3AF',
@@ -31,6 +21,11 @@ async function main() {
     green: '#10B981',
     red: '#EF4444',
   };
+
+  const W = 1080, H = 1350;
+
+  const logoPath = path.join(__dirname, 'skills/instagram-carousel-skill/templates/benaro-logo.jpg');
+  const logoB64 = 'data:image/jpeg;base64,' + fs.readFileSync(logoPath).toString('base64');
 
   const h = (type, props, ...ch) => ({
     type,
@@ -44,12 +39,6 @@ async function main() {
       height: 100,
       style: { borderRadius: '12px', objectFit: 'cover' }
     });
-  }
-
-  function topBar(dark = false) {
-    return h('div', {
-      style: { display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginBottom: '16px' }
-    }, logo());
   }
 
   function badge(text) {
@@ -68,7 +57,7 @@ async function main() {
     return h('span', {
       style: {
         fontSize: `${size}px`, fontWeight: 800, color: C.text,
-        lineHeight: '1.08', letterSpacing: '-1.5px', marginBottom: '8px',
+        lineHeight: '1.08', letterSpacing: '-1.5px', marginBottom: '6px',
         fontFamily: 'Outfit'
       }
     }, text);
@@ -83,289 +72,451 @@ async function main() {
     }, text);
   }
 
-  function keyLearning(text, accent = C.text) {
+  function keyLearning(text, accent) {
+    const accentColor = accent === 'red' ? C.red : accent === 'green' ? C.green : C.text;
     return h('div', {
       style: {
         display: 'flex', alignItems: 'center', gap: '14px',
-        backgroundColor: C.cardBg, borderRadius: '16px', padding: '22px 28px', marginTop: '20px'
+        backgroundColor: C.cardBg, borderRadius: '16px', padding: '22px 28px', marginTop: 'auto'
       }
     },
-      h('div', { style: { display: 'flex', width: '6px', minHeight: '40px', backgroundColor: accent, borderRadius: '3px' } }),
+      h('div', { style: { display: 'flex', width: '6px', minHeight: '40px', backgroundColor: accentColor, borderRadius: '3px' } }),
       h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.4', fontFamily: 'Outfit' } }, text)
     );
   }
 
   function igHandle() {
-    return h('div', { style: { display: 'flex', marginTop: '12px' } },
-      h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted, fontFamily: 'Outfit' } }, '@benarofinanzen')
+    return h('div', { style: { display: 'flex', alignItems: 'center', marginTop: '12px' } },
+      h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, fontFamily: 'Outfit' } }, '@benarofinanzen')
     );
   }
 
-  function slideRoot(bgColor, children) {
-    return h('div', {
-      style: {
-        display: 'flex', flexDirection: 'column', width: W, height: H,
-        padding: '60px 70px', backgroundColor: bgColor, fontFamily: 'Outfit'
-      }
-    }, ...children);
+  function topRow(badgeText) {
+    return h('div', { style: { display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0px' } },
+      badge(badgeText),
+      logo()
+    );
   }
 
-  // ─── SLIDE 1: HOOK ───────────────────────────────────────────────────────────
-  const svgCountdown = `<svg width="860" height="300" viewBox="0 0 860 300" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="130" cy="150" r="110" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.3)" stroke-width="4"/>
-    <circle cx="130" cy="150" r="110" fill="none" stroke="#10B981" stroke-width="8" stroke-dasharray="440 692" stroke-linecap="round" transform="rotate(-90 130 150)"/>
-    <circle cx="310" cy="150" r="80" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)" stroke-width="3"/>
-    <circle cx="490" cy="150" r="80" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)" stroke-width="3"/>
-    <circle cx="670" cy="150" r="80" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)" stroke-width="3"/>
-  </svg>`;
-  const svgCountdownSrc = `data:image/svg+xml;base64,${Buffer.from(svgCountdown).toString('base64')}`;
-
-  const slide1 = slideRoot(C.bg, [
-    topBar(),
-    badge('BREAKING: 01.01.2027'),
-    headline('7 Wochen. Dann startet das neue Altersvorsorge-Depot.', 56),
-    subline('Der größte Rentensystem-Wandel seit 25 Jahren.'),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '16px' } },
-      h('img', { src: svgCountdownSrc, width: 860, height: 300, style: { objectFit: 'contain' } }),
-      h('div', { style: { display: 'flex', flexDirection: 'row', gap: '24px', justifyContent: 'center' } },
-        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' } },
-          h('span', { style: { fontSize: '96px', fontWeight: 800, color: C.green, lineHeight: '1', fontFamily: 'Outfit' } }, '7'),
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textMuted, letterSpacing: '2px', fontFamily: 'Outfit' } }, 'WOCHEN')
+  // ─── SLIDE 1 — HOOK ─────────────────────────────────────────────────────────
+  // "5 Kreditkarten-Fallen die dich 500 € im Jahr kosten"
+  const slide1 = h('div', {
+    style: {
+      display: 'flex', flexDirection: 'column', width: W, height: H,
+      padding: '70px', backgroundColor: C.bg, fontFamily: 'Outfit'
+    }
+  },
+    topRow('JETZT AUFPASSEN'),
+    headline('5 Kreditkarten-Fallen die dich 500 € im Jahr kosten', 60),
+    subline('Und du merkst es meistens nicht'),
+    h('div', {
+      style: {
+        display: 'flex', flex: '1', flexDirection: 'column',
+        justifyContent: 'center', alignItems: 'center', gap: '32px'
+      }
+    },
+      // Big stat hero
+      h('div', {
+        style: {
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          backgroundColor: C.cardBg, borderRadius: '24px', padding: '50px 80px', gap: '12px'
+        }
+      },
+        h('span', { style: { fontSize: '130px', fontWeight: 800, color: C.red, letterSpacing: '-4px', fontFamily: 'Outfit', lineHeight: '1' } }, '500 €'),
+        h('span', { style: { fontSize: '30px', fontWeight: 600, color: C.textSoft, fontFamily: 'Outfit' } }, 'pro Jahr — unnötig verloren')
+      ),
+      // 3 kleine Chips
+      h('div', { style: { display: 'flex', flexDirection: 'row', gap: '16px' } },
+        h('div', {
+          style: {
+            display: 'flex', alignItems: 'center', gap: '8px',
+            backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '12px', padding: '12px 20px'
+          }
+        },
+          h('div', { style: { display: 'flex', width: '10px', height: '10px', borderRadius: '5px', backgroundColor: C.red } }),
+          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.red, fontFamily: 'Outfit' } }, 'Zinsen')
         ),
-        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', marginLeft: '60px' } },
-          h('span', { style: { fontSize: '64px', fontWeight: 800, color: C.textSoft, lineHeight: '1', fontFamily: 'Outfit' } }, '49'),
-          h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.textMuted, letterSpacing: '2px', fontFamily: 'Outfit' } }, 'TAGE')
+        h('div', {
+          style: {
+            display: 'flex', alignItems: 'center', gap: '8px',
+            backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '12px', padding: '12px 20px'
+          }
+        },
+          h('div', { style: { display: 'flex', width: '10px', height: '10px', borderRadius: '5px', backgroundColor: C.red } }),
+          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.red, fontFamily: 'Outfit' } }, 'Gebühren')
         ),
-        h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', marginLeft: '40px' } },
-          h('span', { style: { fontSize: '64px', fontWeight: 800, color: C.textSoft, lineHeight: '1', fontFamily: 'Outfit' } }, '1.176'),
-          h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.textMuted, letterSpacing: '2px', fontFamily: 'Outfit' } }, 'STUNDEN')
+        h('div', {
+          style: {
+            display: 'flex', alignItems: 'center', gap: '8px',
+            backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '12px', padding: '12px 20px'
+          }
+        },
+          h('div', { style: { display: 'flex', width: '10px', height: '10px', borderRadius: '5px', backgroundColor: C.red } }),
+          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.red, fontFamily: 'Outfit' } }, 'Versteckte Kosten')
         )
       )
     ),
-    keyLearning('Wer jetzt handelt, profitiert ab dem ersten Tag.', C.green),
-    igHandle(),
-  ]);
+    keyLearning('Die meisten zahlen, ohne es zu wissen.', 'red'),
+    igHandle()
+  );
 
-  // ─── SLIDE 2: PROBLEM (STAT HERO) ────────────────────────────────────────────
-  const svgRentenniveau = `<svg width="860" height="260" viewBox="0 0 860 260" xmlns="http://www.w3.org/2000/svg">
-    <rect x="40" y="20" width="140" height="220" rx="10" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
-    <rect x="40" y="130" width="140" height="110" rx="6" fill="rgba(239,68,68,0.3)"/>
-    <rect x="40" y="20" width="140" height="110" rx="6" fill="rgba(239,68,68,0.6)"/>
-    <rect x="220" y="20" width="140" height="220" rx="10" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
-    <rect x="220" y="98" width="140" height="142" rx="6" fill="rgba(239,68,68,0.15)"/>
-    <rect x="220" y="20" width="140" height="78" rx="6" fill="rgba(239,68,68,0.5)"/>
-    <rect x="400" y="20" width="140" height="220" rx="10" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
-    <rect x="400" y="80" width="140" height="160" rx="6" fill="rgba(255,255,255,0.03)"/>
-    <rect x="400" y="20" width="140" height="60" rx="6" fill="rgba(239,68,68,0.3)"/>
-    <rect x="580" y="20" width="240" height="220" rx="10" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.3)" stroke-width="2"/>
-    <rect x="600" y="40" width="200" height="180" rx="8" fill="rgba(16,185,129,0.15)"/>
-  </svg>`;
-  const svgRentenniveauSrc = `data:image/svg+xml;base64,${Buffer.from(svgRentenniveau).toString('base64')}`;
-
-  const slide2 = slideRoot(C.bgDark, [
-    topBar(),
-    badge('DAS PROBLEM'),
-    headline('Das Rentenniveau sinkt auf 43 %', 54),
-    subline('Was bleibt dir im Alter wirklich?'),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '20px' } },
-      h('img', { src: svgRentenniveauSrc, width: 860, height: 260, style: { objectFit: 'contain' } }),
-      h('div', { style: { display: 'flex', flexDirection: 'row', gap: '14px' } },
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '16px', padding: '20px 24px', gap: '6px', border: '1px solid rgba(239,68,68,0.3)' } },
-          h('span', { style: { fontSize: '36px', fontWeight: 800, color: C.red, fontFamily: 'Outfit' } }, '43 %'),
-          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, lineHeight: '1.3', fontFamily: 'Outfit' } }, 'Rentenniveau bis 2040')
-        ),
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(239,68,68,0.12)', borderRadius: '16px', padding: '20px 24px', gap: '6px', border: '1px solid rgba(239,68,68,0.3)' } },
-          h('span', { style: { fontSize: '36px', fontWeight: 800, color: C.red, fontFamily: 'Outfit' } }, '1.200 EUR'),
-          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, lineHeight: '1.3', fontFamily: 'Outfit' } }, 'monatliche Rentenlücke')
-        ),
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '16px', padding: '20px 24px', gap: '6px', border: '1px solid rgba(16,185,129,0.3)' } },
-          h('span', { style: { fontSize: '36px', fontWeight: 800, color: C.green, fontFamily: 'Outfit' } }, '540 EUR'),
-          h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textSoft, lineHeight: '1.3', fontFamily: 'Outfit' } }, 'staatliche Förderung p.a.')
-        )
-      )
-    ),
-    keyLearning('78 % der Deutschen unterschätzen, wie viel ihnen im Alter fehlt.', C.red),
-    igHandle(),
-  ]);
-
-  // ─── SLIDE 3: DIE LÖSUNG (Kontrast: Riester vs. AV-Depot) ───────────────────
-  const slide3 = slideRoot(C.bg, [
-    topBar(),
-    badge('DIE LÖSUNG'),
-    headline('Das Altersvorsorge-Depot schlägt Riester in allen Punkten', 48),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '16px' } },
-      h('div', { style: { display: 'flex', flexDirection: 'row', gap: '14px' } },
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '20px', padding: '28px', gap: '14px', border: '1px solid rgba(255,255,255,0.1)' } },
-          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: C.textMuted, fontFamily: 'Outfit' } }, 'RIESTER-RENTE'),
-          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(239,68,68,0.5)', borderRadius: '2px' } }),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4', fontFamily: 'Outfit', textDecoration: 'line-through', opacity: '0.6' } }, '1,8 % Kosten p.a.'),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4', fontFamily: 'Outfit', textDecoration: 'line-through', opacity: '0.6' } }, 'Komplizierte Regeln'),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4', fontFamily: 'Outfit', textDecoration: 'line-through', opacity: '0.6' } }, 'Eingeschränkte ETFs')
-        ),
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '20px', padding: '28px', gap: '14px', border: '1px solid rgba(16,185,129,0.3)' } },
-          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: C.green, fontFamily: 'Outfit' } }, 'AV-DEPOT 2027'),
-          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: C.green, borderRadius: '2px' } }),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.4', fontFamily: 'Outfit' } }, 'ab 0,1 % Kosten p.a.'),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.4', fontFamily: 'Outfit' } }, 'Einfache Einrichtung'),
-          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.4', fontFamily: 'Outfit' } }, 'Alle ETFs wählbar')
+  // ─── SLIDE 2 — STATISTIK ────────────────────────────────────────────────────
+  const slide2 = h('div', {
+    style: {
+      display: 'flex', flexDirection: 'column', width: W, height: H,
+      padding: '70px', backgroundColor: C.bg, fontFamily: 'Outfit'
+    }
+  },
+    topRow('DIE ZAHLEN'),
+    headline('Was die meisten über ihre Kreditkarte nicht wissen', 56),
+    subline('Deutschland 2026'),
+    h('div', {
+      style: {
+        display: 'flex', flex: '1', flexDirection: 'column',
+        justifyContent: 'center', gap: '24px'
+      }
+    },
+      // Stat 1
+      h('div', {
+        style: {
+          display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '24px',
+          backgroundColor: C.cardBg, borderRadius: '20px', padding: '28px 36px'
+        }
+      },
+        h('span', { style: { fontSize: '72px', fontWeight: 800, color: C.red, fontFamily: 'Outfit', minWidth: '160px' } }, '54 %'),
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
+          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.text, fontFamily: 'Outfit' } }, 'kennen ihre Kreditkartenkosten nicht'),
+          h('span', { style: { fontSize: '22px', fontWeight: 400, color: C.textMuted, fontFamily: 'Outfit' } }, 'Stiftung Warentest 2026')
         )
       ),
-      h('div', { style: { display: 'flex', flexDirection: 'row', gap: '14px' } },
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'row', alignItems: 'center', gap: '14px', backgroundColor: C.cardBg, borderRadius: '16px', padding: '20px 24px' } },
-          h('div', { style: { display: 'flex', width: '12px', height: '12px', borderRadius: '6px', backgroundColor: C.green } }),
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.text, lineHeight: '1.3', fontFamily: 'Outfit' } }, 'Bis zu 1.800 EUR staatliche Förderung pro Jahr')
-        ),
-        h('div', { style: { display: 'flex', flex: '1', flexDirection: 'row', alignItems: 'center', gap: '14px', backgroundColor: C.cardBg, borderRadius: '16px', padding: '20px 24px' } },
-          h('div', { style: { display: 'flex', width: '12px', height: '12px', borderRadius: '6px', backgroundColor: C.green } }),
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.text, lineHeight: '1.3', fontFamily: 'Outfit' } }, 'Staatlich zertifiziert und reguliert')
+      // Stat 2
+      h('div', {
+        style: {
+          display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '24px',
+          backgroundColor: C.cardBg, borderRadius: '20px', padding: '28px 36px'
+        }
+      },
+        h('span', { style: { fontSize: '72px', fontWeight: 800, color: C.red, fontFamily: 'Outfit', minWidth: '160px' } }, '22 %'),
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
+          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.text, fontFamily: 'Outfit' } }, 'Zinsen zahlt du auf Raten-Rückstände'),
+          h('span', { style: { fontSize: '22px', fontWeight: 400, color: C.textMuted, fontFamily: 'Outfit' } }, 'Durchschnitt dt. Kreditkarten')
+        )
+      ),
+      // Stat 3
+      h('div', {
+        style: {
+          display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '24px',
+          backgroundColor: C.cardBg, borderRadius: '20px', padding: '28px 36px'
+        }
+      },
+        h('span', { style: { fontSize: '72px', fontWeight: 800, color: C.green, fontFamily: 'Outfit', minWidth: '160px' } }, '0 €'),
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
+          h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.text, fontFamily: 'Outfit' } }, 'zahlen Kreditkarten-Profis dank Cashback'),
+          h('span', { style: { fontSize: '22px', fontWeight: 400, color: C.textMuted, fontFamily: 'Outfit' } }, 'mit der richtigen Strategie')
         )
       )
     ),
-    keyLearning('16 Millionen Riester-Sparer stehen jetzt vor einer wichtigen Entscheidung.'),
-    igHandle(),
-  ]);
+    keyLearning('Unwissenheit bei Kreditkarten kostet echtes Geld.', 'red'),
+    igHandle()
+  );
 
-  // ─── SLIDE 4: CHECKLISTE (5 Schritte) ───────────────────────────────────────
-  const steps = [
-    { num: '01', text: 'Anbieter vergleichen (Trade Republic, Scalable, ING)', pct: 20 },
-    { num: '02', text: 'Für Warteliste deines Wunsch-Anbieters anmelden', pct: 40 },
-    { num: '03', text: 'Monatlichen Betrag festlegen (empfohlen: mind. 50 EUR)', pct: 60 },
-    { num: '04', text: 'Steueridentifikationsnummer bereithalten', pct: 80 },
-    { num: '05', text: 'Am 01.01.2027 sofort Depot eröffnen und Dauerauftrag einrichten', pct: 100 },
+  // ─── SLIDE 3 — DIE ZINSFALLE ─────────────────────────────────────────────────
+  // Chart: 1.000 € Schulden wachsen auf 1.650 € in 2 Jahren bei 22% Zinsen
+
+  const debtSvg = `<svg width="860" height="360" viewBox="0 0 860 360" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="debtGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#EF4444" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#EF4444" stop-opacity="0.9"/>
+    </linearGradient>
+  </defs>
+  <!-- Y-Achse -->
+  <line x1="80" y1="30" x2="80" y2="300" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+  <!-- X-Achse -->
+  <line x1="80" y1="300" x2="830" y2="300" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+  <!-- Grid lines -->
+  <line x1="80" y1="195" x2="830" y2="195" stroke="rgba(255,255,255,0.1)" stroke-width="1" stroke-dasharray="6,4"/>
+  <line x1="80" y1="90" x2="830" y2="90" stroke="rgba(255,255,255,0.1)" stroke-width="1" stroke-dasharray="6,4"/>
+  <!-- Debt curve: starts at 1000 EUR, rises to 1650 EUR -->
+  <!-- y: 300 = 0 EUR (bottom), 30 = 2000 EUR (top). Range 1970px. Scale: 1px = 1970/270 = 7.3 EUR/px -->
+  <!-- 1000 EUR -> y = 300 - (1000/1970*270) = 300 - 137 = 163 -->
+  <!-- 1200 EUR -> y = 300 - (1200/1970*270) = 300 - 164 = 136 -->
+  <!-- 1400 EUR -> y = 300 - (1400/1970*270) = 300 - 192 = 108 -->
+  <!-- 1650 EUR -> y = 300 - (1650/1970*270) = 300 - 226 = 74 -->
+  <path d="M80,163 C200,163 310,153 455,136 C570,122 680,98 830,74"
+    stroke="#EF4444" stroke-width="4" fill="none"/>
+  <!-- Area under curve -->
+  <path d="M80,163 C200,163 310,153 455,136 C570,122 680,98 830,74 L830,300 L80,300 Z"
+    fill="url(#debtGrad)"/>
+  <!-- Data points -->
+  <circle cx="80" cy="163" r="8" fill="#EF4444"/>
+  <circle cx="455" cy="136" r="8" fill="#EF4444"/>
+  <circle cx="830" cy="74" r="8" fill="#EF4444"/>
+</svg>`;
+
+  const debtSrc = `data:image/svg+xml;base64,${Buffer.from(debtSvg).toString('base64')}`;
+
+  const slide3 = h('div', {
+    style: {
+      display: 'flex', flexDirection: 'column', width: W, height: H,
+      padding: '70px', backgroundColor: C.bg, fontFamily: 'Outfit'
+    }
+  },
+    topRow('FALLE #1'),
+    headline('1.000 € Schulden werden in 2 Jahren zu 1.650 €', 54),
+    subline('Bei 22 % Zinsen — Mindest-Zahlung ist die teuerste Option'),
+    h('div', {
+      style: {
+        display: 'flex', flex: '1', flexDirection: 'column',
+        justifyContent: 'center', gap: '16px'
+      }
+    },
+      // Chart
+      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px' } },
+        // Y-Achse Labels + Chart
+        h('div', { style: { display: 'flex', flexDirection: 'row', gap: '12px', alignItems: 'flex-end' } },
+          // Y-Labels
+          h('div', { style: { display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '300px', paddingBottom: '0px' } },
+            h('span', { style: { fontSize: '20px', color: C.textMuted, fontFamily: 'Outfit', textAlign: 'right' } }, '2.000 €'),
+            h('span', { style: { fontSize: '20px', color: C.textMuted, fontFamily: 'Outfit', textAlign: 'right' } }, '1.500 €'),
+            h('span', { style: { fontSize: '20px', color: C.textMuted, fontFamily: 'Outfit', textAlign: 'right' } }, '1.000 €')
+          ),
+          h('img', { src: debtSrc, width: 860, height: 360, style: { objectFit: 'contain' } })
+        ),
+        // X-Labels
+        h('div', { style: { display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingLeft: '70px', paddingRight: '0px' } },
+          h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.textMuted, fontFamily: 'Outfit' } }, 'Start'),
+          h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.textMuted, fontFamily: 'Outfit' } }, '12 Monate'),
+          h('span', { style: { fontSize: '22px', fontWeight: 600, color: C.red, fontFamily: 'Outfit' } }, '24 Monate')
+        )
+      ),
+      // Annotation
+      h('div', {
+        style: {
+          display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '16px',
+          backgroundColor: 'rgba(239,68,68,0.1)', borderRadius: '14px', padding: '16px 24px'
+        }
+      },
+        h('div', { style: { display: 'flex', width: '12px', height: '12px', borderRadius: '6px', backgroundColor: C.red } }),
+        h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.red, fontFamily: 'Outfit' } }, '+650 € Zinsen — nur durch Mindest-Zahlung')
+      )
+    ),
+    keyLearning('Mindest-Zahlung ist die teuerste Entscheidung.', 'red'),
+    igHandle()
+  );
+
+  // ─── SLIDE 4 — ERWARTUNG vs. REALITÄT ───────────────────────────────────────
+  const slide4 = h('div', {
+    style: {
+      display: 'flex', flexDirection: 'column', width: W, height: H,
+      padding: '70px', backgroundColor: C.bg, fontFamily: 'Outfit'
+    }
+  },
+    topRow('WAS DU DENKST'),
+    headline('Kreditkarte: Was du glaubst vs. was stimmt', 56),
+    h('div', {
+      style: {
+        display: 'flex', flex: '1', flexDirection: 'column',
+        justifyContent: 'center', gap: '20px'
+      }
+    },
+      // Row 1
+      h('div', { style: { display: 'flex', flexDirection: 'row', gap: '16px' } },
+        h('div', {
+          style: {
+            display: 'flex', flex: '1', flexDirection: 'column', gap: '10px',
+            backgroundColor: C.cardBg, borderRadius: '20px', padding: '28px'
+          }
+        },
+          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: C.textMuted, fontFamily: 'Outfit' } }, 'ERWARTUNG'),
+          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: C.border, borderRadius: '2px' } }),
+          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4', fontFamily: 'Outfit' } }, '"Die 30-Tage-Frist ist gratis"')
+        ),
+        h('div', {
+          style: {
+            display: 'flex', flex: '1', flexDirection: 'column', gap: '10px',
+            backgroundColor: 'rgba(255,255,255,0.18)', borderRadius: '20px', padding: '28px',
+            border: '2px solid rgba(16,185,129,0.4)'
+          }
+        },
+          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: C.green, fontFamily: 'Outfit' } }, 'REALITÄT'),
+          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(16,185,129,0.4)', borderRadius: '2px' } }),
+          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.4', fontFamily: 'Outfit' } }, 'Nur gratis, wenn du vollständig zahlst')
+        )
+      ),
+      // Row 2
+      h('div', { style: { display: 'flex', flexDirection: 'row', gap: '16px' } },
+        h('div', {
+          style: {
+            display: 'flex', flex: '1', flexDirection: 'column', gap: '10px',
+            backgroundColor: C.cardBg, borderRadius: '20px', padding: '28px'
+          }
+        },
+          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: C.textMuted, fontFamily: 'Outfit' } }, 'ERWARTUNG'),
+          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: C.border, borderRadius: '2px' } }),
+          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4', fontFamily: 'Outfit' } }, '"Cashback ist immer ein Gewinn"')
+        ),
+        h('div', {
+          style: {
+            display: 'flex', flex: '1', flexDirection: 'column', gap: '10px',
+            backgroundColor: 'rgba(255,255,255,0.18)', borderRadius: '20px', padding: '28px',
+            border: '2px solid rgba(16,185,129,0.4)'
+          }
+        },
+          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: C.green, fontFamily: 'Outfit' } }, 'REALITÄT'),
+          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(16,185,129,0.4)', borderRadius: '2px' } }),
+          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.4', fontFamily: 'Outfit' } }, 'Nur wenn Jahresgebühr unter Cashback liegt')
+        )
+      ),
+      // Row 3
+      h('div', { style: { display: 'flex', flexDirection: 'row', gap: '16px' } },
+        h('div', {
+          style: {
+            display: 'flex', flex: '1', flexDirection: 'column', gap: '10px',
+            backgroundColor: C.cardBg, borderRadius: '20px', padding: '28px'
+          }
+        },
+          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: C.textMuted, fontFamily: 'Outfit' } }, 'ERWARTUNG'),
+          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: C.border, borderRadius: '2px' } }),
+          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textSoft, lineHeight: '1.4', fontFamily: 'Outfit' } }, '"Revolut & Co. haben keine Fallen"')
+        ),
+        h('div', {
+          style: {
+            display: 'flex', flex: '1', flexDirection: 'column', gap: '10px',
+            backgroundColor: 'rgba(255,255,255,0.18)', borderRadius: '20px', padding: '28px',
+            border: '2px solid rgba(16,185,129,0.4)'
+          }
+        },
+          h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '2px', color: C.green, fontFamily: 'Outfit' } }, 'REALITÄT'),
+          h('div', { style: { display: 'flex', width: '100%', height: '3px', backgroundColor: 'rgba(16,185,129,0.4)', borderRadius: '2px' } }),
+          h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.4', fontFamily: 'Outfit' } }, 'Auslands- und Bargeldgebühren lauern überall')
+        )
+      )
+    ),
+    keyLearning('Kreditkarte ist kein kostenloses Darlehen.', 'red'),
+    igHandle()
+  );
+
+  // ─── SLIDE 5 — DIE 5 FALLEN ──────────────────────────────────────────────────
+  const fallen = [
+    { num: '01', title: 'Mindest-Zahlung', desc: 'Nur Minimum zahlen kostet bis zu +65 % Zinsen auf den Rest' },
+    { num: '02', title: 'Jahresgebühr-Falle', desc: 'Karte mit 100 € Gebühr lohnt sich nur ab ca. 10.000 € Umsatz' },
+    { num: '03', title: 'Auslands-Gebühren', desc: 'Viele Karten berechnen 1,5–3 % bei Zahlung im Ausland' },
+    { num: '04', title: 'Ratenzahlung', desc: 'Kreditkarten-Raten kosten dich 15–22 % Zinsen p.a.' },
+    { num: '05', title: 'Bargeld-Abhebung', desc: 'Sofortige Zinsen ab Tag 1 — kein zinsfreies Zeitfenster' },
   ];
 
-  const slide4 = slideRoot(C.bgDark, [
-    topBar(),
-    badge('DEINE CHECKLISTE'),
-    headline('5 Schritte vor dem 01.01.2027', 58),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '12px' } },
-      ...steps.map(s =>
+  const slide5 = h('div', {
+    style: {
+      display: 'flex', flexDirection: 'column', width: W, height: H,
+      padding: '70px', backgroundColor: C.bg, fontFamily: 'Outfit'
+    }
+  },
+    topRow('SO VERLIERST DU GELD'),
+    headline('5 Fallen die du ab heute kennen solltest', 56),
+    h('div', {
+      style: {
+        display: 'flex', flex: '1', flexDirection: 'column',
+        justifyContent: 'center', gap: '16px'
+      }
+    },
+      ...fallen.map((f, i) =>
         h('div', {
           style: {
             display: 'flex', flexDirection: 'column', gap: '8px',
-            padding: '18px 24px', backgroundColor: C.cardBg, borderRadius: '16px'
+            padding: '20px 24px',
+            backgroundColor: i === 4 ? 'rgba(16,185,129,0.1)' : C.cardBg,
+            borderRadius: '16px',
+            border: i === 4 ? '2px solid rgba(16,185,129,0.3)' : '2px solid transparent'
           }
         },
-          h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
-            h('span', { style: { fontSize: '32px', fontWeight: 800, color: s.pct === 100 ? C.green : 'rgba(255,255,255,0.4)', minWidth: '52px', fontFamily: 'Outfit' } }, s.num),
-            h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.text, lineHeight: '1.3', fontFamily: 'Outfit' } }, s.text)
-          ),
-          h('div', { style: { display: 'flex', height: '5px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' } },
-            h('div', { style: { display: 'flex', width: `${s.pct}%`, height: '5px', backgroundColor: s.pct === 100 ? C.green : 'rgba(255,255,255,0.4)', borderRadius: '3px' } })
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px' } },
+            h('div', { style: { display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '16px' } },
+              h('span', { style: { fontSize: '36px', fontWeight: 800, color: i === 4 ? C.green : C.red, minWidth: '60px', fontFamily: 'Outfit' } }, f.num),
+              h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.text, fontFamily: 'Outfit' } }, f.title)
+            ),
+            h('span', { style: { fontSize: '22px', fontWeight: 400, color: C.textMuted, lineHeight: '1.4', paddingLeft: '76px', fontFamily: 'Outfit' } }, f.desc)
           )
         )
       )
     ),
-    keyLearning('Schritt 1 dauert 10 Minuten. Die anderen noch weniger.', C.green),
-    igHandle(),
-  ]);
+    keyLearning('Kenne die Regeln bevor du spielst.', 'red'),
+    igHandle()
+  );
 
-  // ─── SLIDE 5: ANBIETER VERGLEICH ─────────────────────────────────────────────
-  const providers = [
-    { name: 'Trade Republic', zins: '3,0 %', sparplan: 'ab 1 EUR', extra: 'Größte Nutzerbasis', color: 'rgba(255,255,255,0.08)', accent: C.text },
-    { name: 'Scalable Capital', zins: '4,0 %', sparplan: 'ab 1 EUR', extra: '8.000+ ETFs', color: 'rgba(255,255,255,0.08)', accent: C.textSoft },
-    { name: 'ING', zins: '3,25 %', sparplan: 'ab 1 EUR', extra: 'Vollbank + Depot', color: 'rgba(255,255,255,0.08)', accent: C.textSoft },
+  // ─── SLIDE 6 — DIE LÖSUNG ─────────────────────────────────────────────────────
+  const steps = [
+    { n: '1', title: 'Immer vollständig zahlen', desc: 'Jedes Monat den vollen Betrag — kein Zinszahler mehr', color: C.green },
+    { n: '2', title: 'Karte mit Cashback wählen', desc: 'Jahresgebühr unter 0 halten: 0 € Karte + 1–2 % Cashback', color: C.green },
+    { n: '3', title: 'Limit bewusst setzen', desc: 'Maximal das, was du diesen Monat wirklich ausgeben kannst', color: C.green },
   ];
 
-  const slide5 = slideRoot(C.bg, [
-    topBar(),
-    badge('ANBIETER IM VERGLEICH'),
-    headline('Diese 3 starten am 01.01.2027', 58),
-    subline('Alle kostenlos. Alle vorbereitet.'),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '14px' } },
-      ...providers.map((p, i) =>
+  const slide6 = h('div', {
+    style: {
+      display: 'flex', flexDirection: 'column', width: W, height: H,
+      padding: '70px', backgroundColor: C.bg, fontFamily: 'Outfit'
+    }
+  },
+    topRow('SO MACHST DU ES RICHTIG'),
+    headline('3 Regeln für smarte Kreditkartennutzung', 56),
+    subline('Damit die Karte für dich arbeitet — nicht gegen dich'),
+    h('div', {
+      style: {
+        display: 'flex', flex: '1', flexDirection: 'column',
+        justifyContent: 'center', gap: '24px'
+      }
+    },
+      ...steps.map((s, i) =>
         h('div', {
           style: {
-            display: 'flex', flexDirection: 'row', alignItems: 'center',
-            backgroundColor: i === 0 ? 'rgba(16,185,129,0.1)' : C.cardBg,
-            border: i === 0 ? '2px solid rgba(16,185,129,0.4)' : '1px solid rgba(255,255,255,0.1)',
-            borderRadius: '18px', padding: '22px 28px', gap: '20px'
+            display: 'flex', flexDirection: 'row', alignItems: 'flex-start', gap: '20px',
+            backgroundColor: 'rgba(16,185,129,0.08)', borderRadius: '20px', padding: '28px 32px',
+            border: '2px solid rgba(16,185,129,0.25)'
           }
         },
           h('div', {
             style: {
-              display: 'flex', width: '52px', height: '52px', borderRadius: '12px',
-              backgroundColor: i === 0 ? C.green : 'rgba(255,255,255,0.1)',
-              alignItems: 'center', justifyContent: 'center', flexShrink: '0'
+              display: 'flex', width: '56px', height: '56px', borderRadius: '28px',
+              backgroundColor: C.green, alignItems: 'center', justifyContent: 'center',
+              minWidth: '56px'
             }
           },
-            h('span', { style: { fontSize: '20px', fontWeight: 800, color: '#FFFFFF', fontFamily: 'Outfit' } }, `${i + 1}`)
+            h('span', { style: { fontSize: '28px', fontWeight: 800, color: '#001F61', fontFamily: 'Outfit' } }, s.n)
           ),
-          h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', gap: '4px' } },
-            h('span', { style: { fontSize: '28px', fontWeight: 700, color: i === 0 ? C.green : C.text, fontFamily: 'Outfit' } }, p.name),
-            h('span', { style: { fontSize: '22px', fontWeight: 500, color: C.textMuted, fontFamily: 'Outfit' } }, p.extra)
-          ),
-          h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' } },
-            h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.text, fontFamily: 'Outfit' } }, p.zins),
-            h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted, fontFamily: 'Outfit' } }, 'Tagesgeld p.a.')
+          h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px' } },
+            h('span', { style: { fontSize: '30px', fontWeight: 700, color: C.text, fontFamily: 'Outfit' } }, s.title),
+            h('span', { style: { fontSize: '24px', fontWeight: 400, color: C.textMuted, lineHeight: '1.4', fontFamily: 'Outfit' } }, s.desc)
           )
-        )
-      ),
-      h('div', { style: { display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px', backgroundColor: 'rgba(16,185,129,0.08)', borderRadius: '14px', padding: '16px 24px' } },
-        h('div', { style: { display: 'flex', width: '10px', height: '10px', borderRadius: '5px', backgroundColor: C.green } }),
-        h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.textSoft, fontFamily: 'Outfit' } }, 'Wartelisten bei allen drei Anbietern bereits offen')
-      )
-    ),
-    keyLearning('Tipp: Melde dich bei allen drei an. Eröffnen kannst du erst ab 01.01.2027.'),
-    igHandle(),
-  ]);
-
-  // ─── SLIDE 6: FÖRDERUNG DETAILS ───────────────────────────────────────────────
-  const foerderungen = [
-    { title: 'Grundförderung', betrag: '300 EUR/Jahr', detail: '50 % auf erste 600 EUR Einzahlung' },
-    { title: 'Höchstförderung', betrag: '1.800 EUR/Jahr', detail: 'mit Kinderzulage (3+ Kinder)' },
-    { title: 'Kinderbonus', betrag: '300 EUR/Kind', detail: 'Zusätzlich pro Kind unter 18' },
-  ];
-
-  const slide6 = slideRoot(C.bgDark, [
-    topBar(),
-    badge('SO VIEL BEKOMMST DU'),
-    headline('Die staatliche Förderung im Detail', 52),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '16px' } },
-      h('div', { style: { display: 'flex', flexDirection: 'row', gap: '14px' } },
-        ...foerderungen.map((f, i) =>
-          h('div', {
-            style: {
-              display: 'flex', flex: '1', flexDirection: 'column', gap: '10px',
-              backgroundColor: i === 0 ? 'rgba(16,185,129,0.12)' : C.cardBg,
-              borderRadius: '20px', padding: '24px',
-              border: i === 0 ? '1px solid rgba(16,185,129,0.3)' : '1px solid rgba(255,255,255,0.1)'
-            }
-          },
-            h('span', { style: { fontSize: '20px', fontWeight: 700, letterSpacing: '1px', color: i === 0 ? C.green : C.textMuted, fontFamily: 'Outfit' } }, f.title.toUpperCase()),
-            h('span', { style: { fontSize: '30px', fontWeight: 800, color: C.text, lineHeight: '1.1', fontFamily: 'Outfit' } }, f.betrag),
-            h('span', { style: { fontSize: '20px', fontWeight: 500, color: C.textMuted, lineHeight: '1.4', fontFamily: 'Outfit' } }, f.detail)
-          )
-        )
-      ),
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px', backgroundColor: C.cardBg, borderRadius: '18px', padding: '24px 28px' } },
-        h('span', { style: { fontSize: '22px', fontWeight: 700, color: C.textMuted, letterSpacing: '2px', fontFamily: 'Outfit' } }, 'RECHENBEISPIEL'),
-        h('div', { style: { display: 'flex', height: '3px', backgroundColor: C.border, borderRadius: '2px' } }),
-        h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.5', fontFamily: 'Outfit' } },
-          'Familie mit 2 Kindern: 100 EUR/Monat einzahlen'),
-        h('div', { style: { display: 'flex', flexDirection: 'row', gap: '8px', alignItems: 'center' } },
-          h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textSoft, fontFamily: 'Outfit' } }, 'Eigenleistung: 1.200 EUR/Jahr'),
-          h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted, fontFamily: 'Outfit' } }, '+'),
-          h('span', { style: { fontSize: '26px', fontWeight: 700, color: C.green, fontFamily: 'Outfit' } }, 'Foerderung: 900 EUR/Jahr')
         )
       )
     ),
-    keyLearning('75 % Förderquote bei Familien mit 2 Kindern — das schlägt jede Riester-Police.', C.green),
-    igHandle(),
-  ]);
+    keyLearning('Kreditkarte als Werkzeug — nicht als Schuld.', 'green'),
+    igHandle()
+  );
 
-  // ─── SLIDE 7: LEARNINGS + TAKEAWAYS ──────────────────────────────────────────
+  // ─── SLIDE 7 — TAKEAWAYS ─────────────────────────────────────────────────────
   const learnings = [
-    { num: '01', text: 'Jetzt Anbieter vergleichen und für Warteliste anmelden', pct: 33 },
-    { num: '02', text: 'Monatlichen Sparbetrag festlegen — schon ab 1 EUR/Monat möglich', pct: 66 },
-    { num: '03', text: 'Am 01.01.2027 sofort starten — Förderung gilt rückwirkend für 2027', pct: 100 },
+    { num: '01', text: 'Vollständige Zahlung jedes Monat — kein Zinszahler', pct: 25 },
+    { num: '02', text: 'Cashback-Karte wählen: Jahresgebühr unter 0 halten', pct: 50 },
+    { num: '03', text: 'Keine Bargeld-Abhebung — sofortige Zinsen ab Tag 1', pct: 75 },
+    { num: '04', text: 'Kreditkarten-Raten vermeiden — 22 % Zinsen p.a.', pct: 100 },
   ];
 
-  const slide7 = slideRoot(C.bg, [
-    topBar(),
-    badge('DEINE 3 TAKEAWAYS'),
-    headline('Das nimmst du mit', 58),
-    h('div', { style: { display: 'flex', flex: '1', flexDirection: 'column', justifyContent: 'center', gap: '14px' } },
+  const slide7 = h('div', {
+    style: {
+      display: 'flex', flexDirection: 'column', width: W, height: H,
+      padding: '70px', backgroundColor: C.bg, fontFamily: 'Outfit'
+    }
+  },
+    topRow('DEIN FAHRPLAN'),
+    headline('4 Regeln die du ab heute umsetzt', 60),
+    subline('Damit deine Kreditkarte für dich arbeitet'),
+    h('div', {
+      style: {
+        display: 'flex', flex: '1', flexDirection: 'column',
+        justifyContent: 'center', gap: '20px'
+      }
+    },
       ...learnings.map(l =>
         h('div', {
           style: {
@@ -374,54 +525,76 @@ async function main() {
           }
         },
           h('div', { style: { display: 'flex', alignItems: 'center', gap: '18px' } },
-            h('span', { style: { fontSize: '40px', fontWeight: 800, color: l.pct === 100 ? C.green : C.text, minWidth: '60px', fontFamily: 'Outfit' } }, l.num),
+            h('span', { style: { fontSize: '38px', fontWeight: 800, color: l.pct === 100 ? C.green : C.text, minWidth: '60px', fontFamily: 'Outfit' } }, l.num),
             h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.3', fontFamily: 'Outfit' } }, l.text)
           ),
-          h('div', { style: { display: 'flex', height: '6px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' } },
+          h('div', { style: { display: 'flex', height: '6px', backgroundColor: C.border, borderRadius: '3px', overflow: 'hidden' } },
             h('div', { style: { display: 'flex', width: `${l.pct}%`, height: '6px', backgroundColor: l.pct === 100 ? C.green : C.text, borderRadius: '3px' } })
           )
         )
-      ),
-      h('div', { style: { display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '14px', backgroundColor: 'rgba(16,185,129,0.1)', borderRadius: '16px', padding: '22px 28px', border: '1px solid rgba(16,185,129,0.3)' } },
-        h('div', { style: { display: 'flex', width: '6px', minHeight: '40px', backgroundColor: C.green, borderRadius: '3px' } }),
-        h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.text, lineHeight: '1.4', fontFamily: 'Outfit' } }, 'In 7 Wochen ist der Startschuss. Fang jetzt mit der Vorbereitung an.')
       )
     ),
-    igHandle(),
-  ]);
+    keyLearning('Wer die Regeln kennt, gewinnt.', 'green'),
+    igHandle()
+  );
 
-  // ─── SLIDE 8: CTA ─────────────────────────────────────────────────────────────
-  const slide8 = slideRoot(C.bgDark, [
-    h('div', { style: { display: 'flex', flexDirection: 'column', flex: '1', alignItems: 'center', justifyContent: 'center', gap: '32px' } },
-      h('img', { src: logoB64, width: 140, height: 140, style: { borderRadius: '24px', objectFit: 'cover' } }),
-      badge('JETZT HANDELN'),
+  // ─── SLIDE 8 — CTA ───────────────────────────────────────────────────────────
+  const slide8 = h('div', {
+    style: {
+      display: 'flex', flexDirection: 'column', width: W, height: H,
+      padding: '70px', backgroundColor: C.bg, fontFamily: 'Outfit'
+    }
+  },
+    h('div', { style: { display: 'flex', justifyContent: 'flex-end' } },
+      logo()
+    ),
+    h('div', {
+      style: {
+        display: 'flex', flex: '1', flexDirection: 'column',
+        justifyContent: 'center', alignItems: 'center', gap: '32px'
+      }
+    },
       h('span', {
         style: {
           fontSize: '52px', fontWeight: 800, color: C.text,
-          lineHeight: '1.15', letterSpacing: '-1.5px', textAlign: 'center',
-          maxWidth: '860px', fontFamily: 'Outfit'
+          textAlign: 'center', lineHeight: '1.15', letterSpacing: '-1px', fontFamily: 'Outfit'
         }
-      }, 'Bei welchem Anbieter öffnest du dein Altersvorsorge-Depot?'),
-      h('span', {
-        style: { fontSize: '28px', fontWeight: 500, color: C.textMuted, textAlign: 'center', fontFamily: 'Outfit' }
-      }, 'Schreib es in die Kommentare 👇'),
-      h('div', { style: { display: 'flex', flexDirection: 'row', gap: '14px', marginTop: '8px' } },
-        h('div', { style: { display: 'flex', backgroundColor: C.cardBg, borderRadius: '50px', padding: '14px 28px' } },
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.text, fontFamily: 'Outfit' } }, 'Trade Republic')
-        ),
-        h('div', { style: { display: 'flex', backgroundColor: C.cardBg, borderRadius: '50px', padding: '14px 28px' } },
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.text, fontFamily: 'Outfit' } }, 'Scalable')
-        ),
-        h('div', { style: { display: 'flex', backgroundColor: C.cardBg, borderRadius: '50px', padding: '14px 28px' } },
-          h('span', { style: { fontSize: '24px', fontWeight: 600, color: C.text, fontFamily: 'Outfit' } }, 'ING')
-        )
+      }, 'Hast du deine Kreditkartenkosten schon mal wirklich berechnet?'),
+      h('div', {
+        style: {
+          display: 'flex', backgroundColor: C.cardBg, borderRadius: '16px',
+          padding: '20px 36px'
+        }
+      },
+        h('span', { style: { fontSize: '28px', fontWeight: 600, color: C.textSoft, fontFamily: 'Outfit' } }, 'Schreib dein Ergebnis in die Kommentare')
+      ),
+      h('div', {
+        style: {
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', marginTop: '16px'
+        }
+      },
+        h('span', { style: { fontSize: '26px', fontWeight: 500, color: C.textMuted, fontFamily: 'Outfit' } }, 'Folge für täglich kostenloses Finanzwissen'),
+        h('span', { style: { fontSize: '30px', fontWeight: 700, color: C.green, fontFamily: 'Outfit' } }, '@benarofinanzen')
       )
     ),
-    h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', paddingBottom: '0px' } },
-      h('span', { style: { fontSize: '26px', fontWeight: 600, color: C.textMuted, fontFamily: 'Outfit' } }, 'Folge uns für mehr Finanzwissen:'),
-      h('span', { style: { fontSize: '28px', fontWeight: 700, color: C.text, fontFamily: 'Outfit' } }, '@benarofinanzen')
-    ),
-  ]);
+    h('div', {
+      style: {
+        display: 'flex', backgroundColor: C.cardBg, borderRadius: '16px',
+        padding: '22px 28px', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'
+      }
+    },
+      h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted, fontFamily: 'Outfit' } }, 'Benaro Finanzen'),
+      h('span', { style: { fontSize: '24px', fontWeight: 500, color: C.textMuted, fontFamily: 'Outfit' } }, '@benarofinanzen')
+    )
+  );
+
+  // ─── GENERATE ALL SLIDES ─────────────────────────────────────────────────────
+  const TODAY = process.env.TODAY || new Date().toISOString().slice(0, 10);
+  const outDir = path.join(__dirname, `output/carousel_${TODAY}/slides`);
+
+  if (!fs.existsSync(outDir)) {
+    fs.mkdirSync(outDir, { recursive: true });
+  }
 
   const slides = [slide1, slide2, slide3, slide4, slide5, slide6, slide7, slide8];
 
@@ -429,16 +602,11 @@ async function main() {
     const svg = await satori(slides[i], { width: W, height: H, fonts });
     const resvg = new Resvg(svg, { fitTo: { mode: 'width', value: W } });
     const pngData = resvg.render();
-    const pngPath = path.join(OUTPUT_DIR, `slide-${String(i + 1).padStart(2, '0')}.png`);
+    const pngPath = path.join(outDir, `slide-${String(i + 1).padStart(2, '0')}.png`);
     fs.writeFileSync(pngPath, pngData.asPng());
-    console.log(`Slide ${i + 1}/${slides.length} generiert: ${pngPath}`);
+    console.log(`Slide ${i + 1}/${slides.length} generiert: ${path.basename(pngPath)}`);
   }
-
-  console.log('\nAlle Slides erfolgreich generiert!');
-  console.log(`Ausgabe: ${OUTPUT_DIR}`);
+  console.log('Alle Slides erfolgreich generiert!');
 }
 
-main().catch(e => {
-  console.error('Fehler:', e);
-  process.exit(1);
-});
+main().catch(e => { console.error(e); process.exit(1); });
